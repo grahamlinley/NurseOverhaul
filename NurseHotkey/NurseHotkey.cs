@@ -1,5 +1,8 @@
-//TO DO: Downed check for calamity bosses
+//TO DO: 
 // COMBAT CHECK. Current guess is between 6 and 6.1309
+// NurseHotkey specific items for range modification. 
+// Nurse Shop for items
+// Specific equipment item slot that will only take NurseHotkey range modification items
 // Piggy bank money count correct and accessed if inventoroy isn't (check on other potential money sources for purchase funding ie Vault)
 // Customizable distance from nurse in config
 // Play Nurse Heal sound effect on button press
@@ -15,6 +18,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria.ModLoader;
+using Terraria;
+using Terraria.ID;
+using Terraria.Localization;
+using Terraria.UI;
+using System.Text;
 
 namespace NurseHotkey
 {
@@ -33,3 +41,5 @@ namespace NurseHotkey
         }
     }
 }
+
+

@@ -520,7 +520,7 @@ public class NurseHotkeyPlayerSettings : ModPlayer
 
 
 
-private void NurseHeal()
+public void NurseHeal()
     {
         NPC nurse = Main.npc[NPC.FindFirstNPC(NPCID.Nurse)];
         Player player = Main.LocalPlayer;
