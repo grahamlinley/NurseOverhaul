@@ -1,3 +1,16 @@
+//TO DO: Downed check for calamity bosses
+// COMBAT CHECK. Current guess is between 6 and 6.1309
+// Piggy bank money count correct and accessed if inventoroy isn't (check on other potential money sources for purchase funding ie Vault)
+// Customizable distance from nurse in config
+// Play Nurse Heal sound effect on button press
+// Hate toggle in config? Manual testing and new methods and logic reconfig. 
+// Find some way to access Nurse happiness and use it to modify price automatically. Would be default in config with love/hate as options
+// Icon for tmod
+// readme
+// DEBUG. Found error when stacking to chest + some other places (spawned something in and got an error, might be unrelated). Check log trace
+// Dialogue for how much you spent at the nurse (button in box? maybe add total spent next to money just spent. could be too cluttery though)
+// Stretch: Maybe resprite or just an animation when you press the hotkey? Would be funny for like an Ana type character that shoots a healing dart at you to heal you past a certain range
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,95 +32,4 @@ namespace NurseHotkey
             NurseHealHotkey = null;
         }
     }
-    public class BossChecklistIntegration : ModSystem
-{
-    private static readonly Version BossChecklistAPIVersion = new Version(1, 1);
-    public class BossChecklistBossInfo
-    {
-        internal string key = "";
-        internal string modSource = "";
-        internal string internalName = "";
-        internal string displayName = "";
-
-        internal float progression = 0f;
-        internal Func<bool> downed = () => false;
-
-        internal bool isBoss = true;
-        internal bool isMiniboss = false;
-        internal bool isEvent = false;
-
-        internal List<int> npcIDs = new List<int>();
-        internal List<int> spawnItem = new List<int>();
-        internal List<int> loot = new List<int>();
-        internal List<int> collection = new List<int>();
-    }
-
-    public static Dictionary<string, BossChecklistBossInfo> bossInfos = new Dictionary<string, BossChecklistBossInfo>();
-
-    public static bool IntegrationSuccessful { get; private set; }
-
-    public override void PostAddRecipes()
-    {
-        bossInfos.Clear();
-
-        if (ModLoader.TryGetMod("BossChecklist", out Mod bossChecklist) && bossChecklist.Version >= BossChecklistAPIVersion)
-        {
-            object currentBossInfoResponse = bossChecklist.Call("GetBossInfoDictionary", Mod, BossChecklistAPIVersion.ToString());
-            if (currentBossInfoResponse is Dictionary<string, Dictionary<string, object>> bossInfoList)
-            {
-                foreach (var boss in bossInfoList)
-                {
-                    BossChecklistBossInfo bossInfo = new BossChecklistBossInfo()
-                    {
-                        key = boss.Value.ContainsKey("key") ? boss.Value["key"] as string : "CalamityMod Providence",
-                        modSource = boss.Value.ContainsKey("modSource") ? boss.Value["modSource"] as string : "CalamityMod",
-                        internalName = boss.Value.ContainsKey("internalName") ? boss.Value["internalName"] as string : "CalamityMod Providence",
-                        displayName = boss.Value.ContainsKey("displayName") ? boss.Value["displayName"] as string : "Providence, The Profaned Goddess",
-
-                        progression = boss.Value.ContainsKey("progression") ? Convert.ToSingle(boss.Value["progression"]) : 19f,
-                        downed = CreateDownedFunc(boss.Value.ContainsKey("downed") ? boss.Value["downed"] : true),
-
-                        isBoss = boss.Value.ContainsKey("isBoss") ? Convert.ToBoolean(boss.Value["isBoss"]) : true,
-                        isMiniboss = boss.Value.ContainsKey("isMiniboss") ? Convert.ToBoolean(boss.Value["isMiniboss"]) : false,
-                        isEvent = boss.Value.ContainsKey("isEvent") ? Convert.ToBoolean(boss.Value["isEvent"]) : false,
-
-                        npcIDs = boss.Value.ContainsKey("npcIDs") ? boss.Value["npcIDs"] as List<int> : new List<int>(),
-                        spawnItem = boss.Value.ContainsKey("spawnItem") ? boss.Value["spawnItem"] as List<int> : new List<int>(),
-                        loot = boss.Value.ContainsKey("loot") ? boss.Value["loot"] as List<int> : new List<int>(),
-                        collection = boss.Value.ContainsKey("collection") ? boss.Value["collection"] as List<int> : new List<int>(),
-                    };
-
-                    bossInfos.Add(boss.Key, bossInfo);
-                }
-
-                IntegrationSuccessful = true;
-            }
-        }
-    }
-
-    private Func<bool> CreateDownedFunc(object downedValue)
-    {
-        if (downedValue is Func<bool> downedFunc)
-            return downedFunc;
-        else if (downedValue is bool downedBool)
-            return () => downedBool;
-
-        return () => false;
-    }
-
-    public override void Unload()
-    {
-        bossInfos.Clear();
-    }
-
-    public static float DownedBossProgress()
-    {
-        if (bossInfos.Count == 0)
-            return 0;
-
-        return (float)bossInfos.Count(x => x.Value.downed()) / bossInfos.Count();
-    }
-
-    public static bool BossDowned(string bossKey) => bossInfos.TryGetValue(bossKey, out var bossInfo) ? bossInfo.downed() : false;
-}
 }
