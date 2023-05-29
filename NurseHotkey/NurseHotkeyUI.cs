@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NurseHotkey.Items;
 using System.Reflection;
 using Terraria;
 using Terraria.Audio;
@@ -7,6 +8,7 @@ using Terraria.GameContent;
 using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.Localization;
+using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
 
@@ -36,8 +38,11 @@ internal class NurseHotkeyUI : UIState
         if (stringSize.X > 260f)
             value2.X *= 260f / stringSize.X;
 
+        Player player = Main.LocalPlayer;
+        float debuffCount = NurseHotkeyPlayerSettings.GetDebuffCount(player);
 
-        if (!Main.LocalPlayer.ghost && Main.LocalPlayer.statLife < Main.LocalPlayer.statLifeMax2)
+
+        if (!Main.LocalPlayer.ghost && Main.LocalPlayer.statLife == Main.LocalPlayer.statLifeMax2 && debuffCount == 0)
         {
             // button positions
             float posButton1 = 180 + (Main.screenWidth - 800) / 2; // position of the first button (Heal)
@@ -121,8 +126,9 @@ internal class NurseHotkeyUI : UIState
     {
 
         // all items being sold:
-        (short id, int price)[] items = {
+        (int id, int price)[] items = {
             (ItemID.HealingPotion, 2),
+            (ModContent.ItemType<NurseVIPBadge>(), 5000)
         };
 
         // some items are only sold if WoF has been defeated
@@ -135,10 +141,15 @@ internal class NurseHotkeyUI : UIState
         // add items to the list
         for (int i = 0; i < items.Length; i++)
         {
-            shop.item[i].SetDefaults(items[i].id);
-            shop.item[i].isAShopItem = true;
-            shop.item[i].shopCustomPrice = items[i].price;
-           }
+            Item newItem = new Item();
+            newItem.SetDefaults(items[i].id);
+            newItem.shopCustomPrice = items[i].price;
+            shop.item[i].SetDefaults(newItem.type);
+            shop.item[i].shopCustomPrice = newItem.shopCustomPrice;
+            // shop.item[i].SetDefaults(items[i].id);
+            // shop.item[i].isAShopItem = true;
+            //shop.item[i].shopCustomPrice = items[i].price;
+        }
         }
 }
     

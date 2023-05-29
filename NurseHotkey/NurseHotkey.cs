@@ -40,6 +40,42 @@ namespace NurseHotkey
             NurseHealHotkey = null;
         }
     }
+
+
+    public class NurseShop : GlobalNPC
+    {
+        public void SetChatButtons(ref string button, ref string button2, ref string button3, ref string button4)
+        {
+            button = "Heal";
+            button2 = "Close";
+            button3 = "Happiness";
+            button4 = "Shop";
+        }
+
+        public static void OnChatButtonClicked(NPC npc, bool firstButton, ref bool shop, Player player)
+        {
+
+            if (firstButton)
+            {
+                //NurseHotkeyPlayerSettings.NurseHeal();
+            }
+        }
+        public override void SetupShop(int type, Chest shop, ref int nextSlot)
+        {
+            if (type == NPCID.Nurse)
+            {
+                // Add items to the Nurse's shop
+                shop.item[nextSlot].SetDefaults(ItemID.HealingPotion);
+                shop.item[nextSlot].value = Item.buyPrice(0, 0, 10, 0); // Set custom price for Healing Potion
+                nextSlot++;
+
+                // Add more items as needed with custom prices
+                shop.item[nextSlot].SetDefaults(ItemID.ManaPotion);
+                shop.item[nextSlot].value = Item.buyPrice(0, 0, 20, 0); // Set custom price for Mana Potion
+                nextSlot++;
+            }
+        }
+    }
 }
 
 
