@@ -11,6 +11,8 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
+using Terraria.GameContent.Achievements;
+using System;
 
 
 namespace NurseHotkey;
@@ -39,7 +41,7 @@ internal class NurseHotkeyUI : UIState
             value2.X *= 260f / stringSize.X;
 
         Player player = Main.LocalPlayer;
-        float debuffCount = NurseHotkeyPlayerSettings.GetDebuffCount(player);
+        float debuffCount = NurseHotkeyPlayer.GetDebuffCount(player);
 
 
         if (!Main.LocalPlayer.ghost && Main.LocalPlayer.statLife == Main.LocalPlayer.statLifeMax2 && debuffCount == 0)
@@ -124,11 +126,14 @@ internal class NurseHotkeyUI : UIState
   
     private static void SetupShop(Chest shop)
     {
-
         // all items being sold:
         (int id, int price)[] items = {
-            (ItemID.HealingPotion, 2),
-            (ModContent.ItemType<NurseVIPBadge>(), 5000)
+            (ItemID.LesserHealingPotion, 300),
+            (ItemID.HealingPotion, 1000),
+            (ModContent.ItemType<NurseVIPBadge>(), 5000),
+            (ModContent.ItemType<LocalTransponder>(), 5000),
+            (ModContent.ItemType<SurfaceTransponder>(), 5000),
+            (ModContent.ItemType<GlobalTransponder>(), 5000),
         };
 
         // some items are only sold if WoF has been defeated
