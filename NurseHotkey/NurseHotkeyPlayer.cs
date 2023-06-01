@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using rail;
 using Terraria;
 using Terraria.GameInput;
 using Terraria.ID;
@@ -110,7 +111,7 @@ public class NurseHotkeyPlayer : ModPlayer
                 }
             }
 
-            if (NPC.downedPlantBoss) // Plantera defeated
+            if (NPC.downedPlantBoss || BossChecklistIntegration.isCalamitasCloneDefeated()) // Plantera defeated
             {
                 multipliedCost += 2000; // 57 silver base
                 
@@ -157,7 +158,8 @@ public class NurseHotkeyPlayer : ModPlayer
                 }
             }
 
-            if (NPC.downedFishron) // Duke Fishron/Plaguebringer Goliath/ Ravager defeated
+            if (NPC.downedFishron || BossChecklistIntegration.isPlaguebringerDefeated() || BossChecklistIntegration.isRavagerDefeated()) // Duke Fishron/Plaguebringer Goliath/ Ravager defeated
+
             {
                 multipliedCost += 3000; // 1 gold 17 silver base
                 if(!NPC.downedGolemBoss)
@@ -189,6 +191,7 @@ public class NurseHotkeyPlayer : ModPlayer
             if (NPC.downedMoonlord) // Moon Lord defeated
             {
                 multipliedCost += 8000; // 1 gold 97 silver base
+
                 if(!NPC.downedFishron)
                 {
                     multipliedCost += 3000;
@@ -429,9 +432,46 @@ public class NurseHotkeyPlayer : ModPlayer
             multiplier = 94.9999f;
         }
 
-        if (NPC.downedPlantBoss || BossChecklistIntegration.isCalamitasCloneDefeated()) //Plantera or Calamitas clone
+        if (NPC.downedPlantBoss) //Plantera or Calamitas clone
         {
             multiplier = 142.4999f;
+        }
+
+        if(BossChecklistIntegration.isCalamitasCloneDefeated())
+        {
+            multiplier = 142.4999f;
+
+            if (!NPC.downedBoss1 && !NPC.downedBoss2 && !NPC.downedBoss3 && !Main.hardMode && !NPC.downedMechBossAny && !NPC.downedPlantBoss)
+            {
+                multiplier = .94999f;
+            }
+
+            /*
+            if (NPC.downedBoss1) // Eye of Cthulhu
+            {
+                multiplier = 2.8499f;
+            }
+
+            if (NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
+            {
+                multiplier = 9.4999f;
+            }
+
+            if (NPC.downedBoss3 || NPC.downedQueenBee) // Skeletron or Queen Bee
+            {
+                multiplier = 23.7499f;
+            }
+
+            if (Main.hardMode) // Wall of Flesh
+            {
+                multiplier = 56.9999f;
+            }
+
+            if (NPC.downedMechBossAny) //Any mech boss
+            {
+                multiplier = 94.9999f;
+            }
+            */
         }
 
         if (NPC.downedGolemBoss) // Golem
@@ -442,30 +482,229 @@ public class NurseHotkeyPlayer : ModPlayer
         if (NPC.downedFishron || BossChecklistIntegration.isPlaguebringerDefeated() || BossChecklistIntegration.isRavagerDefeated())
         {
             multiplier = 189.9999f;
-        }
 
-        if (NPC.downedMoonlord) // Moon Lord
-        {
-            multiplier = 189.999f; //203.9999f at 8000
-        }
+            if(!NPC.downedBoss1 && !NPC.downedBoss2 && !NPC.downedBoss3 && !Main.hardMode && !NPC.downedMechBossAny && !NPC.downedPlantBoss && !NPC.downedGolemBoss)
+            {
+                multiplier = .94999f;
+            }
 
-        if (BossChecklistIntegration.isProvidenceDefeated())
+            if (NPC.downedBoss1) // Eye of Cthulhu
+            {
+                multiplier = 2.8499f;
+            }
+
+            if (NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
+            {
+                multiplier = 9.4999f;
+            }
+
+            if (NPC.downedBoss3 || NPC.downedQueenBee) // Skeletron or Queen Bee
+            {
+                multiplier = 23.7499f;
+            }
+
+            if (Main.hardMode) // Wall of Flesh
+            {
+                multiplier = 56.9999f;
+            }
+
+            if (NPC.downedMechBossAny) //Any mech boss
+            {
+                multiplier = 94.9999f;
+            }
+
+            if (NPC.downedPlantBoss || BossChecklistIntegration.isCalamitasCloneDefeated()) //Plantera or Calamitas clone
+            {
+                multiplier = 142.4999f;
+            }
+
+            if (NPC.downedGolemBoss) // Golem
+            {
+                multiplier = 189.9999f;
+            }
+            }
+
+        if (NPC.downedMoonlord)
         {
             multiplier = 189.9999f;
+
+            if (!NPC.downedBoss1 && !NPC.downedBoss2 && !NPC.downedBoss3 && !Main.hardMode && !NPC.downedMechBossAny && !NPC.downedPlantBoss && !NPC.downedGolemBoss) // && !NPC.downedFishron || !BossChecklistIntegration.isPlaguebringerDefeated() || !BossChecklistIntegration.isRavagerDefeated())
+            {
+                multiplier = .94999f;
+            }
+
+            if (NPC.downedBoss1) // Eye of Cthulhu
+            {
+                multiplier = 2.8499f;
+            }
+
+            if (NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
+            {
+                multiplier = 9.4999f;
+            }
+
+            if (NPC.downedBoss3 || NPC.downedQueenBee) // Skeletron or Queen Bee
+            {
+                multiplier = 23.7499f;
+            }
+
+            if (Main.hardMode) // Wall of Flesh
+            {
+                multiplier = 56.9999f;
+            }
+
+            if (NPC.downedMechBossAny) //Any mech boss
+            {
+                multiplier = 94.9999f;
+            }
+
+            if (NPC.downedPlantBoss || BossChecklistIntegration.isCalamitasCloneDefeated()) //Plantera or Calamitas clone
+            {
+                multiplier = 142.4999f;
+            }
+
+            if (NPC.downedGolemBoss) // Golem
+            {
+                multiplier = 189.9999f;
+            }
+        }
+            if (BossChecklistIntegration.isProvidenceDefeated())
+            {
+                multiplier = 189.9999f;
+            if (!NPC.downedBoss1 && !NPC.downedBoss2 && !NPC.downedBoss3 && !Main.hardMode && !NPC.downedMechBossAny && !NPC.downedPlantBoss && !NPC.downedGolemBoss && !NPC.downedFishron || !BossChecklistIntegration.isPlaguebringerDefeated() || !BossChecklistIntegration.isRavagerDefeated() && !NPC.downedMoonlord)
+            {
+                multiplier = .94999f;
+            }
+
+            if (NPC.downedBoss1) // Eye of Cthulhu
+            {
+                multiplier = 2.8499f;
+            }
+
+            if (NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
+            {
+                multiplier = 9.4999f;
+            }
+
+            if (NPC.downedBoss3 || NPC.downedQueenBee) // Skeletron or Queen Bee
+            {
+                multiplier = 23.7499f;
+            }
+
+            if (Main.hardMode) // Wall of Flesh
+            {
+                multiplier = 56.9999f;
+            }
+
+            if (NPC.downedMechBossAny) //Any mech boss
+            {
+                multiplier = 94.9999f;
+            }
+
+            if (NPC.downedPlantBoss || BossChecklistIntegration.isCalamitasCloneDefeated()) //Plantera or Calamitas clone
+            {
+                multiplier = 142.4999f;
+            }
+
+            if (NPC.downedGolemBoss) // Golem
+            {
+                multiplier = 189.9999f;
+            }
         }
 
-        if (BossChecklistIntegration.isDevourerDefeated())
-        {
-            multiplier = 189.9999f;
+            if (BossChecklistIntegration.isDevourerDefeated())
+            {
+                multiplier = 189.9999f;
+            if (!NPC.downedBoss1 && !NPC.downedBoss2 && !NPC.downedBoss3 && !Main.hardMode && !NPC.downedMechBossAny && !NPC.downedPlantBoss && !NPC.downedGolemBoss && !NPC.downedFishron || !BossChecklistIntegration.isPlaguebringerDefeated() 
+                || !BossChecklistIntegration.isRavagerDefeated() && !NPC.downedMoonlord && !BossChecklistIntegration.isProvidenceDefeated())
+            {
+                multiplier = .94999f;
+            }
+
+            if (NPC.downedBoss1) // Eye of Cthulhu
+            {
+                multiplier = 2.8499f;
+            }
+
+            if (NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
+            {
+                multiplier = 9.4999f;
+            }
+
+            if (NPC.downedBoss3 || NPC.downedQueenBee) // Skeletron or Queen Bee
+            {
+                multiplier = 23.7499f;
+            }
+
+            if (Main.hardMode) // Wall of Flesh
+            {
+                multiplier = 56.9999f;
+            }
+
+            if (NPC.downedMechBossAny) //Any mech boss
+            {
+                multiplier = 94.9999f;
+            }
+
+            if (NPC.downedPlantBoss || BossChecklistIntegration.isCalamitasCloneDefeated()) //Plantera or Calamitas clone
+            {
+                multiplier = 142.4999f;
+            }
+
+            if (NPC.downedGolemBoss) // Golem
+            {
+                multiplier = 189.9999f;
+            }
         }
 
-        if (BossChecklistIntegration.isYharonDefeated())
-        {
-            multiplier = 189.9995f;
+            if (BossChecklistIntegration.isYharonDefeated())
+            {
+                multiplier = 189.9995f;
+            if (!NPC.downedBoss1 && !NPC.downedBoss2 && !NPC.downedBoss3 && !Main.hardMode && !NPC.downedMechBossAny && !NPC.downedPlantBoss && !NPC.downedGolemBoss && !NPC.downedFishron || !BossChecklistIntegration.isPlaguebringerDefeated()
+                || !BossChecklistIntegration.isRavagerDefeated() && !NPC.downedMoonlord && !BossChecklistIntegration.isProvidenceDefeated() && BossChecklistIntegration.isDevourerDefeated())
+            {
+                multiplier = .94999f;
+            }
+
+            if (NPC.downedBoss1) // Eye of Cthulhu
+            {
+                multiplier = 2.8499f;
+            }
+
+            if (NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
+            {
+                multiplier = 9.4999f;
+            }
+
+            if (NPC.downedBoss3 || NPC.downedQueenBee) // Skeletron or Queen Bee
+            {
+                multiplier = 23.7499f;
+            }
+
+            if (Main.hardMode) // Wall of Flesh
+            {
+                multiplier = 56.9999f;
+            }
+
+            if (NPC.downedMechBossAny) //Any mech boss
+            {
+                multiplier = 94.9999f;
+            }
+
+            if (NPC.downedPlantBoss || BossChecklistIntegration.isCalamitasCloneDefeated()) //Plantera or Calamitas clone
+            {
+                multiplier = 142.4999f;
+            }
+
+            if (NPC.downedGolemBoss) // Golem
+            {
+                multiplier = 189.9999f;
+            }
         }
 
-        return multiplier;
+            return multiplier;
     }
+       
 
     private static float GetBossMultiplier()
     {
