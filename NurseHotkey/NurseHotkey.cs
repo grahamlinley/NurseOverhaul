@@ -81,15 +81,15 @@ namespace NurseHotkey
                     {
                         BossChecklistBossInfo bossInfo = new BossChecklistBossInfo()
                         {
-                            key = boss.Value.ContainsKey("key") ? boss.Value["key"] as string : "CalamityMod Providence",
-                            modSource = boss.Value.ContainsKey("modSource") ? boss.Value["modSource"] as string : "CalamityMod",
-                            internalName = boss.Value.ContainsKey("internalName") ? boss.Value["internalName"] as string : "CalamityMod Providence",
-                            displayName = boss.Value.ContainsKey("displayName") ? boss.Value["displayName"] as string : "Providence, The Profaned Goddess",
+                            key = boss.Value.ContainsKey("key") ? boss.Value["key"] as string : "",
+                            modSource = boss.Value.ContainsKey("modSource") ? boss.Value["modSource"] as string : "",
+                            internalName = boss.Value.ContainsKey("internalName") ? boss.Value["internalName"] as string : "",
+                            displayName = boss.Value.ContainsKey("displayName") ? boss.Value["displayName"] as string : "",
 
-                            progression = boss.Value.ContainsKey("progression") ? Convert.ToSingle(boss.Value["progression"]) : 19f,
+                            progression = boss.Value.ContainsKey("progression") ? Convert.ToSingle(boss.Value["progression"]) : 0f,
                             downed = CreateDownedFunc(boss.Value.ContainsKey("downed") ? boss.Value["downed"] : true),
 
-                            isBoss = boss.Value.ContainsKey("isBoss") ? Convert.ToBoolean(boss.Value["isBoss"]) : true,
+                            isBoss = boss.Value.ContainsKey("isBoss") ? Convert.ToBoolean(boss.Value["isBoss"]) : false,
                             isMiniboss = boss.Value.ContainsKey("isMiniboss") ? Convert.ToBoolean(boss.Value["isMiniboss"]) : false,
                             isEvent = boss.Value.ContainsKey("isEvent") ? Convert.ToBoolean(boss.Value["isEvent"]) : false,
 
@@ -132,9 +132,43 @@ namespace NurseHotkey
 
         public static bool BossDowned(string Providence) => bossInfos.TryGetValue(Providence, out var bossInfo) ? bossInfo.downed() : false;
 
+        public static bool isCalamitasCloneAlive()
+        {
+            if (!IntegrationSuccessful)
+            {
+                return false;
+            }
+            string calamitasCloneKey = "CalamityMod The Calamitas Clone";
+
+            if(bossInfos.TryGetValue(calamitasCloneKey, out BossChecklistBossInfo bossinfo))
+            {
+                int npcType =NPCID.FromLegacyName(calamitasCloneKey);
+                bool isAlive = NPC.AnyNPCs(npcType);
+                return isAlive;
+            }
+            return false;
+        }
+
+        public static bool isYharonAlive()
+        {
+            if (!IntegrationSuccessful)
+            {
+                return false;
+            }
+            string yharonKey = "CalamityMod Yharon";
+
+            if (bossInfos.TryGetValue(yharonKey, out BossChecklistBossInfo bossinfo))
+            {
+                int npcType = NPCID.FromLegacyName(yharonKey);
+                bool isAlive = NPC.AnyNPCs(npcType);
+                return isAlive;
+            }
+            return false;
+        }
 
 
-    public static bool isCalamitasCloneDefeated()
+
+        public static bool isCalamitasCloneDefeated()
         {
             // Check if integration with Boss Checklist was successful
             if (!BossChecklistIntegration.IntegrationSuccessful)

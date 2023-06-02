@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Terraria;
 using Terraria.GameInput;
 using Terraria.ID;
@@ -45,7 +46,7 @@ public class NurseHotkeyPlayer : ModPlayer
 
         float preCost = (baseCost * difficultyFactor); // Calculate the total cost of the heal based on the difficulty factor
 
-        if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck() == true && debuffCount -1 > 0)
+        if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck() == true && debuffCount - 1 > 0)
         {
             preCost += (debuffCount - 1) * 200;
         }
@@ -130,55 +131,12 @@ public class NurseHotkeyPlayer : ModPlayer
             if (BossChecklistIntegration.isYharonDefeated())
             {
                 multipliedCost += 89700; //897
-                /*
-                if (!BossChecklistIntegration.isRavagerDefeated())
-                {
-                    multipliedCost += 28000;
-                }
-                if (!BossChecklistIntegration.isProvidenceDefeated())
-                {
-                    multipliedCost += 12000;
-                }
-
-                if (!NPC.downedMoonlord)
-                {
-                    multipliedCost += 8000;
-                }
-                if (!NPC.downedFishron && !BossChecklistIntegration.isPlaguebringerDefeated() && !BossChecklistIntegration.isRavagerDefeated())
-                {
-                    multipliedCost += 3000;
-                }
-                if (!NPC.downedGolemBoss)
-                {
-                    multipliedCost += 3000;
-                }
-                if (!NPC.downedPlantBoss && !BossChecklistIntegration.isCalamitasCloneDefeated())
-                {
-                    multipliedCost += 2000;
-                }
-                if (!NPC.downedMechBossAny)
-                {
-                    multipliedCost += 1600;
-                }
-                if (!Main.hardMode)
-                {
-                    multipliedCost += 1200;
-                }
-                if (!NPC.downedBoss1)
-                {
-                    multipliedCost += 300;
-                }
-                if (!NPC.downedBoss3)
-                {
-                    multipliedCost += 600;
-                }
-                */
             }
         }
 
         float finalCost;
 
-        if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck() == true)
+        if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck() == true && debuffCount > 1)
         {
             multipliedCost += preCost * GetCalamityBossMultiplier();
             finalCost = multipliedCost * 5;
@@ -204,6 +162,7 @@ public class NurseHotkeyPlayer : ModPlayer
         return false;
     }
 
+
     public bool IsPlayerFightingBoss()
     {
 
@@ -222,7 +181,9 @@ public class NurseHotkeyPlayer : ModPlayer
                NPC.AnyNPCs(NPCID.Golem) && Main.npc[NPC.FindFirstNPC(NPCID.Golem)].Distance(Main.LocalPlayer.Center) <= 6400 ||
                NPC.AnyNPCs(NPCID.DukeFishron) && Main.npc[NPC.FindFirstNPC(NPCID.DukeFishron)].Distance(Main.LocalPlayer.Center) <= 6400 ||
                NPC.AnyNPCs(NPCID.CultistBoss) && Main.npc[NPC.FindFirstNPC(NPCID.CultistBoss)].Distance(Main.LocalPlayer.Center) <= 6400 ||
-               NPC.AnyNPCs(NPCID.MoonLordCore) && Main.npc[NPC.FindFirstNPC(NPCID.MoonLordCore)].Distance(Main.LocalPlayer.Center) <= 6400;
+               NPC.AnyNPCs(NPCID.MoonLordCore) && Main.npc[NPC.FindFirstNPC(NPCID.MoonLordCore)].Distance(Main.LocalPlayer.Center) <= 6400 ||
+               BossChecklistIntegration.isCalamitasCloneAlive() ||
+               BossChecklistIntegration.isYharonAlive();
         // Add more boss NPCs as needed
     }
     public static int GetDebuffCount(Player player)
@@ -255,7 +216,7 @@ public class NurseHotkeyPlayer : ModPlayer
 
     private static float GetCalamityBossMultiplier()
     {
-        float multiplier = .9499f;
+        float multiplier = .945f;
 
 
         if (NPC.downedBoss1) // Eye of Cthulhu
@@ -435,8 +396,6 @@ public class NurseHotkeyPlayer : ModPlayer
         }
     }
 
-
-
     public void NurseHeal()
     {
         NPC nurse = Main.npc[NPC.FindFirstNPC(NPCID.Nurse)];
@@ -594,8 +553,87 @@ public class NurseHotkeyPlayer : ModPlayer
 
             int Wallet = GetPlayerTotalMoney(Main.myPlayer);
             int intCost = Convert.ToInt32(cost);
+            bool shouldHeal = false;
 
-            if (Wallet >= cost && debuffCount > 0 | healthMissing > 0)
+            if(shouldHeal)
+
+
+            if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck() == true && Wallet >= cost && debuffCount > 1 | healthMissing > 0)
+            {
+                CureAllDebuffs(Player); //debuffs destroyed
+                Player.BuyItem(intCost); //pay up 
+                int healAmount = healthMissing; //ok how much this mothasucka need
+                Player.statLife += healAmount; //puts the item in the bag
+
+                if (healAmount > 0) //needed for healing debuffs and no health (i.e. stink potion)
+                {
+                    Player.HealEffect(healAmount); //"ok here u go sir, have a nice day :)"
+                }
+
+                //all this shit just calculates your money then gives you a message 
+                int remainingMoney = (int)cost;
+                int platRemaining = remainingMoney / 1000000;
+                int goldRemaining = (remainingMoney % 1000000) / 10000;
+                int silverRemaining = (remainingMoney % 10000) / 100;
+                int copperRemaining = remainingMoney % 100;
+
+                if (platRemaining > 0)
+                {
+                    Main.NewText($"You just spent {platRemaining} platinum {goldRemaining} gold {silverRemaining} silver and {copperRemaining} copper on quick healing.");
+                }
+                if (goldRemaining > 0 && platRemaining == 0)
+                {
+                    Main.NewText($"You just spent {goldRemaining} gold {silverRemaining} silver and {copperRemaining} copper for healing.");
+                }
+                if (silverRemaining > 0 && platRemaining == 0 && goldRemaining == 0)
+                {
+                    Main.NewText($"You just spent {silverRemaining} silver and {copperRemaining} copper on quick healing.");
+                }
+                if (cost > 0 && silverRemaining == 0 && platRemaining == 0 && goldRemaining == 0)
+                {
+                    Main.NewText($"You just spent {remainingMoney} copper on quick healing.");
+                }
+            }
+
+            else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && !bossCombatCheck() && Wallet >= cost && debuffCount > 0 | healthMissing > 0)
+                {
+                    CureAllDebuffs(Player); //debuffs destroyed
+                    Player.BuyItem(intCost); //pay up 
+                    int healAmount = healthMissing; //ok how much this mothasucka need
+                    Player.statLife += healAmount; //puts the item in the bag
+
+                    if (healAmount > 0) //needed for healing debuffs and no health (i.e. stink potion)
+                    {
+                        Player.HealEffect(healAmount); //"ok here u go sir, have a nice day :)"
+                    }
+
+                    //all this shit just calculates your money then gives you a message 
+                    int remainingMoney = (int)cost;
+                    int platRemaining = remainingMoney / 1000000;
+                    int goldRemaining = (remainingMoney % 1000000) / 10000;
+                    int silverRemaining = (remainingMoney % 10000) / 100;
+                    int copperRemaining = remainingMoney % 100;
+
+                    if (platRemaining > 0)
+                    {
+                        Main.NewText($"You just spent {platRemaining} platinum {goldRemaining} gold {silverRemaining} silver and {copperRemaining} copper on quick healing.");
+                    }
+                    if (goldRemaining > 0 && platRemaining == 0)
+                    {
+                        Main.NewText($"You just spent {goldRemaining} gold {silverRemaining} silver and {copperRemaining} copper for healing.");
+                    }
+                    if (silverRemaining > 0 && platRemaining == 0 && goldRemaining == 0)
+                    {
+                        Main.NewText($"You just spent {silverRemaining} silver and {copperRemaining} copper on quick healing.");
+                    }
+                    if (cost > 0 && silverRemaining == 0 && platRemaining == 0 && goldRemaining == 0)
+                    {
+                        Main.NewText($"You just spent {remainingMoney} copper on quick healing.");
+                    }
+                }
+
+
+            else if (Wallet >= cost && !ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && debuffCount > 0 | healthMissing > 0)
             {
                 CureAllDebuffs(Player); //debuffs destroyed
                 Player.BuyItem(intCost); //pay up 
@@ -641,7 +679,12 @@ public class NurseHotkeyPlayer : ModPlayer
             {
                 Main.NewText("Health full.");
             }
-            else
+            
+            else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck() == true && debuffCount == 1)
+            {
+                Main.NewText("Health full.");
+            }
+                else
             {
                 Main.NewText("Couldn't quick heal.");
             }
