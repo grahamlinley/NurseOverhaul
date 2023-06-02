@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Linq;
-using Microsoft.Xna.Framework;
-using rail;
 using Terraria;
 using Terraria.GameInput;
 using Terraria.ID;
@@ -47,7 +45,12 @@ public class NurseHotkeyPlayer : ModPlayer
 
         float preCost = (baseCost * difficultyFactor); // Calculate the total cost of the heal based on the difficulty factor
 
-        if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod"))
+        if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck() == true && debuffCount -1 > 0)
+        {
+            preCost += (debuffCount - 1) * 200;
+        }
+
+        else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod"))
         {
             preCost += debuffCount * 200; // Add the debuff cost to the total cost, multiplied by 1 silver per debuff
         }
@@ -63,247 +66,72 @@ public class NurseHotkeyPlayer : ModPlayer
                                                                                                           //NOTE: Not sure if the prices are inaacurate on that page or if the scaling is different, but values derived below are hand tested on a max happiness Nurse and accurate for these 4 tests:
                                                                                                           //1. Max health 1 debuff 2. Missing 10 health 3. Missing 490 health (or whatever other large number your mod uses) 4. Missing somewhere in between those two number to test float accuracy
         {
-            if (NPC.downedBoss1) // Eye of Cthulhu defeated
+            if (NPC.downedBoss1 && !NPC.downedBoss3 && !Main.hardMode && !NPC.downedMechBossAny && !NPC.downedPlantBoss && !BossChecklistIntegration.isCalamitasCloneDefeated() && !NPC.downedGolemBoss && !NPC.downedFishron
+                && !BossChecklistIntegration.isPlaguebringerDefeated() && !BossChecklistIntegration.isRavagerDefeated() && !NPC.downedMoonlord && !BossChecklistIntegration.isProvidenceDefeated() &&
+                !BossChecklistIntegration.isDevourerDefeated() && !BossChecklistIntegration.isYharonDefeated()) // Eye of Cthulhu defeated
             {
                 multipliedCost += 300; // Increased price (3 silver base). Note this differs from what is on the Calamity wiki for whatever reason. Base prices from here are hand calculated
             }
 
 
-            if (NPC.downedBoss3) // Skeletron defeated 
+            if (NPC.downedBoss3 && !Main.hardMode && !NPC.downedMechBossAny && !NPC.downedPlantBoss && !BossChecklistIntegration.isCalamitasCloneDefeated() && !NPC.downedGolemBoss && !NPC.downedFishron
+                && !BossChecklistIntegration.isPlaguebringerDefeated() && !BossChecklistIntegration.isRavagerDefeated() && !NPC.downedMoonlord && !BossChecklistIntegration.isProvidenceDefeated() &&
+                !BossChecklistIntegration.isDevourerDefeated() && !BossChecklistIntegration.isYharonDefeated()) // Skeletron defeated 
             {
-                multipliedCost += 600; // Increased price (9 silver base)
-
-                if (!NPC.downedBoss1) //these nested ifs check if the player has skipped bosses then applies additional cost 
-                {
-                    multipliedCost += 300;
-                }
+                multipliedCost += 900; // Increased price (9 silver base)
             }
 
-            if (Main.hardMode)
+            if (Main.hardMode && !NPC.downedMechBossAny && !NPC.downedPlantBoss && !BossChecklistIntegration.isCalamitasCloneDefeated() && !NPC.downedGolemBoss && !NPC.downedFishron
+                && !BossChecklistIntegration.isPlaguebringerDefeated() && !BossChecklistIntegration.isRavagerDefeated() && !NPC.downedMoonlord && !BossChecklistIntegration.isProvidenceDefeated() &&
+                !BossChecklistIntegration.isDevourerDefeated() && !BossChecklistIntegration.isYharonDefeated())
             {
-                multipliedCost += 1200; // 21 silver base
-
-                if (!NPC.downedBoss1)
-                {
-                    multipliedCost += 300;
-                }
-                if(!NPC.downedBoss3)
-                {
-                    multipliedCost += 600;
-                }
+                multipliedCost += 2100; // 21 silver base
             }
 
-            if (NPC.downedMechBossAny) // At least one Mechanical Boss defeated
+            if (NPC.downedMechBossAny && !NPC.downedPlantBoss && !BossChecklistIntegration.isCalamitasCloneDefeated() && !NPC.downedGolemBoss && !NPC.downedFishron
+                | !BossChecklistIntegration.isPlaguebringerDefeated() && !BossChecklistIntegration.isRavagerDefeated() && !NPC.downedMoonlord && !BossChecklistIntegration.isProvidenceDefeated() &&
+                !BossChecklistIntegration.isDevourerDefeated() && !BossChecklistIntegration.isYharonDefeated()) // At least one Mechanical Boss defeated
             {
-                multipliedCost += 1600; // 37 silver base
-
-                if (!Main.hardMode)
-                {
-                    multipliedCost += 1200;
-                }
-                if (!NPC.downedBoss1)
-                {
-                    multipliedCost += 300;
-                }
-                if (!NPC.downedBoss3)
-                {
-                    multipliedCost += 600;
-                }
+                multipliedCost += 3700; // 37 silver base
             }
 
-            if (NPC.downedPlantBoss || BossChecklistIntegration.isCalamitasCloneDefeated()) // Plantera defeated
+            if (NPC.downedPlantBoss | BossChecklistIntegration.isCalamitasCloneDefeated() && !NPC.downedGolemBoss && !NPC.downedFishron
+                && !BossChecklistIntegration.isPlaguebringerDefeated() && !BossChecklistIntegration.isRavagerDefeated() && !NPC.downedMoonlord && !BossChecklistIntegration.isProvidenceDefeated() &&
+                !BossChecklistIntegration.isDevourerDefeated() && !BossChecklistIntegration.isYharonDefeated()) // Plantera defeated
             {
-                multipliedCost += 2000; // 57 silver base
-                
-                if(!NPC.downedMechBossAny)
-                {
-                    multipliedCost += 1600;
-                }
-                if (!Main.hardMode)
-                {
-                    multipliedCost += 1200;
-                }
-                if (!NPC.downedBoss1)
-                {
-                    multipliedCost += 300;
-                }
-                if (!NPC.downedBoss3)
-                {
-                    multipliedCost += 600;
-                }
+                multipliedCost += 5700; // 57 silver base
             }
 
-            if (NPC.downedGolemBoss) // Golem defeated
+            if (NPC.downedGolemBoss && !NPC.downedFishron && !BossChecklistIntegration.isPlaguebringerDefeated() && !BossChecklistIntegration.isRavagerDefeated()
+                && !NPC.downedMoonlord && !BossChecklistIntegration.isProvidenceDefeated() && !BossChecklistIntegration.isDevourerDefeated() && !BossChecklistIntegration.isYharonDefeated()) // Golem defeated
             {
-                multipliedCost += 3000; // 87 silver base
-                if (!NPC.downedPlantBoss)
-                {
-                    multipliedCost += 2000;
-                }
-                if (!NPC.downedMechBossAny)
-                {
-                    multipliedCost += 1600;
-                }
-                if (!Main.hardMode)
-                {
-                    multipliedCost += 1200;
-                }
-                if (!NPC.downedBoss1)
-                {
-                    multipliedCost += 300;
-                }
-                if (!NPC.downedBoss3)
-                {
-                    multipliedCost += 600;
-                }
+                multipliedCost += 8700; // 87 silver base
             }
 
-            if (NPC.downedFishron || BossChecklistIntegration.isPlaguebringerDefeated() || BossChecklistIntegration.isRavagerDefeated()) // Duke Fishron/Plaguebringer Goliath/ Ravager defeated
-
+            if (NPC.downedFishron | BossChecklistIntegration.isPlaguebringerDefeated() | BossChecklistIntegration.isRavagerDefeated() && !NPC.downedMoonlord && !BossChecklistIntegration.isProvidenceDefeated()
+                && !BossChecklistIntegration.isDevourerDefeated() && !BossChecklistIntegration.isYharonDefeated()) // Duke Fishron/Plaguebringer Goliath/ Ravager defeated
             {
-                multipliedCost += 3000; // 1 gold 17 silver base
-                if(!NPC.downedGolemBoss)
-                {
-                    multipliedCost += 3000;
-                }
-                if (!NPC.downedPlantBoss)
-                {
-                    multipliedCost += 2000;
-                }
-                if (!NPC.downedMechBossAny)
-                {
-                    multipliedCost += 1600;
-                }
-                if (!Main.hardMode)
-                {
-                    multipliedCost += 1200;
-                }
-                if (!NPC.downedBoss1)
-                {
-                    multipliedCost += 300;
-                }
-                if (!NPC.downedBoss3)
-                {
-                    multipliedCost += 600;
-                }
+                multipliedCost += 11700; // 1 gold 17 silver base
             }
 
-            if (NPC.downedMoonlord) // Moon Lord defeated
+            if (NPC.downedMoonlord && !BossChecklistIntegration.isProvidenceDefeated() && !BossChecklistIntegration.isDevourerDefeated() && !BossChecklistIntegration.isYharonDefeated()) // Moon Lord defeated
             {
-                multipliedCost += 8000; // 1 gold 97 silver base
-
-                if(!NPC.downedFishron)
-                {
-                    multipliedCost += 3000;
-                }
-                if (!NPC.downedGolemBoss)
-                {
-                    multipliedCost += 3000;
-                }
-                if (!NPC.downedPlantBoss)
-                {
-                    multipliedCost += 2000;
-                }
-                if (!NPC.downedMechBossAny)
-                {
-                    multipliedCost += 1600;
-                }
-                if (!Main.hardMode)
-                {
-                    multipliedCost += 1200;
-                }
-                if (!NPC.downedBoss1)
-                {
-                    multipliedCost += 300;
-                }
-                if (!NPC.downedBoss3)
-                {
-                    multipliedCost += 600;
-                }
+                multipliedCost += 19700; // 1 gold 97 silver base
             }
 
-            if (BossChecklistIntegration.isProvidenceDefeated()) //Providence defeated
+            if (BossChecklistIntegration.isProvidenceDefeated() && !BossChecklistIntegration.isDevourerDefeated() && !BossChecklistIntegration.isYharonDefeated()) //Providence defeated
             {
-                multipliedCost += 12000; //3 gold 20 silver base
-                if(!NPC.downedMoonlord)
-                {
-                    multipliedCost += 8000;
-                }
-                if (!NPC.downedFishron)
-                {
-                    multipliedCost += 3000;
-                }
-                if (!NPC.downedGolemBoss)
-                {
-                    multipliedCost += 3000;
-                }
-                if (!NPC.downedPlantBoss)
-                {
-                    multipliedCost += 2000;
-                }
-                if (!NPC.downedMechBossAny)
-                {
-                    multipliedCost += 1600;
-                }
-                if (!Main.hardMode)
-                {
-                    multipliedCost += 1200;
-                }
-                if (!NPC.downedBoss1)
-                {
-                    multipliedCost += 300;
-                }
-                if (!NPC.downedBoss3)
-                {
-                    multipliedCost += 600;
-                }
+                multipliedCost += 32000; //3 gold 20 silver base
             }
-            if (BossChecklistIntegration.isDevourerDefeated())
+            if (BossChecklistIntegration.isDevourerDefeated() && !BossChecklistIntegration.isYharonDefeated())
             {
-                multipliedCost += 28000; //5.97
-
-                if(!BossChecklistIntegration.isProvidenceDefeated())
-                {
-                    multipliedCost += 12000;
-                }
-
-                if (!NPC.downedMoonlord)
-                {
-                    multipliedCost += 8000;
-                }
-                if (!NPC.downedFishron)
-                {
-                    multipliedCost += 3000;
-                }
-                if (!NPC.downedGolemBoss)
-                {
-                    multipliedCost += 3000;
-                }
-                if (!NPC.downedPlantBoss)
-                {
-                    multipliedCost += 2000;
-                }
-                if (!NPC.downedMechBossAny)
-                {
-                    multipliedCost += 1600;
-                }
-                if (!Main.hardMode)
-                {
-                    multipliedCost += 1200;
-                }
-                if (!NPC.downedBoss1)
-                {
-                    multipliedCost += 300;
-                }
-                if (!NPC.downedBoss3)
-                {
-                    multipliedCost += 600;
-                }
+                multipliedCost += 59700; //5.97
             }
             if (BossChecklistIntegration.isYharonDefeated())
             {
-                multipliedCost += 30000; //897
-                if(!BossChecklistIntegration.isRavagerDefeated())
+                multipliedCost += 89700; //897
+                /*
+                if (!BossChecklistIntegration.isRavagerDefeated())
                 {
                     multipliedCost += 28000;
                 }
@@ -316,7 +144,7 @@ public class NurseHotkeyPlayer : ModPlayer
                 {
                     multipliedCost += 8000;
                 }
-                if (!NPC.downedFishron)
+                if (!NPC.downedFishron && !BossChecklistIntegration.isPlaguebringerDefeated() && !BossChecklistIntegration.isRavagerDefeated())
                 {
                     multipliedCost += 3000;
                 }
@@ -324,7 +152,7 @@ public class NurseHotkeyPlayer : ModPlayer
                 {
                     multipliedCost += 3000;
                 }
-                if (!NPC.downedPlantBoss)
+                if (!NPC.downedPlantBoss && !BossChecklistIntegration.isCalamitasCloneDefeated())
                 {
                     multipliedCost += 2000;
                 }
@@ -344,22 +172,30 @@ public class NurseHotkeyPlayer : ModPlayer
                 {
                     multipliedCost += 600;
                 }
+                */
             }
         }
 
-        if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod"))
+        float finalCost;
+
+        if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck() == true)
         {
             multipliedCost += preCost * GetCalamityBossMultiplier();
+            finalCost = multipliedCost * 5;
+        }
+        else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod"))
+        {
+            finalCost = multipliedCost + (preCost * GetCalamityBossMultiplier());
         }
         else
         {
-            multipliedCost += preCost * GetBossMultiplier(); // Multiply the total cost by the boss defeat multiplier
+            finalCost = multipliedCost + (preCost * GetBossMultiplier()); // Multiply the total cost by the boss defeat multiplier
         }
 
-        return multipliedCost;
+        return finalCost;
     }
 
-    public bool CombatCheck()
+    public static bool bossCombatCheck()
     {
         if (Main.LocalPlayer.active && Main.LocalPlayer.GetModPlayer<NurseHotkeyPlayer>().IsPlayerFightingBoss())
         {
@@ -370,22 +206,23 @@ public class NurseHotkeyPlayer : ModPlayer
 
     public bool IsPlayerFightingBoss()
     {
-        return NPC.AnyNPCs(NPCID.KingSlime) ||
-               NPC.AnyNPCs(NPCID.EyeofCthulhu) ||
-               NPC.AnyNPCs(NPCID.EaterofWorldsHead) ||
-               NPC.AnyNPCs(NPCID.BrainofCthulhu) ||
-               NPC.AnyNPCs(NPCID.QueenBee) ||
-               NPC.AnyNPCs(NPCID.SkeletronHead) ||
-               NPC.AnyNPCs(NPCID.WallofFlesh) ||
-               NPC.AnyNPCs(NPCID.TheDestroyer) ||
-               NPC.AnyNPCs(NPCID.SkeletronPrime) ||
-               NPC.AnyNPCs(NPCID.Retinazer) ||
-               NPC.AnyNPCs(NPCID.Spazmatism) ||
-               NPC.AnyNPCs(NPCID.Plantera) ||
-               NPC.AnyNPCs(NPCID.Golem) ||
-               NPC.AnyNPCs(NPCID.DukeFishron) ||
-               NPC.AnyNPCs(NPCID.CultistBoss) ||
-               NPC.AnyNPCs(NPCID.MoonLordCore);
+
+        return NPC.AnyNPCs(NPCID.KingSlime) && Main.npc[NPC.FindFirstNPC(NPCID.KingSlime)].Distance(Main.LocalPlayer.Center) <= 6400 ||
+               NPC.AnyNPCs(NPCID.EyeofCthulhu) && Main.npc[NPC.FindFirstNPC(NPCID.EyeofCthulhu)].Distance(Main.LocalPlayer.Center) <= 6400 ||
+               NPC.AnyNPCs(NPCID.EaterofWorldsHead) && Main.npc[NPC.FindFirstNPC(NPCID.EaterofWorldsHead)].Distance(Main.LocalPlayer.Center) <= 6400 ||
+               NPC.AnyNPCs(NPCID.BrainofCthulhu) && Main.npc[NPC.FindFirstNPC(NPCID.BrainofCthulhu)].Distance(Main.LocalPlayer.Center) <= 6400 ||
+               NPC.AnyNPCs(NPCID.QueenBee) && Main.npc[NPC.FindFirstNPC(NPCID.QueenBee)].Distance(Main.LocalPlayer.Center) <= 6400 ||
+               NPC.AnyNPCs(NPCID.SkeletronHead) && Main.npc[NPC.FindFirstNPC(NPCID.SkeletronHead)].Distance(Main.LocalPlayer.Center) <= 6400 ||
+               NPC.AnyNPCs(NPCID.WallofFlesh) && Main.npc[NPC.FindFirstNPC(NPCID.WallofFlesh)].Distance(Main.LocalPlayer.Center) <= 6400 ||
+               NPC.AnyNPCs(NPCID.TheDestroyer) && Main.npc[NPC.FindFirstNPC(NPCID.TheDestroyer)].Distance(Main.LocalPlayer.Center) <= 6400 ||
+               NPC.AnyNPCs(NPCID.SkeletronPrime) && Main.npc[NPC.FindFirstNPC(NPCID.SkeletronPrime)].Distance(Main.LocalPlayer.Center) <= 6400 ||
+               NPC.AnyNPCs(NPCID.Retinazer) && Main.npc[NPC.FindFirstNPC(NPCID.Retinazer)].Distance(Main.LocalPlayer.Center) <= 6400 ||
+               NPC.AnyNPCs(NPCID.Spazmatism) && Main.npc[NPC.FindFirstNPC(NPCID.Spazmatism)].Distance(Main.LocalPlayer.Center) <= 6400 ||
+               NPC.AnyNPCs(NPCID.Plantera) && Main.npc[NPC.FindFirstNPC(NPCID.Plantera)].Distance(Main.LocalPlayer.Center) <= 6400 ||
+               NPC.AnyNPCs(NPCID.Golem) && Main.npc[NPC.FindFirstNPC(NPCID.Golem)].Distance(Main.LocalPlayer.Center) <= 6400 ||
+               NPC.AnyNPCs(NPCID.DukeFishron) && Main.npc[NPC.FindFirstNPC(NPCID.DukeFishron)].Distance(Main.LocalPlayer.Center) <= 6400 ||
+               NPC.AnyNPCs(NPCID.CultistBoss) && Main.npc[NPC.FindFirstNPC(NPCID.CultistBoss)].Distance(Main.LocalPlayer.Center) <= 6400 ||
+               NPC.AnyNPCs(NPCID.MoonLordCore) && Main.npc[NPC.FindFirstNPC(NPCID.MoonLordCore)].Distance(Main.LocalPlayer.Center) <= 6400;
         // Add more boss NPCs as needed
     }
     public static int GetDebuffCount(Player player)
@@ -403,308 +240,150 @@ public class NurseHotkeyPlayer : ModPlayer
         return debuffCount;
     }
 
+    public bool IsBossAlive(string bossName)
+    {
+        foreach (NPC npc in Main.npc)
+        {
+            if (npc.active && npc.boss && npc.FullName == bossName)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private static float GetCalamityBossMultiplier()
     {
-        float multiplier = .94999f;
+        float multiplier = .9499f;
+
 
         if (NPC.downedBoss1) // Eye of Cthulhu
         {
-            multiplier = 2.8499f;
+            multiplier += 1.9f; //2.8499f
         }
 
         if (NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
         {
-            multiplier = 9.4999f;
+            multiplier += 6.65f; //9.4999f or 6.6491 if 6.65 wrong
+            if (!NPC.downedBoss1)
+            {
+                multiplier += 1.9f;
+            }
         }
 
         if (NPC.downedBoss3 || NPC.downedQueenBee) // Skeletron or Queen Bee
         {
-            multiplier = 23.7499f;
+            multiplier += 14.25f; //23.7499f
+
+            if (!NPC.downedBoss1)
+            {
+                multiplier += 1.9f;
+            }
+            if (!NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
+            {
+                multiplier += 6.65f; //9.4999f or 6.6491 if 6.65 wrong
+            }
         }
 
         if (Main.hardMode) // Wall of Flesh
         {
-            multiplier = 56.9999f;
+            multiplier += 33.25f; //56.9999f
+
+            if (!NPC.downedBoss1)
+            {
+                multiplier += 1.9f;
+            }
+            if (!NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
+            {
+                multiplier += 6.65f; //9.4999f or 6.6491 if 6.65 wrong
+            }
+            if (!NPC.downedBoss3 && !NPC.downedQueenBee)
+            {
+                multiplier += 14.25f;
+            }
         }
 
         if (NPC.downedMechBossAny) //Any mech boss
         {
-            multiplier = 94.9999f;
+            multiplier += 38f; //94.9999f
+
+            if (!Main.hardMode)
+            {
+                multiplier += 33.25f;
+            }
+            if (!NPC.downedBoss1)
+            {
+                multiplier += 1.9f;
+            }
+            if (!NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
+            {
+                multiplier += 6.65f; //9.4999f or 6.6491 if 6.65 wrong
+            }
+            if (!NPC.downedBoss3 && !NPC.downedQueenBee)
+            {
+                multiplier += 14.25f;
+            }
         }
 
-        if (NPC.downedPlantBoss) //Plantera or Calamitas clone
+        if (NPC.downedPlantBoss || BossChecklistIntegration.isCalamitasCloneDefeated()) //Plantera or Calamitas clone
         {
-            multiplier = 142.4999f;
-        }
+            multiplier += 48f; //142.4999f
 
-        if(BossChecklistIntegration.isCalamitasCloneDefeated())
-        {
-            multiplier = 142.4999f;
-
-            if (!NPC.downedBoss1 && !NPC.downedBoss2 && !NPC.downedBoss3 && !Main.hardMode && !NPC.downedMechBossAny && !NPC.downedPlantBoss)
+            if (!NPC.downedMechBossAny)
             {
-                multiplier = .94999f;
+                multiplier += 38;
             }
-
-            /*
-            if (NPC.downedBoss1) // Eye of Cthulhu
+            if (!Main.hardMode)
             {
-                multiplier = 2.8499f;
+                multiplier += 33.25f;
             }
-
-            if (NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
+            if (!NPC.downedBoss1)
             {
-                multiplier = 9.4999f;
+                multiplier += 1.9f;
             }
-
-            if (NPC.downedBoss3 || NPC.downedQueenBee) // Skeletron or Queen Bee
+            if (!NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
             {
-                multiplier = 23.7499f;
+                multiplier += 6.65f; //9.4999f or 6.6491 if 6.65 wrong
             }
-
-            if (Main.hardMode) // Wall of Flesh
+            if (!NPC.downedBoss3 && !NPC.downedQueenBee)
             {
-                multiplier = 56.9999f;
+                multiplier += 14.25f;
             }
-
-            if (NPC.downedMechBossAny) //Any mech boss
-            {
-                multiplier = 94.9999f;
-            }
-            */
         }
 
         if (NPC.downedGolemBoss) // Golem
         {
-            multiplier = 189.9999f;
-        }
+            multiplier += 47f; //
 
-        if (NPC.downedFishron || BossChecklistIntegration.isPlaguebringerDefeated() || BossChecklistIntegration.isRavagerDefeated())
-        {
-            multiplier = 189.9999f;
-
-            if(!NPC.downedBoss1 && !NPC.downedBoss2 && !NPC.downedBoss3 && !Main.hardMode && !NPC.downedMechBossAny && !NPC.downedPlantBoss && !NPC.downedGolemBoss)
+            if (!NPC.downedPlantBoss && !BossChecklistIntegration.isCalamitasCloneDefeated())
             {
-                multiplier = .94999f;
+                multiplier += 48f;
             }
-
-            if (NPC.downedBoss1) // Eye of Cthulhu
+            if (!NPC.downedMechBossAny)
             {
-                multiplier = 2.8499f;
+                multiplier += 38;
             }
-
-            if (NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
+            if (!Main.hardMode)
             {
-                multiplier = 9.4999f;
+                multiplier += 33.25f;
             }
-
-            if (NPC.downedBoss3 || NPC.downedQueenBee) // Skeletron or Queen Bee
+            if (!NPC.downedBoss1)
             {
-                multiplier = 23.7499f;
+                multiplier += 1.9f;
             }
-
-            if (Main.hardMode) // Wall of Flesh
+            if (!NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
             {
-                multiplier = 56.9999f;
+                multiplier += 6.65f; //9.4999f or 6.6491 if 6.65 wrong
             }
-
-            if (NPC.downedMechBossAny) //Any mech boss
+            if (!NPC.downedBoss3 && !NPC.downedQueenBee)
             {
-                multiplier = 94.9999f;
-            }
-
-            if (NPC.downedPlantBoss || BossChecklistIntegration.isCalamitasCloneDefeated()) //Plantera or Calamitas clone
-            {
-                multiplier = 142.4999f;
-            }
-
-            if (NPC.downedGolemBoss) // Golem
-            {
-                multiplier = 189.9999f;
-            }
-            }
-
-        if (NPC.downedMoonlord)
-        {
-            multiplier = 189.9999f;
-
-            if (!NPC.downedBoss1 && !NPC.downedBoss2 && !NPC.downedBoss3 && !Main.hardMode && !NPC.downedMechBossAny && !NPC.downedPlantBoss && !NPC.downedGolemBoss) // && !NPC.downedFishron || !BossChecklistIntegration.isPlaguebringerDefeated() || !BossChecklistIntegration.isRavagerDefeated())
-            {
-                multiplier = .94999f;
-            }
-
-            if (NPC.downedBoss1) // Eye of Cthulhu
-            {
-                multiplier = 2.8499f;
-            }
-
-            if (NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
-            {
-                multiplier = 9.4999f;
-            }
-
-            if (NPC.downedBoss3 || NPC.downedQueenBee) // Skeletron or Queen Bee
-            {
-                multiplier = 23.7499f;
-            }
-
-            if (Main.hardMode) // Wall of Flesh
-            {
-                multiplier = 56.9999f;
-            }
-
-            if (NPC.downedMechBossAny) //Any mech boss
-            {
-                multiplier = 94.9999f;
-            }
-
-            if (NPC.downedPlantBoss || BossChecklistIntegration.isCalamitasCloneDefeated()) //Plantera or Calamitas clone
-            {
-                multiplier = 142.4999f;
-            }
-
-            if (NPC.downedGolemBoss) // Golem
-            {
-                multiplier = 189.9999f;
+                multiplier += 14.25f;
             }
         }
-            if (BossChecklistIntegration.isProvidenceDefeated())
-            {
-                multiplier = 189.9999f;
-            if (!NPC.downedBoss1 && !NPC.downedBoss2 && !NPC.downedBoss3 && !Main.hardMode && !NPC.downedMechBossAny && !NPC.downedPlantBoss && !NPC.downedGolemBoss && !NPC.downedFishron || !BossChecklistIntegration.isPlaguebringerDefeated() || !BossChecklistIntegration.isRavagerDefeated() && !NPC.downedMoonlord)
-            {
-                multiplier = .94999f;
-            }
-
-            if (NPC.downedBoss1) // Eye of Cthulhu
-            {
-                multiplier = 2.8499f;
-            }
-
-            if (NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
-            {
-                multiplier = 9.4999f;
-            }
-
-            if (NPC.downedBoss3 || NPC.downedQueenBee) // Skeletron or Queen Bee
-            {
-                multiplier = 23.7499f;
-            }
-
-            if (Main.hardMode) // Wall of Flesh
-            {
-                multiplier = 56.9999f;
-            }
-
-            if (NPC.downedMechBossAny) //Any mech boss
-            {
-                multiplier = 94.9999f;
-            }
-
-            if (NPC.downedPlantBoss || BossChecklistIntegration.isCalamitasCloneDefeated()) //Plantera or Calamitas clone
-            {
-                multiplier = 142.4999f;
-            }
-
-            if (NPC.downedGolemBoss) // Golem
-            {
-                multiplier = 189.9999f;
-            }
-        }
-
-            if (BossChecklistIntegration.isDevourerDefeated())
-            {
-                multiplier = 189.9999f;
-            if (!NPC.downedBoss1 && !NPC.downedBoss2 && !NPC.downedBoss3 && !Main.hardMode && !NPC.downedMechBossAny && !NPC.downedPlantBoss && !NPC.downedGolemBoss && !NPC.downedFishron || !BossChecklistIntegration.isPlaguebringerDefeated() 
-                || !BossChecklistIntegration.isRavagerDefeated() && !NPC.downedMoonlord && !BossChecklistIntegration.isProvidenceDefeated())
-            {
-                multiplier = .94999f;
-            }
-
-            if (NPC.downedBoss1) // Eye of Cthulhu
-            {
-                multiplier = 2.8499f;
-            }
-
-            if (NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
-            {
-                multiplier = 9.4999f;
-            }
-
-            if (NPC.downedBoss3 || NPC.downedQueenBee) // Skeletron or Queen Bee
-            {
-                multiplier = 23.7499f;
-            }
-
-            if (Main.hardMode) // Wall of Flesh
-            {
-                multiplier = 56.9999f;
-            }
-
-            if (NPC.downedMechBossAny) //Any mech boss
-            {
-                multiplier = 94.9999f;
-            }
-
-            if (NPC.downedPlantBoss || BossChecklistIntegration.isCalamitasCloneDefeated()) //Plantera or Calamitas clone
-            {
-                multiplier = 142.4999f;
-            }
-
-            if (NPC.downedGolemBoss) // Golem
-            {
-                multiplier = 189.9999f;
-            }
-        }
-
-            if (BossChecklistIntegration.isYharonDefeated())
-            {
-                multiplier = 189.9995f;
-            if (!NPC.downedBoss1 && !NPC.downedBoss2 && !NPC.downedBoss3 && !Main.hardMode && !NPC.downedMechBossAny && !NPC.downedPlantBoss && !NPC.downedGolemBoss && !NPC.downedFishron || !BossChecklistIntegration.isPlaguebringerDefeated()
-                || !BossChecklistIntegration.isRavagerDefeated() && !NPC.downedMoonlord && !BossChecklistIntegration.isProvidenceDefeated() && BossChecklistIntegration.isDevourerDefeated())
-            {
-                multiplier = .94999f;
-            }
-
-            if (NPC.downedBoss1) // Eye of Cthulhu
-            {
-                multiplier = 2.8499f;
-            }
-
-            if (NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
-            {
-                multiplier = 9.4999f;
-            }
-
-            if (NPC.downedBoss3 || NPC.downedQueenBee) // Skeletron or Queen Bee
-            {
-                multiplier = 23.7499f;
-            }
-
-            if (Main.hardMode) // Wall of Flesh
-            {
-                multiplier = 56.9999f;
-            }
-
-            if (NPC.downedMechBossAny) //Any mech boss
-            {
-                multiplier = 94.9999f;
-            }
-
-            if (NPC.downedPlantBoss || BossChecklistIntegration.isCalamitasCloneDefeated()) //Plantera or Calamitas clone
-            {
-                multiplier = 142.4999f;
-            }
-
-            if (NPC.downedGolemBoss) // Golem
-            {
-                multiplier = 189.9999f;
-            }
-        }
-
-            return multiplier;
+        return multiplier;
     }
-       
+
 
     private static float GetBossMultiplier()
     {
@@ -763,7 +442,7 @@ public class NurseHotkeyPlayer : ModPlayer
         NPC nurse = Main.npc[NPC.FindFirstNPC(NPCID.Nurse)];
         Player player = Main.LocalPlayer;
 
-        if (nurse != null && Vector2.Distance(Player.Center, nurse.Center) <= 300)
+        if (nurse != null && Vector2.Distance(Player.Center, nurse.Center) <= 6400)
         {
             int healthMissing = Player.statLifeMax2 - Player.statLife;
             float cost = GetHealCost(healthMissing, Player);

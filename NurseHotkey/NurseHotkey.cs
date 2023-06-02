@@ -1,10 +1,8 @@
 //TO DO: 
-// COMBAT CHECK. Current guess is between 6 and 6.1309
+// COMBAT CHECK. need calamity specific active boss checks an then gucci
 // NurseHotkey specific items for range modification. 
-// Nurse Shop for items
 // Specific equipment item slot that will only take NurseHotkey range modification items
 // Piggy bank money count correct and accessed if inventoroy isn't (check on other potential money sources for purchase funding ie Vault)
-// Customizable distance from nurse in config
 // Play Nurse Heal sound effect on button press
 // Hate toggle in config? Manual testing and new methods and logic reconfig. 
 // Find some way to access Nurse happiness and use it to modify price automatically. Would be default in config with love/hate as options
@@ -41,7 +39,6 @@ namespace NurseHotkey
             NurseHealHotkey = null;
         }
     }
-
 
 
     public class BossChecklistIntegration : ModSystem
