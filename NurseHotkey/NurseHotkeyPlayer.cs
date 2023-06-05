@@ -2,11 +2,36 @@
 using System;
 using System.Linq;
 using Terraria;
+using Terraria.GameContent.Personalities;
 using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.GameContent;
+using System.Collections.Generic;
+using static Humanizer.In;
 
 namespace NurseHotkey;
+
+/// <summary> This struct provides access to an NPC type's NPC &amp; Biome relationships. </summary>
+/*
+public readonly struct NPCHappiness
+{
+    public static class ShopHelper
+    {
+        public const float hateValue = -1f;
+        public const float dislikeValue = -.5f;
+        public const float likeValue = .5f;
+        public const float loveValue = 2f;
+    }
+    /// <summary> Allows you to modify the shop price multipliers associated with a (biome/npc type) relationship level. </summary>
+    public static readonly Dictionary<AffectionLevel, float> AffectionLevelToPriceMultiplier = new() {
+        { AffectionLevel.Hate, ShopHelper.hateValue },
+        { AffectionLevel.Dislike, ShopHelper.dislikeValue },
+        { AffectionLevel.Like, ShopHelper.likeValue },
+        { AffectionLevel.Love, ShopHelper.loveValue },
+    };
+}
+*/
 
 
 public class NurseHotkeyPlayer : ModPlayer
@@ -30,6 +55,10 @@ public class NurseHotkeyPlayer : ModPlayer
 
     public static float GetHealCost(int healthMissing, Player player)
     {
+        int nurseNPCId = NPC.FindFirstNPC(NPCID.Nurse);
+        NPC nurseNPC = Main.npc[nurseNPCId];
+        var currentShoppingSettings = Main.ShopHelper.GetShoppingSettings(Main.LocalPlayer, nurseNPC);
+        float nurseHappinessAdjustment = (float)currentShoppingSettings.PriceAdjustment;
         float difficultyFactor = 1; // Set the difficulty factor to 1 by default
         float baseCost = healthMissing;
         float debuffCount = GetDebuffCount(player); // Get the count of debuffs for the player
@@ -47,6 +76,7 @@ public class NurseHotkeyPlayer : ModPlayer
         }
 
         float preCost = (baseCost * difficultyFactor); // Calculate the total cost of the heal based on the difficulty factor
+
 
         if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) == true && debuffCount - 1 > 0)
         {
