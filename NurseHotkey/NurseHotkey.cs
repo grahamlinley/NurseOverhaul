@@ -1,16 +1,15 @@
 //TO DO: 
-// COMBAT CHECK. need calamity specific active boss checks an then gucci
-// NurseHotkey specific items for range modification. 
+// NurseHotkey specific items for range modification. Just need recipes now and checks that modify range in nhplayer
 // Specific equipment item slot that will only take NurseHotkey range modification items
 // Piggy bank money count correct and accessed if inventoroy isn't (check on other potential money sources for purchase funding ie Vault)
 // Play Nurse Heal sound effect on button press
 // Hate toggle in config? Manual testing and new methods and logic reconfig. 
 // Find some way to access Nurse happiness and use it to modify price automatically. Would be default in config with love/hate as options
-// Icon for tmod
+// Icon for tmod and item sprites 
 // readme
 // DEBUG. Found error when stacking to chest + some other places (spawned something in and got an error, might be unrelated). Check log trace
 // Dialogue for how much you spent at the nurse (button in box? maybe add total spent next to money just spent. could be too cluttery though)
-// Stretch: Maybe resprite or just an animation when you press the hotkey? Would be funny for like an Ana type character that shoots a healing dart at you to heal you past a certain range
+// Stretch: Maybe resprite or just an animation when you press the hotkey? Would be funny for like an Ana type character that shoots a healing dart at you to heal you past a certain range. Could add when glimmer introduced
 
 using System;
 using System.Collections.Generic;
@@ -27,15 +26,18 @@ namespace NurseHotkey
 {
     public class NurseHotkey : Mod
     {
+        //vessel for keybind
         internal static ModKeybind NurseHealHotkey;
 
         public override void Load()
         {
+            //set keybind
             NurseHealHotkey = KeybindLoader.RegisterKeybind(this, "Heal in range of Nurse", "G");
         }
 
         public override void Unload()
         {
+            //unload mod
             NurseHealHotkey = null;
         }
     }
@@ -43,6 +45,8 @@ namespace NurseHotkey
 
     public class BossChecklistIntegration : ModSystem
     {
+        //Bosschecklist integration for checking Calamity boss kills 
+
         private static readonly Version BossChecklistAPIVersion = new Version(1, 1);
         public class BossChecklistBossInfo
         {
@@ -122,56 +126,13 @@ namespace NurseHotkey
             bossInfos.Clear();
         }
 
-        public static float DownedBossProgress()
-        {
-            if (bossInfos.Count == 0)
-                return 0;
+        //end of integration code
 
-            return (float)bossInfos.Count(x => x.Value.downed()) / bossInfos.Count();
-        }
-
-        public static bool BossDowned(string Providence) => bossInfos.TryGetValue(Providence, out var bossInfo) ? bossInfo.downed() : false;
-
-        public static bool isCalamitasCloneAlive()
-        {
-            if (!IntegrationSuccessful)
-            {
-                return false;
-            }
-            string calamitasCloneKey = "CalamityMod The Calamitas Clone";
-
-            if(bossInfos.TryGetValue(calamitasCloneKey, out BossChecklistBossInfo bossinfo))
-            {
-                int npcType =NPCID.FromLegacyName(calamitasCloneKey);
-                bool isAlive = NPC.AnyNPCs(npcType);
-                return isAlive;
-            }
-            return false;
-        }
-
-        public static bool isYharonAlive()
-        {
-            if (!IntegrationSuccessful)
-            {
-                return false;
-            }
-            string yharonKey = "CalamityMod Yharon";
-
-            if (bossInfos.TryGetValue(yharonKey, out BossChecklistBossInfo bossinfo))
-            {
-                int npcType = NPCID.FromLegacyName(yharonKey);
-                bool isAlive = NPC.AnyNPCs(npcType);
-                return isAlive;
-            }
-            return false;
-        }
-
-
-
+        //checks if calamitas is dead
         public static bool isCalamitasCloneDefeated()
         {
             // Check if integration with Boss Checklist was successful
-            if (!BossChecklistIntegration.IntegrationSuccessful)
+            if (!IntegrationSuccessful)
             {
                 // Integration was not successful, handle the error or return an appropriate value
                 return false;
@@ -183,7 +144,7 @@ namespace NurseHotkey
             // Check if the bossInfos dictionary contains the boss key
             if (bossInfos.TryGetValue(calamatisCloneKey, out BossChecklistBossInfo bossInfo))
             {
-                // Boss info for CalamityMod Providence is found
+                // Boss info for CalamityMod Calmitas Clone is found
 
                 // Check if the boss has been defeated by invoking the downed function
                 bool isDefeated = bossInfo.downed();
@@ -191,179 +152,92 @@ namespace NurseHotkey
                 return isDefeated;
             }
 
-            // Boss info for CalamityMod Providence is not found, handle the error or return an appropriate value
+            // Boss info for CalamityMod Calamitas Clone is not found, handle the error or return an appropriate value
             return false;
         }
 
         public static bool isPlaguebringerDefeated()
         {
-            // Check if integration with Boss Checklist was successful
-            if (!BossChecklistIntegration.IntegrationSuccessful)
+
+            if (!IntegrationSuccessful)
             {
-                // Integration was not successful, handle the error or return an appropriate value
                 return false;
             }
 
-            // Boss key for CalamityMod Providence
             string plaguebringerKey = "CalamityMod Plaguebringer Goliath";
 
-            // Check if the bossInfos dictionary contains the boss key
             if (bossInfos.TryGetValue(plaguebringerKey, out BossChecklistBossInfo bossInfo))
             {
-                // Boss info for CalamityMod Providence is found
-
-                // Check if the boss has been defeated by invoking the downed function
                 bool isDefeated = bossInfo.downed();
-
                 return isDefeated;
             }
-
-            // Boss info for CalamityMod Providence is not found, handle the error or return an appropriate value
             return false;
         }
 
         public static bool isRavagerDefeated()
         {
-            // Check if integration with Boss Checklist was successful
-            if (!BossChecklistIntegration.IntegrationSuccessful)
+            if (!IntegrationSuccessful)
             {
-                // Integration was not successful, handle the error or return an appropriate value
                 return false;
             }
 
-            // Boss key for CalamityMod Providence
             string ravagerKey = "CalamityMod Ravager";
 
-            // Check if the bossInfos dictionary contains the boss key
             if (bossInfos.TryGetValue(ravagerKey, out BossChecklistBossInfo bossInfo))
             {
-                // Boss info for CalamityMod Providence is found
-
-                // Check if the boss has been defeated by invoking the downed function
                 bool isDefeated = bossInfo.downed();
-
                 return isDefeated;
             }
-
-            // Boss info for CalamityMod Providence is not found, handle the error or return an appropriate value
             return false;
         }
 
         public static bool isProvidenceDefeated()
         {
-            // Check if integration with Boss Checklist was successful
-            if (!BossChecklistIntegration.IntegrationSuccessful)
+            if (!IntegrationSuccessful)
             {
-                // Integration was not successful, handle the error or return an appropriate value
                 return false;
             }
-
-            // Boss key for CalamityMod Providence
             string providenceKey = "CalamityMod Providence";
 
-            // Check if the bossInfos dictionary contains the boss key
             if (bossInfos.TryGetValue(providenceKey, out BossChecklistBossInfo bossInfo))
             {
-                // Boss info for CalamityMod Providence is found
-
-                // Check if the boss has been defeated by invoking the downed function
                 bool isDefeated = bossInfo.downed();
-
                 return isDefeated;
             }
-
-            // Boss info for CalamityMod Providence is not found, handle the error or return an appropriate value
             return false;
         }
 
         public static bool isDevourerDefeated()
         {
-            // Check if integration with Boss Checklist was successful
-            if (!BossChecklistIntegration.IntegrationSuccessful)
+            if (!IntegrationSuccessful)
             {
-                // Integration was not successful, handle the error or return an appropriate value
                 return false;
             }
 
-            // Boss key for CalamityMod Providence
             string devourerKey = "CalamityMod Devourer of Gods";
 
-            // Check if the bossInfos dictionary contains the boss key
             if (bossInfos.TryGetValue(devourerKey, out BossChecklistBossInfo bossInfo))
             {
-                // Boss info for CalamityMod Providence is found
-
-                // Check if the boss has been defeated by invoking the downed function
                 bool isDefeated = bossInfo.downed();
-
                 return isDefeated;
             }
-
-            // Boss info for CalamityMod Providence is not found, handle the error or return an appropriate value
             return false;
         }
 
         public static bool isYharonDefeated()
         {
-            // Check if integration with Boss Checklist was successful
-            if (!BossChecklistIntegration.IntegrationSuccessful)
+            if (!IntegrationSuccessful)
             {
-                // Integration was not successful, handle the error or return an appropriate value
                 return false;
             }
-
-            // Boss key for CalamityMod Providence
             string yharonKey = "CalamityMod Yharon";
 
-            // Check if the bossInfos dictionary contains the boss key
             if (bossInfos.TryGetValue(yharonKey, out BossChecklistBossInfo bossInfo))
             {
-                // Boss info for CalamityMod Providence is found
-
-                // Check if the boss has been defeated by invoking the downed function
                 bool isDefeated = bossInfo.downed();
-
                 return isDefeated;
             }
-
-            // Boss info for CalamityMod Providence is not found, handle the error or return an appropriate value
             return false;
-        }
-    }
-
-
-    public class NurseShop : GlobalNPC
-    {
-        public void SetChatButtons(ref string button, ref string button2, ref string button3, ref string button4)
-        {
-            button = "Heal";
-            button2 = "Close";
-            button3 = "Happiness";
-            button4 = "Shop";
-        }
-
-        public static void OnChatButtonClicked(NPC npc, bool firstButton, ref bool shop, Player player)
-        {
-
-            if (firstButton)
-            {
-                //NurseHotkeyPlayerSettings.NurseHeal();
-            }
-        }
-        public override void SetupShop(int type, Chest shop, ref int nextSlot)
-        {
-            if (type == NPCID.Nurse)
-            {
-                // Add items to the Nurse's shop
-                shop.item[nextSlot].SetDefaults(ItemID.HealingPotion);
-                shop.item[nextSlot].value = Item.buyPrice(0, 0, 10, 0); // Set custom price for Healing Potion
-                nextSlot++;
-
-                // Add more items as needed with custom prices
-                shop.item[nextSlot].SetDefaults(ItemID.ManaPotion);
-                shop.item[nextSlot].value = Item.buyPrice(0, 0, 20, 0); // Set custom price for Mana Potion
-                nextSlot++;
-            }
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using Terraria;
 using Terraria.GameInput;
 using Terraria.ID;
@@ -34,6 +33,9 @@ public class NurseHotkeyPlayer : ModPlayer
         float difficultyFactor = 1; // Set the difficulty factor to 1 by default
         float baseCost = healthMissing;
         float debuffCount = GetDebuffCount(player); // Get the count of debuffs for the player
+        float bossRange = 6400f; // Range of 6400 units
+        bool isBossInRange = bossCombatCheck(bossRange);
+
 
         if (Main.expertMode)
         {
@@ -46,7 +48,7 @@ public class NurseHotkeyPlayer : ModPlayer
 
         float preCost = (baseCost * difficultyFactor); // Calculate the total cost of the heal based on the difficulty factor
 
-        if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck() == true && debuffCount - 1 > 0)
+        if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) == true && debuffCount - 1 > 0)
         {
             preCost += (debuffCount - 1) * 200;
         }
@@ -124,6 +126,7 @@ public class NurseHotkeyPlayer : ModPlayer
             {
                 multipliedCost += 32000; //3 gold 20 silver base
             }
+
             if (BossChecklistIntegration.isDevourerDefeated() && !BossChecklistIntegration.isYharonDefeated())
             {
                 multipliedCost += 59700; //5.97
@@ -136,7 +139,7 @@ public class NurseHotkeyPlayer : ModPlayer
 
         float finalCost;
 
-        if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck() == true && debuffCount > 1)
+        if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) == true && debuffCount > 1)
         {
             multipliedCost += preCost * GetCalamityBossMultiplier();
             finalCost = multipliedCost * 5;
@@ -153,38 +156,29 @@ public class NurseHotkeyPlayer : ModPlayer
         return finalCost;
     }
 
-    public static bool bossCombatCheck()
+    public static bool bossCombatCheck(float range)
     {
-        if (Main.LocalPlayer.active && Main.LocalPlayer.GetModPlayer<NurseHotkeyPlayer>().IsPlayerFightingBoss())
+        Player player = Main.LocalPlayer;
+
+        foreach (NPC npc in Main.npc)
         {
-            return true;
+            // Check if the NPC is a boss and if it's still active
+            if (npc.active && npc.boss && npc.life > 0)
+            {
+                // Calculate the distance between the boss and the player
+                float distance = Vector2.Distance(npc.position, player.position);
+
+                // Check if the boss is within the specified range
+                if (distance <= range)
+                {
+                    // Boss found within range
+                    return true;
+                }
+            }
         }
+
+        // No boss found within range
         return false;
-    }
-
-
-    public bool IsPlayerFightingBoss()
-    {
-
-        return NPC.AnyNPCs(NPCID.KingSlime) && Main.npc[NPC.FindFirstNPC(NPCID.KingSlime)].Distance(Main.LocalPlayer.Center) <= 6400 ||
-               NPC.AnyNPCs(NPCID.EyeofCthulhu) && Main.npc[NPC.FindFirstNPC(NPCID.EyeofCthulhu)].Distance(Main.LocalPlayer.Center) <= 6400 ||
-               NPC.AnyNPCs(NPCID.EaterofWorldsHead) && Main.npc[NPC.FindFirstNPC(NPCID.EaterofWorldsHead)].Distance(Main.LocalPlayer.Center) <= 6400 ||
-               NPC.AnyNPCs(NPCID.BrainofCthulhu) && Main.npc[NPC.FindFirstNPC(NPCID.BrainofCthulhu)].Distance(Main.LocalPlayer.Center) <= 6400 ||
-               NPC.AnyNPCs(NPCID.QueenBee) && Main.npc[NPC.FindFirstNPC(NPCID.QueenBee)].Distance(Main.LocalPlayer.Center) <= 6400 ||
-               NPC.AnyNPCs(NPCID.SkeletronHead) && Main.npc[NPC.FindFirstNPC(NPCID.SkeletronHead)].Distance(Main.LocalPlayer.Center) <= 6400 ||
-               NPC.AnyNPCs(NPCID.WallofFlesh) && Main.npc[NPC.FindFirstNPC(NPCID.WallofFlesh)].Distance(Main.LocalPlayer.Center) <= 6400 ||
-               NPC.AnyNPCs(NPCID.TheDestroyer) && Main.npc[NPC.FindFirstNPC(NPCID.TheDestroyer)].Distance(Main.LocalPlayer.Center) <= 6400 ||
-               NPC.AnyNPCs(NPCID.SkeletronPrime) && Main.npc[NPC.FindFirstNPC(NPCID.SkeletronPrime)].Distance(Main.LocalPlayer.Center) <= 6400 ||
-               NPC.AnyNPCs(NPCID.Retinazer) && Main.npc[NPC.FindFirstNPC(NPCID.Retinazer)].Distance(Main.LocalPlayer.Center) <= 6400 ||
-               NPC.AnyNPCs(NPCID.Spazmatism) && Main.npc[NPC.FindFirstNPC(NPCID.Spazmatism)].Distance(Main.LocalPlayer.Center) <= 6400 ||
-               NPC.AnyNPCs(NPCID.Plantera) && Main.npc[NPC.FindFirstNPC(NPCID.Plantera)].Distance(Main.LocalPlayer.Center) <= 6400 ||
-               NPC.AnyNPCs(NPCID.Golem) && Main.npc[NPC.FindFirstNPC(NPCID.Golem)].Distance(Main.LocalPlayer.Center) <= 6400 ||
-               NPC.AnyNPCs(NPCID.DukeFishron) && Main.npc[NPC.FindFirstNPC(NPCID.DukeFishron)].Distance(Main.LocalPlayer.Center) <= 6400 ||
-               NPC.AnyNPCs(NPCID.CultistBoss) && Main.npc[NPC.FindFirstNPC(NPCID.CultistBoss)].Distance(Main.LocalPlayer.Center) <= 6400 ||
-               NPC.AnyNPCs(NPCID.MoonLordCore) && Main.npc[NPC.FindFirstNPC(NPCID.MoonLordCore)].Distance(Main.LocalPlayer.Center) <= 6400 ||
-               BossChecklistIntegration.isCalamitasCloneAlive() ||
-               BossChecklistIntegration.isYharonAlive();
-        // Add more boss NPCs as needed
     }
     public static int GetDebuffCount(Player player)
     {
@@ -216,7 +210,7 @@ public class NurseHotkeyPlayer : ModPlayer
 
     private static float GetCalamityBossMultiplier()
     {
-        float multiplier = .945f;
+        float multiplier = .949f;
 
 
         if (NPC.downedBoss1) // Eye of Cthulhu
@@ -553,12 +547,8 @@ public class NurseHotkeyPlayer : ModPlayer
 
             int Wallet = GetPlayerTotalMoney(Main.myPlayer);
             int intCost = Convert.ToInt32(cost);
-            bool shouldHeal = false;
 
-            if(shouldHeal)
-
-
-            if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck() == true && Wallet >= cost && debuffCount > 1 | healthMissing > 0)
+            if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) && Wallet >= cost && debuffCount > 1 | healthMissing > 0)
             {
                 CureAllDebuffs(Player); //debuffs destroyed
                 Player.BuyItem(intCost); //pay up 
@@ -579,15 +569,71 @@ public class NurseHotkeyPlayer : ModPlayer
 
                 if (platRemaining > 0)
                 {
-                    Main.NewText($"You just spent {platRemaining} platinum {goldRemaining} gold {silverRemaining} silver and {copperRemaining} copper on quick healing.");
+                    string message = $"You just spent {platRemaining} platinum";
+
+                    if(goldRemaining == 0 && silverRemaining ==0 && copperRemaining == 0)
+                    {
+                        message += $" on quick healing";
+                    }
+                    if (goldRemaining > 0 && (silverRemaining > 0 | copperRemaining > 0))
+                    {
+                        message += $" {goldRemaining} gold";
+                    }
+                    if (goldRemaining > 0 && silverRemaining == 0 && copperRemaining == 0)
+                    {
+                        message += $" and {goldRemaining} gold on quick healing.";
+                    }
+                    if (silverRemaining > 0 && copperRemaining > 0)
+                    {
+                        message += $" {silverRemaining} silver";
+                    }
+                    if (silverRemaining > 0 && copperRemaining == 0)
+                    {
+                        message += $" and {silverRemaining} silver on quick healing.";
+                    }
+                    if (copperRemaining > 0)
+                    {
+                        message += $" and {copperRemaining} copper on quick healing.";
+                    }
+
+                    Main.NewText(message);
                 }
+
                 if (goldRemaining > 0 && platRemaining == 0)
                 {
-                    Main.NewText($"You just spent {goldRemaining} gold {silverRemaining} silver and {copperRemaining} copper for healing.");
+                    string message = $"You just spent {goldRemaining} gold";
+
+                    if(silverRemaining == 0 && copperRemaining == 0)
+                    {
+                        message += $" on quick healing.";
+                    }
+                    if (silverRemaining > 0 && copperRemaining > 0)
+                    {
+                        message += $" {silverRemaining} silver";
+                    }
+                    if (silverRemaining > 0 && copperRemaining == 0)
+                    {
+                        message += $" and {silverRemaining} silver on quick healing.";
+                    }
+                    if (copperRemaining > 0)
+                    {
+                        message += $" and {copperRemaining} copper on quick healing.";
+                    }
+                    Main.NewText(message);
                 }
+                
                 if (silverRemaining > 0 && platRemaining == 0 && goldRemaining == 0)
                 {
-                    Main.NewText($"You just spent {silverRemaining} silver and {copperRemaining} copper on quick healing.");
+                    string message = $"You just spent {silverRemaining} silver";
+                    if (copperRemaining == 0)
+                    {
+                        message += " on quick healing.";
+                    }
+                    if (copperRemaining > 0)
+                    {
+                        message += $" and {copperRemaining} copper on quick healing.";
+                    }
+                    Main.NewText(message);
                 }
                 if (cost > 0 && silverRemaining == 0 && platRemaining == 0 && goldRemaining == 0)
                 {
@@ -595,42 +641,98 @@ public class NurseHotkeyPlayer : ModPlayer
                 }
             }
 
-            else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && !bossCombatCheck() && Wallet >= cost && debuffCount > 0 | healthMissing > 0)
+            else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && !bossCombatCheck(6400f) && Wallet >= cost && debuffCount > 0 | healthMissing > 0)
+            {
+                CureAllDebuffs(Player); //debuffs destroyed
+                Player.BuyItem(intCost); //pay up 
+                int healAmount = healthMissing; //ok how much this mothasucka need
+                Player.statLife += healAmount; //puts the item in the bag
+
+                if (healAmount > 0) //needed for healing debuffs and no health (i.e. stink potion)
                 {
-                    CureAllDebuffs(Player); //debuffs destroyed
-                    Player.BuyItem(intCost); //pay up 
-                    int healAmount = healthMissing; //ok how much this mothasucka need
-                    Player.statLife += healAmount; //puts the item in the bag
-
-                    if (healAmount > 0) //needed for healing debuffs and no health (i.e. stink potion)
-                    {
-                        Player.HealEffect(healAmount); //"ok here u go sir, have a nice day :)"
-                    }
-
-                    //all this shit just calculates your money then gives you a message 
-                    int remainingMoney = (int)cost;
-                    int platRemaining = remainingMoney / 1000000;
-                    int goldRemaining = (remainingMoney % 1000000) / 10000;
-                    int silverRemaining = (remainingMoney % 10000) / 100;
-                    int copperRemaining = remainingMoney % 100;
-
-                    if (platRemaining > 0)
-                    {
-                        Main.NewText($"You just spent {platRemaining} platinum {goldRemaining} gold {silverRemaining} silver and {copperRemaining} copper on quick healing.");
-                    }
-                    if (goldRemaining > 0 && platRemaining == 0)
-                    {
-                        Main.NewText($"You just spent {goldRemaining} gold {silverRemaining} silver and {copperRemaining} copper for healing.");
-                    }
-                    if (silverRemaining > 0 && platRemaining == 0 && goldRemaining == 0)
-                    {
-                        Main.NewText($"You just spent {silverRemaining} silver and {copperRemaining} copper on quick healing.");
-                    }
-                    if (cost > 0 && silverRemaining == 0 && platRemaining == 0 && goldRemaining == 0)
-                    {
-                        Main.NewText($"You just spent {remainingMoney} copper on quick healing.");
-                    }
+                    Player.HealEffect(healAmount); //"ok here u go sir, have a nice day :)"
                 }
+
+                //all this shit just calculates your money then gives you a message 
+                int remainingMoney = (int)cost;
+                int platRemaining = remainingMoney / 1000000;
+                int goldRemaining = (remainingMoney % 1000000) / 10000;
+                int silverRemaining = (remainingMoney % 10000) / 100;
+                int copperRemaining = remainingMoney % 100;
+
+                if (platRemaining > 0)
+                {
+                    string message = $"You just spent {platRemaining} platinum";
+
+                    if (goldRemaining == 0 && silverRemaining == 0 && copperRemaining == 0)
+                    {
+                        message += $" on quick healing";
+                    }
+                    if (goldRemaining > 0 && (silverRemaining > 0 | copperRemaining > 0))
+                    {
+                        message += $" {goldRemaining} gold";
+                    }
+                    if (goldRemaining > 0 && silverRemaining == 0 && copperRemaining == 0)
+                    {
+                        message += $" and {goldRemaining} gold on quick healing.";
+                    }
+                    if (silverRemaining > 0 && copperRemaining > 0)
+                    {
+                        message += $" {silverRemaining} silver";
+                    }
+                    if (silverRemaining > 0 && copperRemaining == 0)
+                    {
+                        message += $" and {silverRemaining} silver on quick healing.";
+                    }
+                    if (copperRemaining > 0)
+                    {
+                        message += $" and {copperRemaining} copper on quick healing.";
+                    }
+
+                    Main.NewText(message);
+                }
+
+                if (goldRemaining > 0 && platRemaining == 0)
+                {
+                    string message = $"You just spent {goldRemaining} gold";
+
+                    if (silverRemaining == 0 && copperRemaining == 0)
+                    {
+                        message += $" on quick healing.";
+                    }
+                    if (silverRemaining > 0 && copperRemaining > 0)
+                    {
+                        message += $" {silverRemaining} silver";
+                    }
+                    if (silverRemaining > 0 && copperRemaining == 0)
+                    {
+                        message += $" and {silverRemaining} silver on quick healing.";
+                    }
+                    if (copperRemaining > 0)
+                    {
+                        message += $" and {copperRemaining} copper on quick healing.";
+                    }
+                    Main.NewText(message);
+                }
+
+                if (silverRemaining > 0 && platRemaining == 0 && goldRemaining == 0)
+                {
+                    string message = $"You just spent {silverRemaining} silver";
+                    if (copperRemaining == 0)
+                    {
+                        message += " on quick healing.";
+                    }
+                    if (copperRemaining > 0)
+                    {
+                        message += $" and {copperRemaining} copper on quick healing.";
+                    }
+                    Main.NewText(message);
+                }
+                if (cost > 0 && silverRemaining == 0 && platRemaining == 0 && goldRemaining == 0)
+                {
+                    Main.NewText($"You just spent {remainingMoney} copper on quick healing.");
+                }
+            }
 
 
             else if (Wallet >= cost && !ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && debuffCount > 0 | healthMissing > 0)
@@ -654,15 +756,71 @@ public class NurseHotkeyPlayer : ModPlayer
 
                 if (platRemaining > 0)
                 {
-                    Main.NewText($"You just spent {platRemaining} platinum {goldRemaining} gold {silverRemaining} silver and {copperRemaining} copper on quick healing.");
+                    string message = $"You just spent {platRemaining} platinum";
+
+                    if (goldRemaining == 0 && silverRemaining == 0 && copperRemaining == 0)
+                    {
+                        message += $" on quick healing";
+                    }
+                    if (goldRemaining > 0 && (silverRemaining > 0 | copperRemaining > 0))
+                    {
+                        message += $" {goldRemaining} gold";
+                    }
+                    if (goldRemaining > 0 && silverRemaining == 0 && copperRemaining == 0)
+                    {
+                        message += $" and {goldRemaining} gold on quick healing.";
+                    }
+                    if (silverRemaining > 0 && copperRemaining > 0)
+                    {
+                        message += $" {silverRemaining} silver";
+                    }
+                    if (silverRemaining > 0 && copperRemaining == 0)
+                    {
+                        message += $" and {silverRemaining} silver on quick healing.";
+                    }
+                    if (copperRemaining > 0)
+                    {
+                        message += $" and {copperRemaining} copper on quick healing.";
+                    }
+
+                    Main.NewText(message);
                 }
+
                 if (goldRemaining > 0 && platRemaining == 0)
                 {
-                    Main.NewText($"You just spent {goldRemaining} gold {silverRemaining} silver and {copperRemaining} copper for healing.");
+                    string message = $"You just spent {goldRemaining} gold";
+
+                    if (silverRemaining == 0 && copperRemaining == 0)
+                    {
+                        message += $" on quick healing.";
+                    }
+                    if (silverRemaining > 0 && copperRemaining > 0)
+                    {
+                        message += $" {silverRemaining} silver";
+                    }
+                    if (silverRemaining > 0 && copperRemaining == 0)
+                    {
+                        message += $" and {silverRemaining} silver on quick healing.";
+                    }
+                    if (copperRemaining > 0)
+                    {
+                        message += $" and {copperRemaining} copper on quick healing.";
+                    }
+                    Main.NewText(message);
                 }
+
                 if (silverRemaining > 0 && platRemaining == 0 && goldRemaining == 0)
                 {
-                    Main.NewText($"You just spent {silverRemaining} silver and {copperRemaining} copper on quick healing.");
+                    string message = $"You just spent {silverRemaining} silver";
+                    if (copperRemaining == 0)
+                    {
+                        message += " on quick healing.";
+                    }
+                    if (copperRemaining > 0)
+                    {
+                        message += $" and {copperRemaining} copper on quick healing.";
+                    }
+                    Main.NewText(message);
                 }
                 if (cost > 0 && silverRemaining == 0 && platRemaining == 0 && goldRemaining == 0)
                 {
@@ -679,12 +837,12 @@ public class NurseHotkeyPlayer : ModPlayer
             {
                 Main.NewText("Health full.");
             }
-            
-            else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck() == true && debuffCount == 1)
+
+            else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) == true && debuffCount == 1)
             {
                 Main.NewText("Health full.");
             }
-                else
+            else
             {
                 Main.NewText("Couldn't quick heal.");
             }
