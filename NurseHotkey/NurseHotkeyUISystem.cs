@@ -11,6 +11,7 @@ namespace NurseHotkey;
 internal class UISystem : ModSystem
 {
     internal UserInterface UserInterface;
+    private static bool dialogueTweakLoaded = false;
     private UIState UI;
 
     public override void Load()
@@ -28,6 +29,23 @@ internal class UISystem : ModSystem
     {
         UI = null;
         UserInterface = null;
+    }
+
+    public override void PostSetupContent()
+    {
+        if (ModLoader.TryGetMod("DialogueTweak", out Mod dialogueTweak))
+        {
+            dialogueTweakLoaded = true;
+            dialogueTweak.Call("AddButton",
+                NPCID.Angler, // NPC ID
+                () => Language.GetTextValue("LegacyInterface.28"),
+                "DialogueTweak/Interfaces/Assets/Icon_Default", // The texture's path
+                () =>
+                {
+                    if (Main.mouseLeft)
+                        NurseHotkeyUI.OpenShop(99);
+                });
+        }
     }
 
     private GameTime _lastUpdateUiGameTime;

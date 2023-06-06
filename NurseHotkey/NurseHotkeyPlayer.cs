@@ -9,30 +9,9 @@ using Terraria.ModLoader;
 using Terraria.GameContent;
 using System.Collections.Generic;
 using static Humanizer.In;
+using Terraria.Audio;
 
 namespace NurseHotkey;
-
-/// <summary> This struct provides access to an NPC type's NPC &amp; Biome relationships. </summary>
-/*
-public readonly struct NPCHappiness
-{
-    public static class ShopHelper
-    {
-        public const float hateValue = -1f;
-        public const float dislikeValue = -.5f;
-        public const float likeValue = .5f;
-        public const float loveValue = 2f;
-    }
-    /// <summary> Allows you to modify the shop price multipliers associated with a (biome/npc type) relationship level. </summary>
-    public static readonly Dictionary<AffectionLevel, float> AffectionLevelToPriceMultiplier = new() {
-        { AffectionLevel.Hate, ShopHelper.hateValue },
-        { AffectionLevel.Dislike, ShopHelper.dislikeValue },
-        { AffectionLevel.Like, ShopHelper.likeValue },
-        { AffectionLevel.Love, ShopHelper.loveValue },
-    };
-}
-*/
-
 
 public class NurseHotkeyPlayer : ModPlayer
 {
@@ -171,16 +150,16 @@ public class NurseHotkeyPlayer : ModPlayer
 
         if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) == true && debuffCount > 1)
         {
-            multipliedCost += preCost * GetCalamityBossMultiplier();
+            multipliedCost += preCost * GetCalamityBossMultiplier() * nurseHappinessAdjustment;
             finalCost = multipliedCost * 5;
         }
         else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod"))
         {
-            finalCost = multipliedCost + (preCost * GetCalamityBossMultiplier());
+            finalCost = multipliedCost + (preCost * GetCalamityBossMultiplier() * nurseHappinessAdjustment);
         }
         else
         {
-            finalCost = multipliedCost + (preCost * GetBossMultiplier()); // Multiply the total cost by the boss defeat multiplier
+            finalCost = multipliedCost + (preCost * GetBossMultiplier() * nurseHappinessAdjustment); // Multiply the total cost by the boss defeat multiplier
         }
 
         return finalCost;
@@ -240,130 +219,143 @@ public class NurseHotkeyPlayer : ModPlayer
 
     private static float GetCalamityBossMultiplier()
     {
-        float multiplier = .949f;
+        int nurseNPCId = NPC.FindFirstNPC(NPCID.Nurse);
+        NPC nurseNPC = Main.npc[nurseNPCId];
+        var currentShoppingSettings = Main.ShopHelper.GetShoppingSettings(Main.LocalPlayer, nurseNPC);
+        float nurseHappinessAdjustment = (float)currentShoppingSettings.PriceAdjustment;
+        float multiplier = 0;
+       
+        if (nurseHappinessAdjustment < 1.02)
+        {
+            multiplier += .9999f;
+        }
 
+        if (nurseHappinessAdjustment >= 1.02)
+        {
+            multiplier += 1f;
+        }
 
         if (NPC.downedBoss1) // Eye of Cthulhu
         {
-            multiplier += 1.9f; //2.8499f
+            multiplier += 2f; //2.8499f
         }
 
         if (NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
         {
-            multiplier += 6.65f; //9.4999f or 6.6491 if 6.65 wrong
+            multiplier += 7f; //9.4999f or 6.6491 if 6.65 wrong
             if (!NPC.downedBoss1)
             {
-                multiplier += 1.9f;
+                multiplier += 2f;
             }
         }
 
         if (NPC.downedBoss3 || NPC.downedQueenBee) // Skeletron or Queen Bee
         {
-            multiplier += 14.25f; //23.7499f
+            multiplier += 15f; //23.7499f
 
             if (!NPC.downedBoss1)
             {
-                multiplier += 1.9f;
+                multiplier += 2f;
             }
             if (!NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
             {
-                multiplier += 6.65f; //9.4999f or 6.6491 if 6.65 wrong
+                multiplier += 7f; //9.4999f or 6.6491 if 6.65 wrong
             }
         }
 
         if (Main.hardMode) // Wall of Flesh
         {
-            multiplier += 33.25f; //56.9999f
+            multiplier += 35f; //56.9999f
 
             if (!NPC.downedBoss1)
             {
-                multiplier += 1.9f;
+                multiplier += 2f;
             }
             if (!NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
             {
-                multiplier += 6.65f; //9.4999f or 6.6491 if 6.65 wrong
+                multiplier += 7f; //9.4999f or 6.6491 if 6.65 wrong
             }
             if (!NPC.downedBoss3 && !NPC.downedQueenBee)
             {
-                multiplier += 14.25f;
+                multiplier += 15f;
             }
         }
 
         if (NPC.downedMechBossAny) //Any mech boss
         {
-            multiplier += 38f; //94.9999f
+            multiplier += 40f; //94.9999f
 
             if (!Main.hardMode)
             {
-                multiplier += 33.25f;
+                multiplier += 35f;
             }
             if (!NPC.downedBoss1)
             {
-                multiplier += 1.9f;
+                multiplier += 2f;
             }
             if (!NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
             {
-                multiplier += 6.65f; //9.4999f or 6.6491 if 6.65 wrong
+                multiplier += 7f; //9.4999f or 6.6491 if 6.65 wrong
             }
             if (!NPC.downedBoss3 && !NPC.downedQueenBee)
             {
-                multiplier += 14.25f;
+                multiplier += 15f;
             }
         }
 
-        if (NPC.downedPlantBoss || BossChecklistIntegration.isCalamitasCloneDefeated()) //Plantera or Calamitas clone
+        if (NPC.downedPlantBoss) //Plantera or Calamitas clone
         {
-            multiplier += 48f; //142.4999f
+            multiplier += 50f; //142.4999f
 
             if (!NPC.downedMechBossAny)
             {
-                multiplier += 38;
+                multiplier += 40f;
             }
             if (!Main.hardMode)
             {
-                multiplier += 33.25f;
+                multiplier += 35f;
             }
             if (!NPC.downedBoss1)
             {
-                multiplier += 1.9f;
+                multiplier += 2f;
             }
             if (!NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
             {
-                multiplier += 6.65f; //9.4999f or 6.6491 if 6.65 wrong
+                multiplier += 7f; //9.4999f or 6.6491 if 6.65 wrong
             }
             if (!NPC.downedBoss3 && !NPC.downedQueenBee)
             {
-                multiplier += 14.25f;
+                multiplier += 15f;
             }
         }
 
         if (NPC.downedGolemBoss) // Golem
         {
-            multiplier += 47f; //
+            multiplier += 50f; //
 
-            if (!NPC.downedPlantBoss && !BossChecklistIntegration.isCalamitasCloneDefeated())
+            if (!NPC.downedPlantBoss)
             {
-                multiplier += 48f;
+                multiplier += 50f;
             }
             if (!NPC.downedMechBossAny)
             {
-                multiplier += 38;
+                multiplier += 40f;
             }
             if (!Main.hardMode)
             {
-                multiplier += 33.25f;
+                multiplier += 35f;
             }
             if (!NPC.downedBoss1)
             {
-                multiplier += 1.9f;
+                multiplier += 2f;
             }
             if (!NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
             {
-                multiplier += 6.65f; //9.4999f or 6.6491 if 6.65 wrong
+                multiplier += 7f; //9.4999f or 6.6491 if 6.65 wrong
             }
             if (!NPC.downedBoss3 && !NPC.downedQueenBee)
             {
-                multiplier += 14.25f;
+                multiplier += 15f;
             }
         }
         return multiplier;
@@ -372,37 +364,145 @@ public class NurseHotkeyPlayer : ModPlayer
 
     private static float GetBossMultiplier()
     {
-        float multiplier = .84f; // NEED TO FIX EVERYTHING
+        int nurseNPCId = NPC.FindFirstNPC(NPCID.Nurse);
+        NPC nurseNPC = Main.npc[nurseNPCId];
+        var currentShoppingSettings = Main.ShopHelper.GetShoppingSettings(Main.LocalPlayer, nurseNPC);
+        float nurseHappinessAdjustment = (float)currentShoppingSettings.PriceAdjustment;
+        float multiplier = 0;
+
+        if (nurseHappinessAdjustment < 1.02)
+        {
+            multiplier = .9999f;
+        }
+
+        if (nurseHappinessAdjustment >= 1.02)
+        {
+            multiplier = 1f;
+        }
 
         if (NPC.downedBoss1) // Eye of Cthulhu
         {
-            multiplier = 1.8499f;
-        }
-        if (NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
-        {
-            multiplier = 8.4999f;
-        }
-        if (NPC.downedBoss3) // Skeletron
-        {
-            multiplier = 22.7499f;
-        }
-        if (Main.hardMode)
-        {
-            multiplier = 55.9999f;
-        }
-        if (NPC.downedMechBossAny)
-        {
-            multiplier = 93.9999f;
-        }
-        if (NPC.downedPlantBoss)
-        {
-            multiplier = 141.4999f;
-        }
-        if (NPC.downedGolemBoss)
-        {
-            multiplier = 188.9999f;
+            multiplier += 2f; //2.8499f
         }
 
+        if (NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
+        {
+            multiplier += 7f; //9.4999f or 6.6491 if 6.65 wrong
+            if (!NPC.downedBoss1)
+            {
+                multiplier += 2.005f;
+            }
+        }
+
+        if (NPC.downedBoss3 || NPC.downedQueenBee) // Skeletron or Queen Bee
+        {
+            multiplier += 18f; //23.7499f
+
+            if (!NPC.downedBoss1)
+            {
+                multiplier += 2.005f;
+            }
+            if (!NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
+            {
+                multiplier += 7f; //9.4999f or 6.6491 if 6.65 wrong
+            }
+        }
+
+        if (Main.hardMode) // Wall of Flesh
+        {
+            multiplier += 35f; //56.9999f
+
+            if (!NPC.downedBoss1)
+            {
+                multiplier += 2.005f;
+            }
+            if (!NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
+            {
+                multiplier += 7f; //9.4999f or 6.6491 if 6.65 wrong
+            }
+            if (!NPC.downedBoss3 && !NPC.downedQueenBee)
+            {
+                multiplier += 18f;
+            }
+        }
+
+        if (NPC.downedMechBossAny) //Any mech boss
+        {
+            multiplier += 40f; //94.9999f
+
+            if (!Main.hardMode)
+            {
+                multiplier += 35f;
+            }
+            if (!NPC.downedBoss1)
+            {
+                multiplier += 2.005f;
+            }
+            if (!NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
+            {
+                multiplier += 7f; //9.4999f or 6.6491 if 6.65 wrong
+            }
+            if (!NPC.downedBoss3 && !NPC.downedQueenBee)
+            {
+                multiplier += 18f;
+            }
+        }
+
+        if (NPC.downedPlantBoss || BossChecklistIntegration.isCalamitasCloneDefeated()) //Plantera or Calamitas clone
+        {
+            multiplier += 50f; //142.4999f
+
+            if (!NPC.downedMechBossAny)
+            {
+                multiplier += 40f;
+            }
+            if (!Main.hardMode)
+            {
+                multiplier += 35f;
+            }
+            if (!NPC.downedBoss1)
+            {
+                multiplier += 2.005f;
+            }
+            if (!NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
+            {
+                multiplier += 7f; //9.4999f or 6.6491 if 6.65 wrong
+            }
+            if (!NPC.downedBoss3 && !NPC.downedQueenBee)
+            {
+                multiplier += 18f;
+            }
+        }
+
+        if (NPC.downedGolemBoss) // Golem
+        {
+            multiplier += 50f; //
+
+            if (!NPC.downedPlantBoss && !BossChecklistIntegration.isCalamitasCloneDefeated())
+            {
+                multiplier += 50f;
+            }
+            if (!NPC.downedMechBossAny)
+            {
+                multiplier += 40f;
+            }
+            if (!Main.hardMode)
+            {
+                multiplier += 35f;
+            }
+            if (!NPC.downedBoss1)
+            {
+                multiplier += 2.005f;
+            }
+            if (!NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
+            {
+                multiplier += 7f; //9.4999f or 6.6491 if 6.65 wrong
+            }
+            if (!NPC.downedBoss3 && !NPC.downedQueenBee)
+            {
+                multiplier += 18f;
+            }
+        }
         return multiplier;
     }
 
@@ -420,10 +520,29 @@ public class NurseHotkeyPlayer : ModPlayer
         }
     }
 
+    public Chest bank;
+    public Chest bank2;
+    public Chest bank3;
+    public Chest bank4;
+
     public void NurseHeal()
     {
         NPC nurse = Main.npc[NPC.FindFirstNPC(NPCID.Nurse)];
         Player player = Main.LocalPlayer;
+        Item[] GetAllBankItems(int playerIndex)
+        {
+            Player player = Main.player[playerIndex];
+            List<Item> allItems = new List<Item>();
+
+            // Add all bank items to the list
+            allItems.AddRange(player.bank.item);
+            allItems.AddRange(player.bank2.item);
+            allItems.AddRange(player.bank3.item);
+            allItems.AddRange(player.bank4.item);
+
+            return allItems.ToArray();
+        }
+
 
         if (nurse != null && Vector2.Distance(Player.Center, nurse.Center) <= 6400)
         {
@@ -446,22 +565,23 @@ public class NurseHotkeyPlayer : ModPlayer
                 float remainingCost = cost - totalMoney;
                 if (remainingCost > 0)
                 {
-                    // Access the player's Piggy Bank items
-                    Item[] piggyBankItems = player.bank.item;
+                    // Access all the player's Bank items
+                    Item[] bankItems = GetAllBankItems(playerIndex);
 
-                    // Calculate the total money from Piggy Bank
-                    totalMoney += CalculateMoneyFromItems(piggyBankItems);
+                    // Calculate the total money from all Banks
+                    totalMoney += CalculateMoneyFromItems(bankItems);
 
-                    // Deduct the remaining cost from Piggy Bank if needed
+                    // Deduct the remaining cost from all Banks if needed
                     if (totalMoney >= remainingCost)
                     {
-                        int deductedMoney = DeductMoneyFromItems(piggyBankItems, (int)remainingCost);
+                        int deductedMoney = DeductMoneyFromItems(bankItems, (int)remainingCost);
                         totalMoney -= deductedMoney;
                     }
                 }
 
                 return totalMoney;
             }
+
 
             // Helper method to deduct money from items
             int DeductMoneyFromItems(Item[] items, int amount)
@@ -584,6 +704,7 @@ public class NurseHotkeyPlayer : ModPlayer
                 Player.BuyItem(intCost); //pay up 
                 int healAmount = healthMissing; //ok how much this mothasucka need
                 Player.statLife += healAmount; //puts the item in the bag
+                SoundEngine.PlaySound(SoundID.Item4);
 
                 if (healAmount > 0) //needed for healing debuffs and no health (i.e. stink potion)
                 {
@@ -677,6 +798,7 @@ public class NurseHotkeyPlayer : ModPlayer
                 Player.BuyItem(intCost); //pay up 
                 int healAmount = healthMissing; //ok how much this mothasucka need
                 Player.statLife += healAmount; //puts the item in the bag
+                SoundEngine.PlaySound(SoundID.Item4);
 
                 if (healAmount > 0) //needed for healing debuffs and no health (i.e. stink potion)
                 {
@@ -771,6 +893,7 @@ public class NurseHotkeyPlayer : ModPlayer
                 Player.BuyItem(intCost); //pay up 
                 int healAmount = healthMissing; //ok how much this mothasucka need
                 Player.statLife += healAmount; //puts the item in the bag
+                SoundEngine.PlaySound(SoundID.Item4);
 
                 if (healAmount > 0) //needed for healing debuffs and no health (i.e. stink potion)
                 {

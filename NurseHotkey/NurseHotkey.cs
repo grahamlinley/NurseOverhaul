@@ -1,13 +1,12 @@
 //TO DO: 
 // NurseHotkey specific items for range modification. Just need recipes now and checks that modify range in nhplayer
 // Add items to shop (nhshop)
+// Recipes for potions
 // Piggy bank money count correct and accessed if inventoroy isn't (check on other potential money sources for purchase funding ie Vault)
-// Play Nurse Heal sound effect on button press
-// Find some way to access Nurse happiness and use it to modify price automatically. Would be default in config with love/hate as options
-// Hate toggle in config? Manual testing and new methods and logic reconfig. 
 // Icon for tmod and item sprites 
 // readme
-// DEBUG. Found error when stacking to chest + some other places (spawned something in and got an error, might be unrelated). Check log trace
+// DEBUG. Found error when stacking to chest + some other places (spawned something in and got an error, might be unrelated). Check log trace. 
+// ADD CATCHES FOR IF NURSE DOESN'T EXIST
 // Dialogue for how much you spent at the nurse (button in box? maybe add total spent next to money just spent. could be too cluttery though)
 // WISH Specific equipment item slot that will only take NurseHotkey range modification items 
 // WISH: Maybe resprite or just an animation when you press the hotkey? Would be funny for like an Ana type character that shoots a healing dart at you to heal you past a certain range. Could add when glimmer introduced

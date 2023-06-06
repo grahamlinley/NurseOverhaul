@@ -137,11 +137,11 @@ internal class NurseHotkeyUI : UIState
         };
 
         // some items are only sold if WoF has been defeated
-       // if (!Main.hardMode)
-       // {
-        //    items[^1].id = ItemID.None;
-        //    items[^2].id = ItemID.None;
-       // }
+        if (!Main.hardMode)
+        {
+            items[^1].id = ItemID.None;
+            items[^2].id = ItemID.None;
+        }
 
         // add items to the list
         for (int i = 0; i < items.Length; i++)
@@ -151,9 +151,9 @@ internal class NurseHotkeyUI : UIState
             newItem.shopCustomPrice = items[i].price;
             shop.item[i].SetDefaults(newItem.type);
             shop.item[i].shopCustomPrice = newItem.shopCustomPrice;
-            // shop.item[i].SetDefaults(items[i].id);
-            // shop.item[i].isAShopItem = true;
-            //shop.item[i].shopCustomPrice = items[i].price;
+            shop.item[i].SetDefaults(items[i].id);
+            shop.item[i].isAShopItem = true;
+            shop.item[i].shopCustomPrice = items[i].price;
         }
         }
 }
