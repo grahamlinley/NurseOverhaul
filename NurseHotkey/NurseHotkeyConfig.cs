@@ -5,7 +5,8 @@ using Terraria.IO;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 
-namespace NurseHotkey;
+namespace NurseHotkey
+{ 
 
 /*
 
@@ -22,3 +23,4 @@ internal class NurseHotkeyConfig : ModConfig
 }
 
 */
+}
