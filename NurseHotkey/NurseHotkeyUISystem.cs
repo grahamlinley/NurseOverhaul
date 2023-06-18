@@ -37,7 +37,7 @@ namespace NurseHotkey
             {
                 dialogueTweakLoaded = true;
                 dialogueTweak.Call("AddButton",
-                    NPCID.Angler, // NPC ID
+                    NPCID.Nurse, // NPC ID
                     () => Language.GetTextValue("LegacyInterface.28"),
                     "DialogueTweak/Interfaces/Assets/Icon_Default", // The texture's path
                     () =>

@@ -75,71 +75,49 @@ namespace NurseHotkey
                                                                                                               //NOTE: Not sure if the prices are inaacurate on that page or if the scaling is different, but values derived below are hand tested on a max happiness Nurse and accurate for these 4 tests:
                                                                                                               //1. Max health 1 debuff 2. Missing 10 health 3. Missing 490 health (or whatever other large number your mod uses) 4. Missing somewhere in between those two number to test float accuracy
             {
-                if (NPC.downedBoss1 && !NPC.downedBoss3 && !Main.hardMode && !NPC.downedMechBossAny && !NPC.downedPlantBoss && !BossChecklistIntegration.isCalamitasCloneDefeated() && !NPC.downedGolemBoss && !NPC.downedFishron
-                    && !BossChecklistIntegration.isPlaguebringerDefeated() && !BossChecklistIntegration.isRavagerDefeated() && !NPC.downedMoonlord && !BossChecklistIntegration.isProvidenceDefeated() &&
-                    !BossChecklistIntegration.isDevourerDefeated() && !BossChecklistIntegration.isYharonDefeated()) // Eye of Cthulhu defeated
-                {
-                    multipliedCost += 300; // Increased price (3 silver base). Note this differs from what is on the Calamity wiki for whatever reason. Base prices from here are hand calculated
-                }
-
-
-                if (NPC.downedBoss3 && !Main.hardMode && !NPC.downedMechBossAny && !NPC.downedPlantBoss && !BossChecklistIntegration.isCalamitasCloneDefeated() && !NPC.downedGolemBoss && !NPC.downedFishron
-                    && !BossChecklistIntegration.isPlaguebringerDefeated() && !BossChecklistIntegration.isRavagerDefeated() && !NPC.downedMoonlord && !BossChecklistIntegration.isProvidenceDefeated() &&
-                    !BossChecklistIntegration.isDevourerDefeated() && !BossChecklistIntegration.isYharonDefeated()) // Skeletron defeated 
-                {
-                    multipliedCost += 900; // Increased price (9 silver base)
-                }
-
-                if (Main.hardMode && !NPC.downedMechBossAny && !NPC.downedPlantBoss && !BossChecklistIntegration.isCalamitasCloneDefeated() && !NPC.downedGolemBoss && !NPC.downedFishron
-                    && !BossChecklistIntegration.isPlaguebringerDefeated() && !BossChecklistIntegration.isRavagerDefeated() && !NPC.downedMoonlord && !BossChecklistIntegration.isProvidenceDefeated() &&
-                    !BossChecklistIntegration.isDevourerDefeated() && !BossChecklistIntegration.isYharonDefeated())
-                {
-                    multipliedCost += 2100; // 21 silver base
-                }
-
-                if (NPC.downedMechBossAny && !NPC.downedPlantBoss && !BossChecklistIntegration.isCalamitasCloneDefeated() && !NPC.downedGolemBoss && !NPC.downedFishron
-                    | !BossChecklistIntegration.isPlaguebringerDefeated() && !BossChecklistIntegration.isRavagerDefeated() && !NPC.downedMoonlord && !BossChecklistIntegration.isProvidenceDefeated() &&
-                    !BossChecklistIntegration.isDevourerDefeated() && !BossChecklistIntegration.isYharonDefeated()) // At least one Mechanical Boss defeated
-                {
-                    multipliedCost += 3700; // 37 silver base
-                }
-
-                if (NPC.downedPlantBoss | BossChecklistIntegration.isCalamitasCloneDefeated() && !NPC.downedGolemBoss && !NPC.downedFishron
-                    && !BossChecklistIntegration.isPlaguebringerDefeated() && !BossChecklistIntegration.isRavagerDefeated() && !NPC.downedMoonlord && !BossChecklistIntegration.isProvidenceDefeated() &&
-                    !BossChecklistIntegration.isDevourerDefeated() && !BossChecklistIntegration.isYharonDefeated()) // Plantera defeated
-                {
-                    multipliedCost += 5700; // 57 silver base
-                }
-
-                if (NPC.downedGolemBoss && !NPC.downedFishron && !BossChecklistIntegration.isPlaguebringerDefeated() && !BossChecklistIntegration.isRavagerDefeated()
-                    && !NPC.downedMoonlord && !BossChecklistIntegration.isProvidenceDefeated() && !BossChecklistIntegration.isDevourerDefeated() && !BossChecklistIntegration.isYharonDefeated()) // Golem defeated
-                {
-                    multipliedCost += 8700; // 87 silver base
-                }
-
-                if (NPC.downedFishron | BossChecklistIntegration.isPlaguebringerDefeated() | BossChecklistIntegration.isRavagerDefeated() && !NPC.downedMoonlord && !BossChecklistIntegration.isProvidenceDefeated()
-                    && !BossChecklistIntegration.isDevourerDefeated() && !BossChecklistIntegration.isYharonDefeated()) // Duke Fishron/Plaguebringer Goliath/ Ravager defeated
-                {
-                    multipliedCost += 11700; // 1 gold 17 silver base
-                }
-
-                if (NPC.downedMoonlord && !BossChecklistIntegration.isProvidenceDefeated() && !BossChecklistIntegration.isDevourerDefeated() && !BossChecklistIntegration.isYharonDefeated()) // Moon Lord defeated
-                {
-                    multipliedCost += 19700; // 1 gold 97 silver base
-                }
-
-                if (BossChecklistIntegration.isProvidenceDefeated() && !BossChecklistIntegration.isDevourerDefeated() && !BossChecklistIntegration.isYharonDefeated()) //Providence defeated
-                {
-                    multipliedCost += 32000; //3 gold 20 silver base
-                }
-
-                if (BossChecklistIntegration.isDevourerDefeated() && !BossChecklistIntegration.isYharonDefeated())
-                {
-                    multipliedCost += 59700; //5.97
-                }
                 if (BossChecklistIntegration.isYharonDefeated())
                 {
-                    multipliedCost += 89700; //897
+                    multipliedCost = 89700; //897
+                }
+                else if (BossChecklistIntegration.isDevourerDefeated())
+                {
+                    multipliedCost = 59700; //5.97
+                }
+                else if (BossChecklistIntegration.isProvidenceDefeated()) //Providence defeated
+                {
+                    multipliedCost = 32000; //3 gold 20 silver base
+                }
+                else if (NPC.downedMoonlord) // Moon Lord defeated
+                {
+                    multipliedCost = 19700; // 1 gold 97 silver base
+                }
+                else if (NPC.downedFishron | BossChecklistIntegration.isPlaguebringerDefeated() | BossChecklistIntegration.isRavagerDefeated()) // Duke Fishron/Plaguebringer Goliath/ Ravager defeated
+                {
+                    multipliedCost = 11700; // 1 gold 17 silver base
+                }
+                else if (NPC.downedGolemBoss) // Golem defeated
+                {
+                    multipliedCost = 8700; // 87 silver base
+                }
+                else if (NPC.downedPlantBoss | BossChecklistIntegration.isCalamitasCloneDefeated()) // Plantera defeated
+                {
+                    multipliedCost = 5700; // 57 silver base
+                }
+                else if (NPC.downedMechBossAny) // At least one Mechanical Boss defeated
+                {
+                    multipliedCost = 3700; // 37 silver base
+                }
+                else if (Main.hardMode)
+                {
+                    multipliedCost = 2100; // 21 silver base
+                }
+                else if (NPC.downedBoss3) // Skeletron defeated 
+                {
+                    multipliedCost = 900; // Increased price (9 silver base)
+                }
+                else if (NPC.downedBoss1) // Eye of Cthulhu defeated
+                {
+                    multipliedCost = 300; // Increased price (3 silver base). Note this differs from what is on the Calamity wiki for whatever reason. Base prices from here are hand calculated
                 }
             }
 
@@ -224,7 +202,7 @@ namespace NurseHotkey
 
             if (nurseHappinessAdjustment < 1.02) //
             {
-                multiplier += .995f;
+                multiplier += .9995f;
             }
 
             if (nurseHappinessAdjustment >= 1.02)
@@ -384,6 +362,7 @@ namespace NurseHotkey
                 Item[] inventory = player.inventory;
 
                 // Add all bank items to the list
+                allItems.AddRange(inventory);
                 allItems.AddRange(player.bank.item);
                 allItems.AddRange(player.bank2.item);
                 allItems.AddRange(player.bank3.item);
@@ -391,7 +370,6 @@ namespace NurseHotkey
 
                 return allItems.ToArray();
             }
-
 
             if (nurse != null && Vector2.Distance(Player.Center, nurse.Center) <= 6400)
             {
@@ -404,113 +382,20 @@ namespace NurseHotkey
                     Player player = Main.player[playerIndex];
 
                     // Access the player's inventory
-                    Item[] inventory = player.inventory;
+                    //Item[] inventory = player.inventory;
 
                     // Access all the player's Bank items
                     Item[] bankItems = GetAllItems(playerIndex);
 
                     // Calculate the total money from inventory
-                    int totalMoney = CalculateMoneyFromItems(inventory);
+                    //int totalMoney = CalculateMoneyFromItems(inventory);
 
                     // Calculate the total money from all Banks
-                    totalMoney += CalculateMoneyFromItems(bankItems);
+                    int totalMoney = CalculateMoneyFromItems(bankItems);
 
                     // Check if remaining cost is greater than zero
                     float remainingCost = cost - totalMoney;
-
-                    //if (remainingCost > 0 | debuffCount > 0)
-                    //{
-                        // Deduct the remaining cost from all Banks if needed
-                        //if (totalMoney >= remainingCost)
-                        //{
-                           // int deductedMoney = DeductMoneyFromItems(bankItems, (int)remainingCost);
-                            //totalMoney -= deductedMoney;
-                        //}
-                   // }
-
                     return totalMoney;
-                }
-
-                int DeductMoneyFromItems(Item[] items, int amount)
-                {
-                    int deductedMoney = 0;
-
-                    for (int i = 0; i < items.Length; i++)
-                    {
-                        Item item = items[i];
-
-                        if (item.type == ItemID.CopperCoin)
-                        {
-                            if (item.stack >= amount)
-                            {
-                                item.stack -= amount;
-                                deductedMoney += amount;
-                                break;
-                            }
-                            else
-                            {
-                                amount -= item.stack;
-                                deductedMoney += item.stack;
-                                item.stack = 0;
-                            }
-                        }
-                        else if (item.type == ItemID.SilverCoin)
-                        {
-                            int silverValue = item.stack * 100;
-
-                            if (silverValue >= amount)
-                            {
-                                int deductedSilver = amount / 100;
-                                item.stack -= deductedSilver;
-                                deductedMoney += deductedSilver * 100;
-                                break;
-                            }
-                            else
-                            {
-                                amount -= silverValue;
-                                deductedMoney += item.stack * 100;
-                                item.stack = 0;
-                            }
-                        }
-                        else if (item.type == ItemID.GoldCoin)
-                        {
-                            int goldValue = item.stack * 10000;
-
-                            if (goldValue >= amount)
-                            {
-                                int deductedGold = amount / 10000;
-                                item.stack -= deductedGold;
-                                deductedMoney += deductedGold * 10000;
-                                break;
-                            }
-                            else
-                            {
-                                amount -= goldValue;
-                                deductedMoney += item.stack * 10000;
-                                item.stack = 0;
-                            }
-                        }
-                        else if (item.type == ItemID.PlatinumCoin)
-                        {
-                            int platinumValue = item.stack * 1000000;
-
-                            if (platinumValue >= amount)
-                            {
-                                int deductedPlatinum = amount / 1000000;
-                                item.stack -= deductedPlatinum;
-                                deductedMoney += deductedPlatinum * 1000000;
-                                break;
-                            }
-                            else
-                            {
-                                amount -= platinumValue;
-                                deductedMoney += item.stack * 1000000;
-                                item.stack = 0;
-                            }
-                        }
-                    }
-
-                    return deductedMoney;
                 }
 
                 // Helper method to calculate money from items
@@ -542,23 +427,30 @@ namespace NurseHotkey
                 }
 
                 int Wallet = GetPlayerTotalMoney(Main.myPlayer);
-                int intCost = Convert.ToInt32(cost);
 
-                if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) && Wallet >= cost && debuffCount > 1 | healthMissing > 0)
+                void HealAndSpend(float cost, Player player, int healthMissing)
                 {
-                    CureAllDebuffs(Player); //debuffs destroyed
+                    CureAllDebuffs(player); //debuffs destroyed
+                    float flooredFloatCost = (float)Math.Floor(cost);
                     Main.NewText($"This is the float cost {cost}");
+                    Main.NewText($"This is the floored float cost {flooredFloatCost}");
+                    int intCost = Convert.ToInt32(flooredFloatCost);
                     Main.NewText($"This is the int cost {intCost}");
-                    Player.BuyItem(intCost); //pay up 
+                    player.BuyItem(intCost); //pay up 
                     int healAmount = healthMissing; //ok how much this mothasucka need
-                    Player.statLife += healAmount; //puts the item in the bag
+                    player.statLife += healAmount; //puts the item in the bag
                     SoundEngine.PlaySound(SoundID.Item4);
 
                     if (healAmount > 0) //needed for healing debuffs and no health (i.e. stink potion)
                     {
-                        Player.HealEffect(healAmount); //"ok here u go sir, have a nice day :)"
+                        player.HealEffect(healAmount); //"ok here u go sir, have a nice day :)"
                     }
 
+                    CalculateAndPrintSpending(intCost);
+                }
+
+                void CalculateAndPrintSpending(float cost)
+                {
                     //all this shit just calculates your money then gives you a message 
                     int remainingMoney = (int)cost;
                     int platRemaining = remainingMoney / 1000000;
@@ -638,201 +530,23 @@ namespace NurseHotkey
                     {
                         Main.NewText($"You just spent {remainingMoney} copper on quick healing.");
                     }
+                }
+
+
+                if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) && Wallet >= cost && debuffCount > 1 | healthMissing > 0)
+                {
+                    HealAndSpend(cost, Player, healthMissing);
                 }
 
                 else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && !bossCombatCheck(6400f) && Wallet >= cost && debuffCount > 0 | healthMissing > 0)
                 {
-                    CureAllDebuffs(Player); //debuffs destroyed
-                    Main.NewText($"This is the float cost {cost}");
-                    Main.NewText($"This is the int cost {intCost}");
-                    Player.BuyItem(intCost); //pay up 
-                    int healAmount = healthMissing; //ok how much this mothasucka need
-                    Player.statLife += healAmount; //puts the item in the bag
-                    SoundEngine.PlaySound(SoundID.Item4);
-
-                    if (healAmount > 0) //needed for healing debuffs and no health (i.e. stink potion)
-                    {
-                        Player.HealEffect(healAmount); //"ok here u go sir, have a nice day :)"
-                    }
-
-                    //all this shit just calculates your money then gives you a message 
-                    int remainingMoney = (int)cost;
-                    int platRemaining = remainingMoney / 1000000;
-                    int goldRemaining = (remainingMoney % 1000000) / 10000;
-                    int silverRemaining = (remainingMoney % 10000) / 100;
-                    int copperRemaining = remainingMoney % 100;
-
-                    if (platRemaining > 0)
-                    {
-                        string message = $"You just spent {platRemaining} platinum";
-
-                        if (goldRemaining == 0 && silverRemaining == 0 && copperRemaining == 0)
-                        {
-                            message += $" on quick healing";
-                        }
-                        if (goldRemaining > 0 && (silverRemaining > 0 | copperRemaining > 0))
-                        {
-                            message += $" {goldRemaining} gold";
-                        }
-                        if (goldRemaining > 0 && silverRemaining == 0 && copperRemaining == 0)
-                        {
-                            message += $" and {goldRemaining} gold on quick healing.";
-                        }
-                        if (silverRemaining > 0 && copperRemaining > 0)
-                        {
-                            message += $" {silverRemaining} silver";
-                        }
-                        if (silverRemaining > 0 && copperRemaining == 0)
-                        {
-                            message += $" and {silverRemaining} silver on quick healing.";
-                        }
-                        if (copperRemaining > 0)
-                        {
-                            message += $" and {copperRemaining} copper on quick healing.";
-                        }
-
-                        Main.NewText(message);
-                    }
-
-                    if (goldRemaining > 0 && platRemaining == 0)
-                    {
-                        string message = $"You just spent {goldRemaining} gold";
-
-                        if (silverRemaining == 0 && copperRemaining == 0)
-                        {
-                            message += $" on quick healing.";
-                        }
-                        if (silverRemaining > 0 && copperRemaining > 0)
-                        {
-                            message += $" {silverRemaining} silver";
-                        }
-                        if (silverRemaining > 0 && copperRemaining == 0)
-                        {
-                            message += $" and {silverRemaining} silver on quick healing.";
-                        }
-                        if (copperRemaining > 0)
-                        {
-                            message += $" and {copperRemaining} copper on quick healing.";
-                        }
-                        Main.NewText(message);
-                    }
-
-                    if (silverRemaining > 0 && platRemaining == 0 && goldRemaining == 0)
-                    {
-                        string message = $"You just spent {silverRemaining} silver";
-                        if (copperRemaining == 0)
-                        {
-                            message += " on quick healing.";
-                        }
-                        if (copperRemaining > 0)
-                        {
-                            message += $" and {copperRemaining} copper on quick healing.";
-                        }
-                        Main.NewText(message);
-                    }
-                    if (cost > 0 && silverRemaining == 0 && platRemaining == 0 && goldRemaining == 0)
-                    {
-                        Main.NewText($"You just spent {remainingMoney} copper on quick healing.");
-                    }
+                    HealAndSpend(cost, Player, healthMissing);
                 }
-
 
                 else if (Wallet >= cost && !ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && debuffCount > 0 | healthMissing > 0)
                 {
-                    CureAllDebuffs(Player); //debuffs destroyed
-                    Main.NewText($"This is the float cost {cost}");
-                    Main.NewText($"This is the int cost {intCost}");
-                    Player.BuyItem(intCost); //pay up 
-                    int healAmount = healthMissing; //ok how much this mothasucka need
-                    Player.statLife += healAmount; //puts the item in the bag
-                    SoundEngine.PlaySound(SoundID.Item4);
-
-                    if (healAmount > 0) //needed for healing debuffs and no health (i.e. stink potion)
-                    {
-                        Player.HealEffect(healAmount); //"ok here u go sir, have a nice day :)"
-                    }
-
-                    //all this shit just calculates your money then gives you a message 
-                    int remainingMoney = (int)cost;
-                    int platRemaining = remainingMoney / 1000000;
-                    int goldRemaining = (remainingMoney % 1000000) / 10000;
-                    int silverRemaining = (remainingMoney % 10000) / 100;
-                    int copperRemaining = remainingMoney % 100;
-
-                    if (platRemaining > 0)
-                    {
-                        string message = $"You just spent {platRemaining} platinum";
-
-                        if (goldRemaining == 0 && silverRemaining == 0 && copperRemaining == 0)
-                        {
-                            message += $" on quick healing";
-                        }
-                        if (goldRemaining > 0 && (silverRemaining > 0 | copperRemaining > 0))
-                        {
-                            message += $" {goldRemaining} gold";
-                        }
-                        if (goldRemaining > 0 && silverRemaining == 0 && copperRemaining == 0)
-                        {
-                            message += $" and {goldRemaining} gold on quick healing.";
-                        }
-                        if (silverRemaining > 0 && copperRemaining > 0)
-                        {
-                            message += $" {silverRemaining} silver";
-                        }
-                        if (silverRemaining > 0 && copperRemaining == 0)
-                        {
-                            message += $" and {silverRemaining} silver on quick healing.";
-                        }
-                        if (copperRemaining > 0)
-                        {
-                            message += $" and {copperRemaining} copper on quick healing.";
-                        }
-
-                        Main.NewText(message);
-                    }
-
-                    if (goldRemaining > 0 && platRemaining == 0)
-                    {
-                        string message = $"You just spent {goldRemaining} gold";
-
-                        if (silverRemaining == 0 && copperRemaining == 0)
-                        {
-                            message += $" on quick healing.";
-                        }
-                        if (silverRemaining > 0 && copperRemaining > 0)
-                        {
-                            message += $" {silverRemaining} silver";
-                        }
-                        if (silverRemaining > 0 && copperRemaining == 0)
-                        {
-                            message += $" and {silverRemaining} silver on quick healing.";
-                        }
-                        if (copperRemaining > 0)
-                        {
-                            message += $" and {copperRemaining} copper on quick healing.";
-                        }
-                        Main.NewText(message);
-                    }
-
-                    if (silverRemaining > 0 && platRemaining == 0 && goldRemaining == 0)
-                    {
-                        string message = $"You just spent {silverRemaining} silver";
-                        if (copperRemaining == 0)
-                        {
-                            message += " on quick healing.";
-                        }
-                        if (copperRemaining > 0)
-                        {
-                            message += $" and {copperRemaining} copper on quick healing.";
-                        }
-                        Main.NewText(message);
-                    }
-                    if (cost > 0 && silverRemaining == 0 && platRemaining == 0 && goldRemaining == 0)
-                    {
-                        Main.NewText($"You just spent {remainingMoney} copper on quick healing.");
-                    }
+                    HealAndSpend(cost, Player, healthMissing);
                 }
-
                 else if (Wallet < cost)
                 {
                     Main.NewText("You don't have enough money to pay for a quick heal.");
@@ -843,7 +557,7 @@ namespace NurseHotkey
                     Main.NewText("Health full.");
                 }
 
-                else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) == true && debuffCount == 1)
+                else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) == true && debuffCount == 1 && healthMissing == 0)
                 {
                     Main.NewText("Health full.");
                 }
