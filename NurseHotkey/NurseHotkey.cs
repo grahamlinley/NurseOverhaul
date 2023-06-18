@@ -1,8 +1,7 @@
 //TO DO: 
+// Finalize shop
 // NurseHotkey specific items for range modification. Just need recipes now and checks that modify range in nhplayer
-// Add items to shop (nhshop)
 // Recipes for potions
-// Piggy bank money count correct and accessed if inventoroy isn't (check on other potential money sources for purchase funding ie Vault)
 // Icon for tmod and item sprites 
 // readme
 // DEBUG. Found error when stacking to chest + some other places (spawned something in and got an error, might be unrelated). Check log trace. 
@@ -10,6 +9,7 @@
 // Dialogue for how much you spent at the nurse (button in box? maybe add total spent next to money just spent. could be too cluttery though)
 // WISH Specific equipment item slot that will only take NurseHotkey range modification items 
 // WISH: Maybe resprite or just an animation when you press the hotkey? Would be funny for like an Ana type character that shoots a healing dart at you to heal you past a certain range. Could add when glimmer introduced
+// Potentially add lifeforce/jungle heart if people want
 
 using System;
 using System.Collections.Generic;
@@ -144,26 +144,20 @@ namespace NurseHotkey
             // Check if the bossInfos dictionary contains the boss key
             if (bossInfos.TryGetValue(calamatisCloneKey, out BossChecklistBossInfo bossInfo))
             {
-                // Boss info for CalamityMod Calmitas Clone is found
-
                 // Check if the boss has been defeated by invoking the downed function
                 bool isDefeated = bossInfo.downed();
-
                 return isDefeated;
             }
-
             // Boss info for CalamityMod Calamitas Clone is not found, handle the error or return an appropriate value
             return false;
         }
 
         public static bool isPlaguebringerDefeated()
         {
-
             if (!IntegrationSuccessful)
             {
                 return false;
             }
-
             string plaguebringerKey = "CalamityMod Plaguebringer Goliath";
 
             if (bossInfos.TryGetValue(plaguebringerKey, out BossChecklistBossInfo bossInfo))

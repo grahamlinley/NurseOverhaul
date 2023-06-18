@@ -109,8 +109,7 @@ namespace NurseHotkey
             // if the shop button is clicked
             if (focused && Main.mouseLeft)
             {
-                //OpenShop(99);
-                baseShop = true;
+                OpenShop(99);
             }
         }
 
@@ -122,20 +121,104 @@ namespace NurseHotkey
             Main.npcChatText = "";
             Main.SetNPCShopIndex(shopIndex);
             //shop[npcShop].SetupShop(npcShop);
-            //SetupShop(Main.instance.shop[99]); // calling my own SetupShop method
+            SetupShop(Main.instance.shop[99]); // calling my own SetupShop method
             SoundEngine.PlaySound(SoundID.MenuTick);
         }
 
-        public void SetupShop(Chest shop, ref int nextSlot)
+
+        private static void SetupShop(Chest shop)
         {
-            if (baseShop)
+            ModLoader.TryGetMod("CalamityMod", out Mod Calamity);
+            // all items being sold:
+            (int id, int price)[] items = {
+            (ItemID.Mushroom, 300),
+            (ItemID.BottledWater, 300),
+            (ItemID.BottledHoney, 300),
+            (ItemID.LesserHealingPotion, 300),
+            (ItemID.HealingPotion, 1000),
+            (ItemID.RestorationPotion, 1000),
+            (ItemID.LifeforcePotion, 1000),
+            (ItemID.SuperHealingPotion, 1000),
+            (ModContent.ItemType<NurseVIPBadge>(), 5000),
+            (ModContent.ItemType<LocalTransponder>(), 5000),
+            (ModContent.ItemType<SurfaceTransponder>(), 5000),
+            (ModContent.ItemType<GlobalTransponder>(), 5000),
+        };
+
+            if(!NPC.downedSlimeKing)
             {
-                shop.item[nextSlot].SetDefaults(ItemID.LesserHealingPotion);
-                shop.item[nextSlot].shopCustomPrice = 1000;
-                nextSlot++;
+                items[^6].id = ItemID.None;
+            }
+            if (!NPC.downedSlimeKing)
+            {
+                items[^6].id = ItemID.None;
+            }
+            if (!NPC.downedSlimeKing)
+            {
+                items[^6].id = ItemID.None;
+            }
+            if (!Main.hardMode)
+            {
+                items[^1].id = ItemID.None;
+                items[^2].id = ItemID.None;
+            }
+            if (!NPC.downedSlimeKing)
+            {
+                items[^6].id = ItemID.None;
+            }
+            if (!NPC.downedSlimeKing)
+            {
+                items[^6].id = ItemID.None;
+            }
+            if (!NPC.downedSlimeKing)
+            {
+                items[^6].id = ItemID.None;
+            }
+            if (!NPC.downedSlimeKing)
+            {
+                items[^6].id = ItemID.None;
+            }
+
+            // add items to the list
+            for (int i = 0; i < items.Length; i++)
+            {
+                if (items[i].id == ItemID.None) continue;
+                Item newItem = new Item();
+                newItem.SetDefaults(items[i].id);
+                newItem.shopCustomPrice = items[i].price;
+                shop.item[i].SetDefaults(newItem.type);
+                shop.item[i].shopCustomPrice = newItem.shopCustomPrice;
+                shop.item[i].SetDefaults(items[i].id);
+                shop.item[i].isAShopItem = true;
+                shop.item[i].shopCustomPrice = items[i].price;
+            }
+            if (Calamity != null)
+            {
+                if (NPC.downedMoonlord)
+                {
+                    if (Calamity.TryFind<ModItem>("SupremeHealingPotion", out ModItem currItem))
+                    {
+                        int index = items.Length;
+                        shop.item[index].SetDefaults(currItem.Type);
+                        shop.item[index].shopCustomPrice = 500000;
+                        shop.item[index].isAShopItem = true;
+                    }
+                }
+                if (BossChecklistIntegration.isDevourerDefeated())
+                {
+                    if (Calamity.TryFind<ModItem>("OmegaHealingPotion", out ModItem currItem))
+                    {
+                        int index = items.Length + 1;
+                        shop.item[index].SetDefaults(currItem.Type);
+                        shop.item[index].shopCustomPrice = 1000000;
+                        shop.item[index].isAShopItem = true;
+                    }
+
+                }
             }
         }
     }
 }
+
 
     

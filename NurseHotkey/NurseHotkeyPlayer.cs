@@ -61,7 +61,7 @@ namespace NurseHotkey
 
             else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod"))
             {
-                preCost += debuffCount * 200; // Add the debuff cost to the total cost, multiplied by 1 silver per debuff
+                preCost += debuffCount * 200; // Add the debuff cost to the total cost, multiplied by 2 silver per debuff
             }
 
             else
@@ -69,7 +69,7 @@ namespace NurseHotkey
                 preCost += debuffCount * 100; // Add the debuff cost to the total cost, multiplied by 1 silver per debuff
             }
 
-            float multipliedCost = 0;
+            float calamityBaseCost = 0;
 
             if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && debuffCount > 0 || healthMissing > 0) //increases base cost by set amount based on https://calamitymod.fandom.com/wiki/Town_NPCs/Nurse_Price_Scaling
                                                                                                               //NOTE: Not sure if the prices are inaacurate on that page or if the scaling is different, but values derived below are hand tested on a max happiness Nurse and accurate for these 4 tests:
@@ -77,47 +77,47 @@ namespace NurseHotkey
             {
                 if (BossChecklistIntegration.isYharonDefeated())
                 {
-                    multipliedCost = 89700; //897
+                    calamityBaseCost = 89700; //897
                 }
                 else if (BossChecklistIntegration.isDevourerDefeated())
                 {
-                    multipliedCost = 59700; //5.97
+                    calamityBaseCost = 59700; //5.97
                 }
                 else if (BossChecklistIntegration.isProvidenceDefeated()) //Providence defeated
                 {
-                    multipliedCost = 32000; //3 gold 20 silver base
+                    calamityBaseCost = 32000; //3 gold 20 silver base
                 }
                 else if (NPC.downedMoonlord) // Moon Lord defeated
                 {
-                    multipliedCost = 19700; // 1 gold 97 silver base
+                    calamityBaseCost = 19700; // 1 gold 97 silver base
                 }
                 else if (NPC.downedFishron | BossChecklistIntegration.isPlaguebringerDefeated() | BossChecklistIntegration.isRavagerDefeated()) // Duke Fishron/Plaguebringer Goliath/ Ravager defeated
                 {
-                    multipliedCost = 11700; // 1 gold 17 silver base
+                    calamityBaseCost = 11700; // 1 gold 17 silver base
                 }
                 else if (NPC.downedGolemBoss) // Golem defeated
                 {
-                    multipliedCost = 8700; // 87 silver base
+                    calamityBaseCost = 8700; // 87 silver base
                 }
                 else if (NPC.downedPlantBoss | BossChecklistIntegration.isCalamitasCloneDefeated()) // Plantera defeated
                 {
-                    multipliedCost = 5700; // 57 silver base
+                    calamityBaseCost = 5700; // 57 silver base
                 }
                 else if (NPC.downedMechBossAny) // At least one Mechanical Boss defeated
                 {
-                    multipliedCost = 3700; // 37 silver base
+                    calamityBaseCost = 3700; // 37 silver base
                 }
                 else if (Main.hardMode)
                 {
-                    multipliedCost = 2100; // 21 silver base
+                    calamityBaseCost = 2100; // 21 silver base
                 }
                 else if (NPC.downedBoss3) // Skeletron defeated 
                 {
-                    multipliedCost = 900; // Increased price (9 silver base)
+                    calamityBaseCost = 900; // Increased price (9 silver base)
                 }
                 else if (NPC.downedBoss1) // Eye of Cthulhu defeated
                 {
-                    multipliedCost = 300; // Increased price (3 silver base). Note this differs from what is on the Calamity wiki for whatever reason. Base prices from here are hand calculated
+                    calamityBaseCost = 300; // Increased price (3 silver base). Note this differs from what is on the Calamity wiki for whatever reason. Base prices from here are hand calculated
                 }
             }
 
@@ -125,16 +125,16 @@ namespace NurseHotkey
 
             if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) == true && debuffCount > 1)
             {
-                multipliedCost += preCost * GetMultiplier() * nurseHappinessAdjustment;
-                finalCost = multipliedCost * 5;
+                calamityBaseCost += preCost * GetMultiplier() * nurseHappinessAdjustment;
+                finalCost = calamityBaseCost * 5;
             }
             else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod"))
             {
-                finalCost = multipliedCost + (preCost * GetMultiplier() * nurseHappinessAdjustment);
+                finalCost = calamityBaseCost + (preCost * GetMultiplier() * nurseHappinessAdjustment);
             }
             else
             {
-                finalCost = multipliedCost + (preCost * GetMultiplier() * nurseHappinessAdjustment); // Multiply the total cost by the boss defeat multiplier
+                finalCost = preCost * GetMultiplier() * nurseHappinessAdjustment; // Multiply the total cost by the boss defeat multiplier
             }
 
             return finalCost;
@@ -199,13 +199,14 @@ namespace NurseHotkey
             var currentShoppingSettings = Main.ShopHelper.GetShoppingSettings(Main.LocalPlayer, nurseNPC);
             float nurseHappinessAdjustment = (float)currentShoppingSettings.PriceAdjustment;
             float multiplier = 0;
+            Main.NewText($"happiness {nurseHappinessAdjustment}");
 
-            if (nurseHappinessAdjustment < 1.02) //
+            if (nurseHappinessAdjustment < 1.07 && nurseHappinessAdjustment != 1) //
             {
                 multiplier += .9995f;
             }
 
-            if (nurseHappinessAdjustment >= 1.02)
+            if (nurseHappinessAdjustment >= 1.07 | nurseHappinessAdjustment == 1)
             {
                 multiplier += 1f;
             }
@@ -432,10 +433,7 @@ namespace NurseHotkey
                 {
                     CureAllDebuffs(player); //debuffs destroyed
                     float flooredFloatCost = (float)Math.Floor(cost);
-                    Main.NewText($"This is the float cost {cost}");
-                    Main.NewText($"This is the floored float cost {flooredFloatCost}");
                     int intCost = Convert.ToInt32(flooredFloatCost);
-                    Main.NewText($"This is the int cost {intCost}");
                     player.BuyItem(intCost); //pay up 
                     int healAmount = healthMissing; //ok how much this mothasucka need
                     player.statLife += healAmount; //puts the item in the bag
