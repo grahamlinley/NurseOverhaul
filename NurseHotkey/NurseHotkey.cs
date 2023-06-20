@@ -41,6 +41,11 @@ namespace NurseHotkey
             //unload mod
             NurseHealHotkey = null;
         }
+    }
+
+
+    public class BossChecklistIntegration : ModSystem
+    {
         public override void AddRecipes()
         {
             // Recipe to turn 3 Lesser Healing Potions into a Healing Potion
@@ -61,38 +66,20 @@ namespace NurseHotkey
             superHealingPotionRecipe.AddTile(TileID.AlchemyTable);
             superHealingPotionRecipe.Register();
         }
-        public override void PostAddRecipes()
+        public override void PostSetupContent()
         {
             Mod bossChecklist = ModLoader.GetMod("BossChecklist");
-            if (bossChecklist != null)
-            {
-                bossChecklist.Call("AddBossBagRewards",
-                    // boss key
-                    "Terraria:KingSlime",
-                    // Add item type(s) to drop from King Slime
-                    ModContent.ItemType<NurseWalkieTalkie>()
+                bossChecklist.Call(
+                    "SubmitEntryLoot",
+                    this,  // This is the instance of the current mod
+                    new Dictionary<string, object>() {
+                { "Terraria KingSlime", ModContent.ItemType<NurseWalkieTalkie>() },
+                { "Terraria EyeOfCthulhu", ModContent.ItemType<SurfaceTransponder>() },
+                { "Terraria Skeletron", ModContent.ItemType<PlatinumInsurance>() }
+                    }
                 );
-
-                bossChecklist.Call("AddBossBagRewards",
-                    // boss key
-                    "Terraria:EyeOfCthulhu",
-                    // Add item type(s) to drop from Eye of Cthulhu
-                    ModContent.ItemType<SurfaceTransponder>()
-                );
-
-                bossChecklist.Call("AddBossBagRewards",
-                    // boss key
-                    "Terraria:Skeletron",
-                    // Add item type(s) to drop from Skeletron
-                    ModContent.ItemType<PlatinumInsurance>()
-                );
-            }
+            
         }
-    }
-
-
-    public class BossChecklistIntegration : ModSystem
-    {
         //Bosschecklist integration for checking Calamity boss kills 
 
         private static readonly Version BossChecklistAPIVersion = new Version(1, 1);

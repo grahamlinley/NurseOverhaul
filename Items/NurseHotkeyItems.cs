@@ -33,7 +33,7 @@ namespace NurseHotkey.Items
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Single Band Transceiver");
-            Tooltip.SetDefault("You get the feeling this could be used with your Nurse badge...");
+            Tooltip.SetDefault("You get the feeling this could somehow be combined with your Nurse badge...");
         }
 
         public override void SetDefaults()
@@ -65,12 +65,6 @@ namespace NurseHotkey.Items
             Item.value = Item.sellPrice(0, 1, 0, 0); // Set the item's value
             Item.rare = ItemRarityID.Green; // Set the item's rarity
             Item.accessory = false; // Make the item an accessory
-        }
-
-        public override void UpdateAccessory(Player player, bool hideVisual)
-        {
-            // Add any functionality you want the accessory to have when equipped here
-            //player.moveSpeed += 0.1f; // Example: Increase player's movement speed
         }
 
         public override void AddRecipes()
@@ -142,8 +136,8 @@ namespace NurseHotkey.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Thruster Blueprint's");
-            Tooltip.SetDefault("Why do thruster's make you think of healing... Maybe the Nurse could use this for something...");
+            DisplayName.SetDefault("Thruster Blueprints");
+            Tooltip.SetDefault("Why do thrusters make you think of healing? Either the Nurse could use this or you might need some serious medical treatment...");
         }
 
         public override void SetDefaults()
@@ -182,7 +176,7 @@ namespace NurseHotkey.Items
             // Add any crafting recipe for the item here if desired
             Recipe recipe = CreateRecipe();
             recipe.AddIngredient(ItemID.PlatinumCoin, 1);
-            recipe.AddIngredient(ModContent.ItemType<NurseWalkieTalkie>(), 1);
+            recipe.AddIngredient(ModContent.ItemType<SurfaceTransponder>(), 1);
             recipe.AddIngredient(ModContent.ItemType<Thruster>(), 1);
             recipe.Register();
         }
