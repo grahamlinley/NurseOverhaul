@@ -23,7 +23,7 @@ namespace NurseHotkey.Items
             Item.height = 20;
             Item.value = Item.sellPrice(0, 0, 1, 0); // Set the item's value
             Item.rare = ItemRarityID.Blue; // Set the item's rarity
-            Item.accessory = true; // Make the item an accessory
+            Item.accessory = false; // Make the item an accessory
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
@@ -59,7 +59,7 @@ namespace NurseHotkey.Items
             Item.height = 20;
             Item.value = Item.sellPrice(0, 1, 0, 0); // Set the item's value
             Item.rare = ItemRarityID.Green; // Set the item's rarity
-            Item.accessory = true; // Make the item an accessory
+            Item.accessory = false; // Make the item an accessory
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
@@ -94,7 +94,7 @@ namespace NurseHotkey.Items
             Item.height = 20;
             Item.value = Item.sellPrice(0, 20, 0, 0); // Set the item's value
             Item.rare = ItemRarityID.Orange; // Set the item's rarity
-            Item.accessory = true; // Make the item an accessory
+            Item.accessory = false; // Make the item an accessory
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
@@ -129,7 +129,7 @@ namespace NurseHotkey.Items
             Item.height = 20;
             Item.value = Item.sellPrice(0, 20, 0, 0); // Set the item's value
             Item.rare = ItemRarityID.Orange; // Set the item's rarity
-            Item.accessory = true; // Make the item an accessory
+            Item.accessory = false; // Make the item an accessory
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)

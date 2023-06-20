@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using NurseHotkey.Items;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,14 @@ namespace NurseHotkey
 {
     public class NurseHotkeyPlayer : ModPlayer
     {
+        public override void PostUpdate()
+        {
+            Player player = Main.LocalPlayer;
+            if (PlayerIsInRangeOfNurse() && PlayerHasTransponder())
+            {
+                player.AddBuff(ModContent.BuffType<Buffs.NurseInRange>(), 2);
+            }
+        }
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
             if (NurseHotkey.NurseHealHotkey.JustPressed)
@@ -352,6 +361,67 @@ namespace NurseHotkey
                 }
             }
         }
+        private bool PlayerHasItem(Player player, int itemType)
+        {
+            return player.inventory.Any(i => i.type == itemType);
+        }
+        private int GetRangeForItem(int itemType)
+        {
+            if (itemType == ModContent.ItemType<NurseVIPBadge>())
+                return 320;
+            if (itemType == ModContent.ItemType<LocalTransponder>())
+                return 3200;
+            if (itemType == ModContent.ItemType<SurfaceTransponder>())
+                return 32000;
+            if (itemType == ModContent.ItemType<GlobalTransponder>())
+                return 320000;
+            return 0;
+        }
+
+        private bool PlayerIsInRangeOfNurse()
+        {
+            Player player = Main.LocalPlayer;
+            NPC nurse = Main.npc[NPC.FindFirstNPC(NPCID.Nurse)];
+            int highestRange = GetHighestRangeForItems(player);
+            return nurse != null && Vector2.Distance(player.Center, nurse.Center) <= highestRange;
+        }
+
+        private bool PlayerHasTransponder()
+        {
+            Player player = Main.LocalPlayer;
+            int[] itemsTypesToCheck = new int[]
+            {
+                ModContent.ItemType<NurseVIPBadge>(),
+                ModContent.ItemType<LocalTransponder>(),
+                ModContent.ItemType<SurfaceTransponder>(),
+                ModContent.ItemType<GlobalTransponder>()
+            };
+            return itemsTypesToCheck.Any(itemType => PlayerHasItem(player, itemType));
+        }
+
+        private int GetHighestRangeForItems(Player player)
+        {
+            int[] itemsTypesToCheck = new int[]
+            {
+                ModContent.ItemType<NurseVIPBadge>(),
+                ModContent.ItemType<LocalTransponder>(),
+                ModContent.ItemType<SurfaceTransponder>(),
+                ModContent.ItemType<GlobalTransponder>()
+            };
+            int highestRange = 3200; // base range
+            int rangeForItem;
+
+            foreach (int itemType in itemsTypesToCheck)
+            {
+                if (PlayerHasItem(player, itemType))
+                {
+                    rangeForItem = GetRangeForItem(itemType);
+                    highestRange = Math.Max(highestRange, rangeForItem);
+                }
+            }
+
+            return highestRange;
+        }
 
         public void NurseHeal()
         {
@@ -373,7 +443,26 @@ namespace NurseHotkey
                 return allItems.ToArray();
             }
 
-            if (nurse != null && Vector2.Distance(Player.Center, nurse.Center) <= 6400)
+            int[] itemsTypesToCheck = new int[]
+            {
+                    ModContent.ItemType<NurseVIPBadge>(),
+                    ModContent.ItemType<LocalTransponder>(),
+                    ModContent.ItemType<SurfaceTransponder>(),
+                    ModContent.ItemType<GlobalTransponder>()
+            };
+                        int highestRange = 320; // base range
+                        int rangeForItem;
+
+                        foreach (int itemType in itemsTypesToCheck)
+                        {
+                            if (PlayerHasItem(player, itemType))
+                            {
+                                rangeForItem = GetRangeForItem(itemType);
+                                highestRange = Math.Max(highestRange, rangeForItem);
+                            }
+                        }
+
+            if (nurse != null && Vector2.Distance(Player.Center, nurse.Center) <= highestRange)
             {
                 int healthMissing = Player.statLifeMax2 - Player.statLife;
                 float cost = GetHealCost(healthMissing, Player);

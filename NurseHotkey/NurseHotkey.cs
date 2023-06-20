@@ -1,7 +1,5 @@
 //TO DO: 
-// Checks that modify range in nhplayer
 // Recipes for potions
-// Add buff for in range of nurse
 // Icon for tmod and item sprites 
 // readme + tmodloader info file
 // DEBUG. Found error when stacking to chest + some other places (spawned something in and got an error, might be unrelated). Check log trace. 
