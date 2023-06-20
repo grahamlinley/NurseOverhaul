@@ -1,3 +1,4 @@
 displayName = Nurse Hotkey
 author = Sely
 version = 0.11
+dependencies = BossChecklist

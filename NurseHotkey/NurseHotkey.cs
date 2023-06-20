@@ -1,6 +1,4 @@
 //TO DO: 
-// Add customm item drops to bosses, include recipes in current item
-// Fix buff to work with each item
 // Icon for tmod and item sprites 
 // readme + tmodloader info file
 // DEBUG. Found error when stacking to chest + some other places (spawned something in and got an error, might be unrelated). Check log trace. 
@@ -23,6 +21,7 @@ using Terraria.UI;
 using System.Text;
 using static NurseHotkey.BossChecklistIntegration;
 using Terraria.GameContent.Creative;
+using NurseHotkey.Items;
 
 namespace NurseHotkey
 {
@@ -34,7 +33,7 @@ namespace NurseHotkey
         public override void Load()
         {
             //set keybind
-            NurseHealHotkey = KeybindLoader.RegisterKeybind(this, "Heal in range of Nurse", "G");
+            NurseHealHotkey = KeybindLoader.RegisterKeybind(this, "Heal in range of Nurse", "G");   
         }
 
         public override void Unload()
@@ -61,6 +60,33 @@ namespace NurseHotkey
             superHealingPotionRecipe.AddIngredient(ItemID.GreaterHealingPotion, 5);
             superHealingPotionRecipe.AddTile(TileID.AlchemyTable);
             superHealingPotionRecipe.Register();
+        }
+        public override void PostAddRecipes()
+        {
+            Mod bossChecklist = ModLoader.GetMod("BossChecklist");
+            if (bossChecklist != null)
+            {
+                bossChecklist.Call("AddBossBagRewards",
+                    // boss key
+                    "Terraria:KingSlime",
+                    // Add item type(s) to drop from King Slime
+                    ModContent.ItemType<NurseWalkieTalkie>()
+                );
+
+                bossChecklist.Call("AddBossBagRewards",
+                    // boss key
+                    "Terraria:EyeOfCthulhu",
+                    // Add item type(s) to drop from Eye of Cthulhu
+                    ModContent.ItemType<SurfaceTransponder>()
+                );
+
+                bossChecklist.Call("AddBossBagRewards",
+                    // boss key
+                    "Terraria:Skeletron",
+                    // Add item type(s) to drop from Skeletron
+                    ModContent.ItemType<PlatinumInsurance>()
+                );
+            }
         }
     }
 

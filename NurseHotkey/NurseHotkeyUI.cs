@@ -110,9 +110,9 @@ namespace NurseHotkey
                 (ItemID.LifeforcePotion, 10000),
                 (ItemID.SuperHealingPotion, 150000),
                 (ModContent.ItemType<NurseVIPBadge>(), 5000),
-                (ModContent.ItemType<LocalTransponder>(), 250000),
+                (ModContent.ItemType<NurseWalkieTalkie>(), 250000),
                 (ModContent.ItemType<SurfaceTransponder>(), 750000),
-                (ModContent.ItemType<GlobalTransponder>(), 2000000),
+                (ModContent.ItemType<PlatinumInsurance>(), 2000000),
                 (ItemID.None, 0),
                 (ItemID.None, 0),
                 (ItemID.None, 0),
@@ -121,7 +121,6 @@ namespace NurseHotkey
                 (ItemID.None, 0),
                 (ItemID.None, 0),
                 (ItemID.None, 0),
-                                (ItemID.None, 0),
                 (ItemID.None, 0),
                 (ItemID.None, 0),
                 (ItemID.None, 0),
@@ -129,7 +128,8 @@ namespace NurseHotkey
                 (ItemID.None, 0),
                 (ItemID.None, 0),
                 (ItemID.None, 0),
-                                (ItemID.None, 0),
+                (ItemID.None, 0),
+                (ItemID.None, 0),
                 (ItemID.None, 0),
                 (ItemID.None, 0),
                 (ItemID.None, 0),
@@ -148,9 +148,9 @@ namespace NurseHotkey
                                         item.id == ItemID.LifeforcePotion ||
                                         item.id == ItemID.SuperHealingPotion ||
                                         item.id == ItemID.None ||
-                                        item.id == ModContent.ItemType<LocalTransponder>() ||
+                                        item.id == ModContent.ItemType<NurseWalkieTalkie>() ||
                                         item.id == ModContent.ItemType<SurfaceTransponder>() ||
-                                        item.id == ModContent.ItemType<GlobalTransponder>());
+                                        item.id == ModContent.ItemType<PlatinumInsurance>());
             }
 
             if (!NPC.downedBoss1)
@@ -160,7 +160,7 @@ namespace NurseHotkey
                                         item.id == ItemID.LifeforcePotion ||
                                         item.id == ItemID.SuperHealingPotion ||
                                         item.id == ModContent.ItemType<SurfaceTransponder>() ||
-                                        item.id == ModContent.ItemType<GlobalTransponder>());
+                                        item.id == ModContent.ItemType<PlatinumInsurance>());
             }
 
             if (!NPC.downedBoss3)
@@ -169,7 +169,7 @@ namespace NurseHotkey
                                         item.id == ItemID.GreaterHealingPotion ||
                                         item.id == ItemID.LifeforcePotion ||
                                         item.id == ItemID.SuperHealingPotion ||
-                                        item.id == ModContent.ItemType<GlobalTransponder>());
+                                        item.id == ModContent.ItemType<PlatinumInsurance>());
             }
 
             if (!Main.hardMode)
