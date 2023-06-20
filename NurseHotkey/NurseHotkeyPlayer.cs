@@ -23,7 +23,8 @@ namespace NurseHotkey
         public static bool ExcludedDebuff(int buffType)
         {
             // List of debuffs to be excluded
-            int[] excludedDebuffs = { BuffID.PotionSickness, BuffID.WaterCandle, BuffID.NoBuilding, BuffID.Werewolf };
+            int[] excludedDebuffs = { BuffID.PotionSickness, BuffID.WaterCandle, BuffID.NoBuilding, BuffID.Werewolf, BuffID.DryadsWard, BuffID.HeartLamp, BuffID.PeaceCandle,
+            BuffID.Honey, BuffID.StarInBottle, BuffID.CatBast, BuffID.Sunflower, BuffID.Merfolk, BuffID.Campfire};
 
             // Check if the given buffType is in the excludedDebuffs list
             return excludedDebuffs.Contains(buffType);
@@ -85,7 +86,7 @@ namespace NurseHotkey
                 }
                 else if (BossChecklistIntegration.isProvidenceDefeated()) //Providence defeated
                 {
-                    calamityBaseCost = 32000; //3 gold 20 silver base
+                    calamityBaseCost = 31700; //3 gold 20 silver base
                 }
                 else if (NPC.downedMoonlord) // Moon Lord defeated
                 {
@@ -225,7 +226,7 @@ namespace NurseHotkey
                 }
             }
 
-            if (NPC.downedBoss3 || NPC.downedQueenBee) // Skeletron or Queen Bee
+            if (NPC.downedBoss3 | NPC.downedQueenBee) // Skeletron or Queen Bee
             {
                 multiplier += 15f; //23.7499f
 
@@ -241,7 +242,7 @@ namespace NurseHotkey
 
             if (Main.hardMode) // Wall of Flesh
             {
-                multiplier += 35f; //56.9999f
+                multiplier += 35f; //28f fixed
 
                 if (!NPC.downedBoss1)
                 {

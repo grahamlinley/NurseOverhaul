@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NurseHotkey.Items;
+using System.Collections.Generic;
 using System.Reflection;
 using Terraria;
 using Terraria.Audio;
@@ -11,56 +12,43 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
-using Terraria.GameContent.Achievements;
-using System;
-
 
 namespace NurseHotkey
 {
     internal class NurseHotkeyUI : UIState
     {
-        // Main._textDisplayCache
         private static object TextDisplayCache => typeof(Main).GetField("_textDisplayCache", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(Main.instance);
-        private bool focused; // true if the shop button is hovered
+        private bool focused;
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
 
-            // Source: Main.DrawNPCChatButtons
-
-            Vector2 scale = new(0.9f); // scale of the button
+            Vector2 scale = new Vector2(0.9f);
             string text = Language.GetTextValue("LegacyInterface.28"); // "Shop"
-                                                                       // How long the npc text is (varies with language)
             int numLines = (int)TextDisplayCache.GetType().GetProperty("AmountOfLines", BindingFlags.Instance | BindingFlags.Public).GetValue(TextDisplayCache);
-            Vector2 stringSize = ChatManager.GetStringSize(FontAssets.MouseText.Value, text, scale); // size of "Shop" with scale 0.9
+            Vector2 stringSize = ChatManager.GetStringSize(FontAssets.MouseText.Value, text, scale);
 
-            // vanilla did that, idk
-            Vector2 value2 = new(1f);
+            Vector2 value2 = Vector2.One;
             if (stringSize.X > 260f)
                 value2.X *= 260f / stringSize.X;
 
             Player player = Main.LocalPlayer;
             float debuffCount = NurseHotkeyPlayer.GetDebuffCount(player);
 
-
             if (!Main.LocalPlayer.ghost && Main.LocalPlayer.statLife == Main.LocalPlayer.statLifeMax2 && debuffCount == 0)
             {
-                // button positions
-                float posButton1 = 180 + (Main.screenWidth - 800) / 2; // position of the first button (Heal)
-                float posButton2 = posButton1 + ChatManager.GetStringSize(FontAssets.MouseText.Value, Language.GetTextValue("LegacyInterface.54"), scale).X + 30f; // Position of the second button (Close)
-                float posButton3 = posButton2 + ChatManager.GetStringSize(FontAssets.MouseText.Value, Language.GetTextValue("LegacyInterface.52"), scale).X + 30f; // Position of the third button (Happiness)
-                float posButton4 = posButton3 + ChatManager.GetStringSize(FontAssets.MouseText.Value, Language.GetTextValue("UI.NPCCheckHappiness"), scale).X + 30f; // Position of the new button
-                Vector2 position = new(posButton4, 130 + numLines * 30);
+                float posButton1 = 180 + (Main.screenWidth - 800) / 2;
+                float posButton2 = posButton1 + ChatManager.GetStringSize(FontAssets.MouseText.Value, Language.GetTextValue("LegacyInterface.54"), scale).X + 30f;
+                float posButton3 = posButton2 + ChatManager.GetStringSize(FontAssets.MouseText.Value, Language.GetTextValue("LegacyInterface.52"), scale).X + 30f;
+                float posButton4 = posButton3 + ChatManager.GetStringSize(FontAssets.MouseText.Value, Language.GetTextValue("UI.NPCCheckHappiness"), scale).X + 30f;
+                Vector2 position = new Vector2(posButton4, 130 + numLines * 30);
 
-
-
-                // if the player is hovering over the button
                 if (Main.MouseScreen.Between(position, position + stringSize * scale * value2.X) && !PlayerInput.IgnoreMouseInterface)
                 {
                     Main.LocalPlayer.mouseInterface = true;
                     Main.LocalPlayer.releaseUseItem = false;
-                    scale *= 1.2f; // make button bigger
+                    scale *= 1.2f;
 
                     if (!focused)
                     {
@@ -79,146 +67,153 @@ namespace NurseHotkey
                     focused = false;
                 }
 
-                // draw button shadow
-                ChatManager.DrawColorCodedStringShadow(spriteBatch: spriteBatch,
-                    font: FontAssets.MouseText.Value,
-                    text: text,
-                    position: position + stringSize * value2 * 0.5f,
-                    baseColor: (!focused) ? Color.Black : Color.Brown,
-                    rotation: 0f,
-                    origin: stringSize * 0.5f,
-                    baseScale: scale * value2);
-
-                // draw button text
-                ChatManager.DrawColorCodedString(spriteBatch: spriteBatch,
-                    font: FontAssets.MouseText.Value,
-                    text: text,
-                    position: position + stringSize * value2 * 0.5f,
-                    baseColor: !focused ? new Color(228, 206, 114, Main.mouseTextColor / 2) : new Color(255, 231, 69), // color of the button text
-                    rotation: 0f,
-                    origin: stringSize * 0.5f,
-                    baseScale: scale);
+                ChatManager.DrawColorCodedStringShadow(spriteBatch, FontAssets.MouseText.Value, text, position + stringSize * value2 * 0.5f, (!focused) ? Color.Black : Color.Brown, 0f, stringSize * 0.5f, scale * value2);
+                ChatManager.DrawColorCodedString(spriteBatch, FontAssets.MouseText.Value, text, position + stringSize * value2 * 0.5f, !focused ? new Color(228, 206, 114, Main.mouseTextColor / 2) : new Color(255, 231, 69), 0f, stringSize * 0.5f, scale);
             }
         }
+
         public static bool baseShop = false;
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            // if the shop button is clicked
             if (focused && Main.mouseLeft)
             {
                 OpenShop(99);
             }
         }
 
-        // copied from Main.OpenShop (except the line with the comment)
         internal static void OpenShop(int shopIndex)
         {
             Main.playerInventory = true;
             Main.stackSplit = 9999;
             Main.npcChatText = "";
             Main.SetNPCShopIndex(shopIndex);
-            //shop[npcShop].SetupShop(npcShop);
-            SetupShop(Main.instance.shop[99]); // calling my own SetupShop method
+            SetupShop(Main.instance.shop[99]);
             SoundEngine.PlaySound(SoundID.MenuTick);
         }
-
-
+        
         private static void SetupShop(Chest shop)
         {
             ModLoader.TryGetMod("CalamityMod", out Mod Calamity);
-            // all items being sold:
-            (int id, int price)[] items = {
-            (ItemID.Mushroom, 300),
-            (ItemID.BottledWater, 300),
-            (ItemID.BottledHoney, 300),
-            (ItemID.LesserHealingPotion, 300),
-            (ItemID.HealingPotion, 1000),
-            (ItemID.RestorationPotion, 1000),
-            (ItemID.LifeforcePotion, 1000),
-            (ItemID.SuperHealingPotion, 1000),
-            (ModContent.ItemType<NurseVIPBadge>(), 5000),
-            (ModContent.ItemType<LocalTransponder>(), 5000),
-            (ModContent.ItemType<SurfaceTransponder>(), 5000),
-            (ModContent.ItemType<GlobalTransponder>(), 5000),
-        };
 
-            if(!NPC.downedSlimeKing)
+            List<(int id, int price)> items = new List<(int id, int price)>
             {
-                items[^6].id = ItemID.None;
-            }
+                (ItemID.Mushroom, 250),
+                (ItemID.BottledWater, 200),
+                (ItemID.BottledHoney, 400),
+                (ItemID.LesserHealingPotion, 300),
+                (ItemID.RestorationPotion, 15000),
+                (ItemID.HealingPotion, 10000),
+                (ItemID.LifeforcePotion, 10000),
+                (ItemID.SuperHealingPotion, 150000),
+                (ModContent.ItemType<NurseVIPBadge>(), 5000),
+                (ModContent.ItemType<LocalTransponder>(), 250000),
+                (ModContent.ItemType<SurfaceTransponder>(), 750000),
+                (ModContent.ItemType<GlobalTransponder>(), 2000000),
+                        (ItemID.None, 0),
+                (ItemID.None, 0),
+                (ItemID.None, 0),
+                (ItemID.None, 0),
+                (ItemID.None, 0),
+                (ItemID.None, 0),
+                (ItemID.None, 0),
+                (ItemID.None, 0),
+                (ItemID.None, 0),
+                                (ItemID.None, 0),
+                (ItemID.None, 0),
+                (ItemID.None, 0),
+                (ItemID.None, 0),
+                (ItemID.None, 0),
+                (ItemID.None, 0),
+                (ItemID.None, 0),
+                (ItemID.None, 0),
+                                (ItemID.None, 0),
+                (ItemID.None, 0),
+                (ItemID.None, 0),
+                (ItemID.None, 0),
+                (ItemID.None, 0),
+                (ItemID.None, 0),
+                (ItemID.None, 0),
+                (ItemID.None, 0),
+                (ItemID.None, 0)
+            };
+
             if (!NPC.downedSlimeKing)
             {
-                items[^6].id = ItemID.None;
+                items.RemoveAll(item => item.id == ItemID.HealingPotion ||
+                                        item.id == ItemID.RestorationPotion ||
+                                        item.id == ItemID.GreaterHealingPotion ||
+                                        item.id == ItemID.LifeforcePotion ||
+                                        item.id == ItemID.SuperHealingPotion ||
+                                        item.id == ItemID.None ||
+                                        item.id == ModContent.ItemType<LocalTransponder>() ||
+                                        item.id == ModContent.ItemType<SurfaceTransponder>() ||
+                                        item.id == ModContent.ItemType<GlobalTransponder>());
             }
-            if (!NPC.downedSlimeKing)
+
+            if (!NPC.downedBoss1)
             {
-                items[^6].id = ItemID.None;
+                items.RemoveAll(item => item.id == ItemID.RestorationPotion ||
+                                        item.id == ItemID.GreaterHealingPotion ||
+                                        item.id == ItemID.LifeforcePotion ||
+                                        item.id == ItemID.SuperHealingPotion ||
+                                        item.id == ModContent.ItemType<SurfaceTransponder>() ||
+                                        item.id == ModContent.ItemType<GlobalTransponder>());
             }
+
+            if (!NPC.downedBoss3)
+            {
+                items.RemoveAll(item => item.id == ItemID.RestorationPotion ||
+                                        item.id == ItemID.GreaterHealingPotion ||
+                                        item.id == ItemID.LifeforcePotion ||
+                                        item.id == ItemID.SuperHealingPotion ||
+                                        item.id == ModContent.ItemType<GlobalTransponder>());
+            }
+
             if (!Main.hardMode)
             {
-                items[^1].id = ItemID.None;
-                items[^2].id = ItemID.None;
-            }
-            if (!NPC.downedSlimeKing)
-            {
-                items[^6].id = ItemID.None;
-            }
-            if (!NPC.downedSlimeKing)
-            {
-                items[^6].id = ItemID.None;
-            }
-            if (!NPC.downedSlimeKing)
-            {
-                items[^6].id = ItemID.None;
-            }
-            if (!NPC.downedSlimeKing)
-            {
-                items[^6].id = ItemID.None;
+                items.RemoveAll(item => item.id == ItemID.LifeforcePotion ||
+                                        item.id == ItemID.SuperHealingPotion);
             }
 
-            // add items to the list
-            for (int i = 0; i < items.Length; i++)
+            if (!NPC.downedAncientCultist)
             {
-                if (items[i].id == ItemID.None) continue;
+                items.RemoveAll(item => item.id == ItemID.SuperHealingPotion);
+            }
+
+
+            int supremeHealingPotionIndex = -1;
+            int omegaHealingPotionIndex = -1;
+
+            if (Calamity != null && NPC.downedMoonlord && Calamity.TryFind<ModItem>("SupremeHealingPotion", out ModItem supremeHealingPotion))
+            {
+                supremeHealingPotionIndex = items.FindIndex(item => item.id == ItemID.SuperHealingPotion);
+
+                    items.Add((supremeHealingPotion.Type, 500000));
+            
+
+            }
+
+            if (Calamity != null && BossChecklistIntegration.isDevourerDefeated() && Calamity.TryFind<ModItem>("OmegaHealingPotion", out ModItem omegaHealingPotion))
+            {
+                omegaHealingPotionIndex = items.FindIndex(item => item.id == ItemID.SuperHealingPotion);
+
+                    items.Add((omegaHealingPotion.Type, 1000000));
+
+            }
+
+            for (int i = 0; i < items.Count; i++)
+            {
                 Item newItem = new Item();
                 newItem.SetDefaults(items[i].id);
                 newItem.shopCustomPrice = items[i].price;
                 shop.item[i].SetDefaults(newItem.type);
                 shop.item[i].shopCustomPrice = newItem.shopCustomPrice;
-                shop.item[i].SetDefaults(items[i].id);
                 shop.item[i].isAShopItem = true;
-                shop.item[i].shopCustomPrice = items[i].price;
-            }
-            if (Calamity != null)
-            {
-                if (NPC.downedMoonlord)
-                {
-                    if (Calamity.TryFind<ModItem>("SupremeHealingPotion", out ModItem currItem))
-                    {
-                        int index = items.Length;
-                        shop.item[index].SetDefaults(currItem.Type);
-                        shop.item[index].shopCustomPrice = 500000;
-                        shop.item[index].isAShopItem = true;
-                    }
-                }
-                if (BossChecklistIntegration.isDevourerDefeated())
-                {
-                    if (Calamity.TryFind<ModItem>("OmegaHealingPotion", out ModItem currItem))
-                    {
-                        int index = items.Length + 1;
-                        shop.item[index].SetDefaults(currItem.Type);
-                        shop.item[index].shopCustomPrice = 1000000;
-                        shop.item[index].isAShopItem = true;
-                    }
-
-                }
             }
         }
+
     }
 }
-
-
-    
