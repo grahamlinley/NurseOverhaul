@@ -20,6 +20,7 @@
     <Folder Include="Content\" />
     <Folder Include="Common\" />
     <Folder Include="Localization\" />
+    <Folder Include="Recipes\" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="BossChecklist">

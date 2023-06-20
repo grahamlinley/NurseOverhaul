@@ -189,6 +189,20 @@ namespace NurseHotkey
             return debuffCount;
         }
 
+        public static void CureAllDebuffs(Player player)
+        {
+            for (int i = 0; i < player.buffType.Length; i++)
+            {
+                int buffType = player.buffType[i];
+
+                if (buffType > 0 && Main.debuff[buffType] && !ExcludedDebuff(buffType))
+                {
+                    player.DelBuff(i);
+                    i--; // Decrement i to account for the removed buff
+                }
+            }
+        }
+
         public bool IsBossAlive(string bossName)
         {
             foreach (NPC npc in Main.npc)
@@ -347,46 +361,59 @@ namespace NurseHotkey
             return multiplier;
         }
 
-
-        public static void CureAllDebuffs(Player player)
-        {
-            for (int i = 0; i < player.buffType.Length; i++)
-            {
-                int buffType = player.buffType[i];
-
-                if (buffType > 0 && Main.debuff[buffType] && !ExcludedDebuff(buffType))
-                {
-                    player.DelBuff(i);
-                    i--; // Decrement i to account for the removed buff
-                }
-            }
-        }
-        private bool PlayerHasItem(Player player, int itemType)
+        private bool PlayerHasItem(Player player, int itemType) // helper method that will determine if the player has a Nurse healing item
         {
             return player.inventory.Any(i => i.type == itemType);
         }
         private int GetRangeForItem(int itemType)
         {
+            double scaleFactor = (double)Main.maxTilesX / 8400; // calculate scaling factor based on world size
+
             if (itemType == ModContent.ItemType<NurseVIPBadge>())
                 return 320;
             if (itemType == ModContent.ItemType<LocalTransponder>())
                 return 3200;
             if (itemType == ModContent.ItemType<SurfaceTransponder>())
-                return 32000;
+                return (int)(64000 * scaleFactor); // scaling becomes important here for smaller worlds, you're surface transponder becomes global transponder-esque in a small world. scaleFactor fixes this!
             if (itemType == ModContent.ItemType<GlobalTransponder>())
-                return 320000;
+                return (int)(160000 * scaleFactor);
             return 0;
         }
 
-        private bool PlayerIsInRangeOfNurse()
+
+        private int GetHighestRangeForItems(Player player) // checks your items and determines which one has the highest range
+        {
+            int[] itemsTypesToCheck = new int[]
+            {
+                ModContent.ItemType<NurseVIPBadge>(),
+                ModContent.ItemType<LocalTransponder>(),
+                ModContent.ItemType<SurfaceTransponder>(),
+                ModContent.ItemType<GlobalTransponder>()
+            };
+            int highestRange = 320; // initialized base "highest" range, starts at lowest
+            int rangeForItem;
+
+            foreach (int itemType in itemsTypesToCheck)
+            {
+                if (PlayerHasItem(player, itemType))
+                {
+                    rangeForItem = GetRangeForItem(itemType);
+                    highestRange = Math.Max(highestRange, rangeForItem); // Takes the highest value in all the items listed above by using the dictionary established in getrangeforitem to check range values
+                }
+            }
+
+            return highestRange; // gives us highest value
+        }
+
+        private bool PlayerIsInRangeOfNurse() 
         {
             Player player = Main.LocalPlayer;
             NPC nurse = Main.npc[NPC.FindFirstNPC(NPCID.Nurse)];
-            int highestRange = GetHighestRangeForItems(player);
-            return nurse != null && Vector2.Distance(player.Center, nurse.Center) <= highestRange;
+            int highestRange = GetHighestRangeForItems(player); // The highest range the Nurse Item lets the player be from the Nurse
+            return Vector2.Distance(player.Center, nurse.Center) <= highestRange;
         }
 
-        private bool PlayerHasTransponder()
+        private bool PlayerHasTransponder() // Checks if you have any nurse item in your inventory
         {
             Player player = Main.LocalPlayer;
             int[] itemsTypesToCheck = new int[]
@@ -397,30 +424,6 @@ namespace NurseHotkey
                 ModContent.ItemType<GlobalTransponder>()
             };
             return itemsTypesToCheck.Any(itemType => PlayerHasItem(player, itemType));
-        }
-
-        private int GetHighestRangeForItems(Player player)
-        {
-            int[] itemsTypesToCheck = new int[]
-            {
-                ModContent.ItemType<NurseVIPBadge>(),
-                ModContent.ItemType<LocalTransponder>(),
-                ModContent.ItemType<SurfaceTransponder>(),
-                ModContent.ItemType<GlobalTransponder>()
-            };
-            int highestRange = 3200; // base range
-            int rangeForItem;
-
-            foreach (int itemType in itemsTypesToCheck)
-            {
-                if (PlayerHasItem(player, itemType))
-                {
-                    rangeForItem = GetRangeForItem(itemType);
-                    highestRange = Math.Max(highestRange, rangeForItem);
-                }
-            }
-
-            return highestRange;
         }
 
         public void NurseHeal()
