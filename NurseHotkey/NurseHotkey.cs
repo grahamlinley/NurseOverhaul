@@ -5,10 +5,9 @@
 // ADD CATCHES FOR IF NURSE DOESN'T EXIST
 // Dialogue for how much you spent at the nurse (button in box? maybe add total spent next to money just spent. could be too cluttery though)
 // WISH Specific equipment item slot that will only take NurseHotkey range modification items 
-// WISH: Maybe resprite or just an animation when you press the hotkey? Would be funny for like an Ana type character that shoots a healing dart at you to heal you past a certain range. Could add when glimmer introduced
+// WISH: Maybe resprite or just an animation when you press the hotkey? Would be funny for like an Ana type character that shoots a healing dart at you to heal you past a certain range. Could add when glimmer introduced to tmod
 // Potentially add lifeforce/jungle heart if people want
 // System fix: need to make it so calamity pots don't spawn at bottom of shop
-// Potentially add dynamic length adjustments based on world size? Not sure if possible
 
 using System;
 using System.Collections.Generic;
@@ -48,37 +47,44 @@ namespace NurseHotkey
     {
         public override void AddRecipes()
         {
-            // Recipe to turn 3 Lesser Healing Potions into a Healing Potion
+            // Recipe to turn Lesser Healing Potions into a Healing Potion
             Recipe healingPotionRecipe = Recipe.Create(ItemID.HealingPotion);
-            healingPotionRecipe.AddIngredient(ItemID.LesserHealingPotion, 3);
+            healingPotionRecipe.AddIngredient(ItemID.LesserHealingPotion, 5);
             healingPotionRecipe.AddTile(TileID.AlchemyTable);
             healingPotionRecipe.Register();
 
-            // Recipe to turn 3 Healing Potions into a Greater Healing Potion
+            // Recipe to turn Healing Potions into a Greater Healing Potion
             Recipe greaterHealingPotionRecipe = Recipe.Create(ItemID.GreaterHealingPotion);
-            greaterHealingPotionRecipe.AddIngredient(ItemID.HealingPotion, 3);
+            greaterHealingPotionRecipe.AddIngredient(ItemID.HealingPotion, 2);
+            greaterHealingPotionRecipe.AddIngredient(ItemID.PixieDust, 1);
             greaterHealingPotionRecipe.AddTile(TileID.AlchemyTable);
             greaterHealingPotionRecipe.Register();
 
-            // Recipe to turn 5 Greater Healing Potions into a Super Healing Potion
+            // Recipe to turn Greater Healing Potions into a Super Healing Potion
             Recipe superHealingPotionRecipe = Recipe.Create(ItemID.SuperHealingPotion);
-            superHealingPotionRecipe.AddIngredient(ItemID.GreaterHealingPotion, 5);
+            superHealingPotionRecipe.AddIngredient(ItemID.GreaterHealingPotion, 4);
             superHealingPotionRecipe.AddTile(TileID.AlchemyTable);
             superHealingPotionRecipe.Register();
-        }
-        public override void PostSetupContent()
-        {
-            Mod bossChecklist = ModLoader.GetMod("BossChecklist");
-                bossChecklist.Call(
-                    "SubmitEntryLoot",
-                    this,  // This is the instance of the current mod
-                    new Dictionary<string, object>() {
-                { "Terraria KingSlime", ModContent.ItemType<NurseWalkieTalkie>() },
-                { "Terraria EyeOfCthulhu", ModContent.ItemType<SurfaceTransponder>() },
-                { "Terraria Skeletron", ModContent.ItemType<PlatinumInsurance>() }
-                    }
-                );
+
+            ModLoader.TryGetMod("CalamityMod", out Mod Calamity);
+            if (Calamity != null && Calamity.TryFind<ModItem>("SupremeHealingPotion", out ModItem supremeHealingPotion))
+            {
+                Recipe supremeHealingPotionRecipe = Recipe.Create(supremeHealingPotion.Type);
+                supremeHealingPotionRecipe.AddIngredient(ItemID.SuperHealingPotion, 4);
+                supremeHealingPotionRecipe.AddTile(TileID.AlchemyTable);
+                supremeHealingPotionRecipe.Register();
+            }
             
+            /* don't really want to touch this for now. haven't played in a while and not sure how balanced something like this would be
+             * 
+            if (Calamity != null && Calamity.TryFind<ModItem>("OmegaHealingPotion", out ModItem omegaHealingPotion))
+            {
+                Recipe omegaHealingPotionRecipe = Recipe.Create(omegaHealingPotion.Type);
+                omegaHealingPotionRecipe.AddIngredient(ItemID.SuperHealingPotion, 5);
+                omegaHealingPotionRecipe.AddTile(TileID.AlchemyTable);
+                omegaHealingPotionRecipe.Register();
+            }
+            */
         }
         //Bosschecklist integration for checking Calamity boss kills 
 

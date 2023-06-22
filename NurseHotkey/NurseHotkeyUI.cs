@@ -96,8 +96,6 @@ namespace NurseHotkey
         
         private static void SetupShop(Chest shop)
         {
-            ModLoader.TryGetMod("CalamityMod", out Mod Calamity);
-
             List<(int id, int price)> items = new List<(int id, int price)>
             {
                 (ItemID.Mushroom, 250),
@@ -186,6 +184,8 @@ namespace NurseHotkey
 
             int supremeHealingPotionIndex = -1;
             int omegaHealingPotionIndex = -1;
+
+            ModLoader.TryGetMod("CalamityMod", out Mod Calamity);
 
             if (Calamity != null && NPC.downedMoonlord && Calamity.TryFind<ModItem>("SupremeHealingPotion", out ModItem supremeHealingPotion))
             {

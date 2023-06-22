@@ -11,11 +11,20 @@ namespace NurseHotkey.Items
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Nurse VIP Badge");
-            Tooltip.SetDefault("The Nurse will be watching for your signal. " +
+
+            string tooltipText = "The Nurse will be watching for your signal. " +
                 "\nWhen you're close to her, and you give her the signal (default key G when bound)," +
                 "\nshe will drop everything she's doing to heal you." +
                 "\nThe Nurse will only be able to track you as long as you keep this item in your inventory." +
-                "\nIf you lose it, she'll sell you another at her \"discounted rate.\"");
+                "\nIf you lose it, she'll sell you another at her \"discounted rate.\"";
+
+            // Check if Calamity Mod is enabled.
+            if (ModLoader.GetMod("CalamityMod") != null)
+            {
+                tooltipText += "\nCALAMITY PLAYERS: Be aware Calamity bosses increases the price of the Nurse by 5 times what it normally costs to heal if you are within 400 tiles of them.";
+            }
+
+            Tooltip.SetDefault(tooltipText);
         }
 
         public override void SetDefaults()
@@ -23,7 +32,7 @@ namespace NurseHotkey.Items
             Item.width = 20;
             Item.height = 20;
             Item.value = Item.sellPrice(0, 0, 1, 0); // Set the item's value
-            Item.rare = ItemRarityID.Blue; // Set the item's rarity
+            Item.rare = ItemRarityID.Green; // Set the item's rarity
             Item.accessory = false; // Make the item an accessory
         }
     }
@@ -41,7 +50,7 @@ namespace NurseHotkey.Items
             Item.width = 20;
             Item.height = 20;
             Item.value = Item.sellPrice(0, 0, 1, 0); // Set the item's value
-            Item.rare = ItemRarityID.Blue; // Set the item's rarity
+            Item.rare = ItemRarityID.Green; // Set the item's rarity
             Item.accessory = false; // Make the item an accessory
         }
     }
@@ -52,10 +61,17 @@ namespace NurseHotkey.Items
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Nurse's Walkie Talkie");
-            Tooltip.SetDefault("Using the technology you discovered, the Nurse has developed a way to remain in constant contact with you, and with a press of a button (default G) she can track you and heal you. " +
+            string tooltipText = "Using the technology you discovered, the Nurse has developed a way to remain in constant contact with you, and with a press of a button (default G) she can track you and heal you. " +
                 "\nShe tells you she can hit you as long as you stay within a little over one" +
                 "\n\"screen's worth\" of her. Whatever that means." +
-                "\nThe Nurse will only be able to track you as long as you keep this item in your inventory.");
+                "\nThe Nurse will only be able to track you as long as you keep this item in your inventory.";
+
+            // Check if Calamity Mod is enabled.
+            if (ModLoader.GetMod("CalamityMod") != null)
+            {
+                tooltipText += "\nCALAMITY PLAYERS: Be aware Calamity bosses increases the price of the Nurse by 5 times what it normally costs to heal if you are within 400 tiles of them.";
+            }
+            Tooltip.SetDefault(tooltipText);
         }
 
         public override void SetDefaults()
@@ -63,7 +79,7 @@ namespace NurseHotkey.Items
             Item.width = 20;
             Item.height = 20;
             Item.value = Item.sellPrice(0, 1, 0, 0); // Set the item's value
-            Item.rare = ItemRarityID.Green; // Set the item's rarity
+            Item.rare = ItemRarityID.Orange; // Set the item's rarity
             Item.accessory = false; // Make the item an accessory
         }
 
@@ -91,7 +107,7 @@ namespace NurseHotkey.Items
             Item.width = 20;
             Item.height = 20;
             Item.value = Item.sellPrice(0, 0, 1, 0); // Set the item's value
-            Item.rare = ItemRarityID.Blue; // Set the item's rarity
+            Item.rare = ItemRarityID.Orange; // Set the item's rarity
             Item.accessory = false; // Make the item an accessory
         }
     }
@@ -101,9 +117,16 @@ namespace NurseHotkey.Items
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Surface Transponder");
-            Tooltip.SetDefault("With your \"investments\" into the Nurse's new technology, she has found a way to increase her quick heal's range even further, taking her heals to the sky." +
+            string tooltipText = "With your \"investments\" into the Nurse's new technology, she has found a way to increase her quick heal's range even further, taking her heals to the sky." +
                 "\nIncreases Nurse's quick heal range to anywhere on the surface, plus a decent amount underground." +
-                "\nThe Nurse will only be able to track you as long as you keep this item in your inventory.");
+                "\nThe Nurse will only be able to track you as long as you keep this item in your inventory.";
+
+            // Check if Calamity Mod is enabled.
+            if (ModLoader.GetMod("CalamityMod") != null)
+            {
+                tooltipText += "\nCALAMITY PLAYERS: Be aware Calamity bosses increases the price of the Nurse by 5 times what it normally costs to heal if you are within 400 tiles of them.";
+            }
+            Tooltip.SetDefault(tooltipText);
         }
 
         public override void SetDefaults()
@@ -111,7 +134,7 @@ namespace NurseHotkey.Items
             Item.width = 20;
             Item.height = 20;
             Item.value = Item.sellPrice(0, 20, 0, 0); // Set the item's value
-            Item.rare = ItemRarityID.Orange; // Set the item's rarity
+            Item.rare = ItemRarityID.LightPurple; // Set the item's rarity
             Item.accessory = false; // Make the item an accessory
         }
 
@@ -136,7 +159,7 @@ namespace NurseHotkey.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Thruster Blueprints");
+            DisplayName.SetDefault("Thruster Components");
             Tooltip.SetDefault("Why do thrusters make you think of healing? Either the Nurse could use this or you might need some serious medical treatment...");
         }
 
@@ -145,7 +168,7 @@ namespace NurseHotkey.Items
             Item.width = 20;
             Item.height = 20;
             Item.value = Item.sellPrice(0, 0, 1, 0); // Set the item's value
-            Item.rare = ItemRarityID.Blue; // Set the item's rarity
+            Item.rare = ItemRarityID.Yellow; // Set the item's rarity
             Item.accessory = false; // Make the item an accessory
         }
     }
@@ -155,11 +178,18 @@ namespace NurseHotkey.Items
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Platinum Insurance");
-            Tooltip.SetDefault("She has the technology." +
+            string tooltipText = "She has the technology." +
                 "\nThe Nurse has created an industry, and that industry is booming. Her customers demand range and that's what she plans to deliver with her new satellite network." +
                 "\nAs one of her original clients, she has given you acess to her highest tier of insurance." +
                 "\nIncreases's Nurse's quick range to anywhere in the world." +
-                "\nThe Nurse will only be able to track you as long as you keep this item in your inventory.");
+                "\nThe Nurse will only be able to track you as long as you keep this item in your inventory.";
+
+            // Check if Calamity Mod is enabled.
+            if (ModLoader.GetMod("CalamityMod") != null)
+            {
+                tooltipText += "\nCALAMITY PLAYERS: Be aware Calamity bosses increases the price of the Nurse by 5 times what it normally costs to heal if you are within 400 tiles of them.";
+            }
+            Tooltip.SetDefault(tooltipText);
         }
 
         public override void SetDefaults()
@@ -167,7 +197,7 @@ namespace NurseHotkey.Items
             Item.width = 20;
             Item.height = 20;
             Item.value = Item.sellPrice(0, 20, 0, 0); // Set the item's value
-            Item.rare = ItemRarityID.Orange; // Set the item's rarity
+            Item.rare = ItemRarityID.Red; // Set the item's rarity
             Item.accessory = false; // Make the item an accessory
         }
 

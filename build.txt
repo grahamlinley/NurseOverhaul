@@ -1,4 +1,7 @@
-displayName = Nurse Hotkey
+displayName = Nurse Overhaul
 author = Sely
 version = 0.11
-dependencies = BossChecklist
+hideCode = true
+hideResources = true
+includeSource = false
+noCompile = false
