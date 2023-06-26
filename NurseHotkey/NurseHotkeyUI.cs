@@ -1,6 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿/*
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NurseHotkey.Items;
+using NurseHotkey.NPCs;
 using System.Collections.Generic;
 using System.Reflection;
 using Terraria;
@@ -71,29 +73,34 @@ namespace NurseHotkey
                 ChatManager.DrawColorCodedString(spriteBatch, FontAssets.MouseText.Value, text, position + stringSize * value2 * 0.5f, !focused ? new Color(228, 206, 114, Main.mouseTextColor / 2) : new Color(255, 231, 69), 0f, stringSize * 0.5f, scale);
             }
         }
-
-        public static bool baseShop = false;
-
+        
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
             if (focused && Main.mouseLeft)
             {
-                OpenShop(99);
+                int type = NPCID.Nurse;  // Specify the NPC type.
+                Chest shop = new Chest(false);  // Create a new Chest object to represent the shop.
+                int nextSlot = 0;  // Initialize the nextSlot counter.
+                NurseHotkeyGlobalNPC.SetupShop(type, shop, ref nextSlot);
             }
         }
 
         internal static void OpenShop(int shopIndex)
         {
+            int type = NPCID.Nurse;  // Specify the NPC type.
+            Chest shop = new Chest(false);  // Create a new Chest object to represent the shop.
+            int nextSlot = 0;  // Initialize the nextSlot counter.
+        NurseHotkeyGlobalNPC.SetupShop(type, shop, ref nextSlot);
             Main.playerInventory = true;
             Main.stackSplit = 9999;
             Main.npcChatText = "";
             Main.SetNPCShopIndex(shopIndex);
-            SetupShop(Main.instance.shop[99]);
+            //SetupShop(Main.instance.shop[99]);
             SoundEngine.PlaySound(SoundID.MenuTick);
         }
-        
+       
         private static void SetupShop(Chest shop)
         {
             List<(int id, int price)> items = new List<(int id, int price)>
@@ -137,7 +144,8 @@ namespace NurseHotkey
                 (ItemID.None, 0),
                 (ItemID.None, 0)
             };
-
+            
+            
             if (!NPC.downedSlimeKing)
             {
                 items.RemoveAll(item => item.id == ItemID.HealingPotion ||
@@ -180,10 +188,12 @@ namespace NurseHotkey
             {
                 items.RemoveAll(item => item.id == ItemID.SuperHealingPotion);
             }
+            
 
 
             int supremeHealingPotionIndex = -1;
             int omegaHealingPotionIndex = -1;
+            
 
             ModLoader.TryGetMod("CalamityMod", out Mod Calamity);
 
@@ -191,8 +201,8 @@ namespace NurseHotkey
             {
                 supremeHealingPotionIndex = items.FindIndex(item => item.id == ItemID.SuperHealingPotion);
 
-                    items.Add((supremeHealingPotion.Type, 500000));
-            
+                items.Add((supremeHealingPotion.Type, 500000));
+
 
             }
 
@@ -200,7 +210,7 @@ namespace NurseHotkey
             {
                 omegaHealingPotionIndex = items.FindIndex(item => item.id == ItemID.SuperHealingPotion);
 
-                    items.Add((omegaHealingPotion.Type, 1000000));
+                items.Add((omegaHealingPotion.Type, 1000000));
 
             }
 
@@ -214,6 +224,7 @@ namespace NurseHotkey
                 shop.item[i].isAShopItem = true;
             }
         }
-
+        
     }
 }
+*/

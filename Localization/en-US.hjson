@@ -1,0 +1,74 @@
+Mods: {
+	NurseHotkey: {
+		Buffs: {
+			NurseInRange: {
+				DisplayName: In Range of Nurse
+				Description: The Nurse is watching and ready to deploy a quick heal at your command
+			}
+		}
+
+		Items: {
+			BioticRifle: {
+				DisplayName: Biotic Rifle
+				Tooltip: A faint echo of Arabic rings in your ear. Despite it's gun-like shape, you can't wield it. Maybe the Nurse could use it for something...
+			}
+
+			NurseVIPBadge: {
+				DisplayName: Nurse VIP Badge
+				Tooltip:
+					'''
+					The Nurse will be watching for your signal. 
+					When you're close to her, and you give her the signal (default key G when bound),
+					she will drop everything she's doing to heal you.
+					The Nurse will only be able to track you as long as you keep this item in your inventory.
+					If you lose it, she'll sell you another at her "discounted rate."
+					'''
+			}
+
+			NurseWalkieTalkie: {
+				DisplayName: Nurse's Walkie Talkie
+				Tooltip:
+					'''
+					Using the technology you discovered, the Nurse has developed a way to remain in constant contact with you, and with a press of a button (default G) she can track you and heal you. 
+					She tells you she can hit you as long as you stay within a little over one
+					"screen's worth" of her. Whatever that means.
+					The Nurse will only be able to track you as long as you keep this item in your inventory.
+					'''
+			}
+
+			PlatinumInsurance: {
+				DisplayName: Platinum Insurance
+				Tooltip:
+					'''
+					She has the technology.
+					The Nurse has created an industry, and that industry is booming. Her customers demand range and that's what she plans to deliver with her new satellite network.
+					As one of her original clients, she has given you acess to her highest tier of insurance.
+					Increases's Nurse's quick range to anywhere in the world.
+					The Nurse will only be able to track you as long as you keep this item in your inventory.
+					'''
+			}
+
+			SingleBandTransceiver: {
+				DisplayName: Single Band Transceiver
+				Tooltip: You get the feeling this could somehow be combined with your Nurse badge...
+			}
+
+			SurfaceTransponder: {
+				DisplayName: Surface Transponder
+				Tooltip:
+					'''
+					With your "investments" into the Nurse's new technology, she has found a way to increase her quick heal's range even further, taking her heals to the sky.
+					Increases Nurse's quick heal range to anywhere on the surface, plus a decent amount underground.
+					The Nurse will only be able to track you as long as you keep this item in your inventory.
+					'''
+			}
+
+			Thruster: {
+				DisplayName: Thruster Components
+				Tooltip: Why do thrusters make you think of healing? Either the Nurse could use this or you might need some serious medical treatment...
+			}
+		}
+
+		"Keybinds.Heal in range of Nurse.DisplayName": Heal in range of  Nurse
+	}
+}

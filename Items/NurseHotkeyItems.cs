@@ -3,6 +3,7 @@
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Localization;
 
 namespace NurseHotkey.Items
 {
@@ -10,7 +11,7 @@ namespace NurseHotkey.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Nurse VIP Badge");
+            // DisplayName.SetDefault("Nurse VIP Badge");
 
             string tooltipText = "The Nurse will be watching for your signal. " +
                 "\nWhen you're close to her, and you give her the signal (default key G when bound)," +
@@ -19,12 +20,13 @@ namespace NurseHotkey.Items
                 "\nIf you lose it, she'll sell you another at her \"discounted rate.\"";
 
             // Check if Calamity Mod is enabled.
-            if (ModLoader.GetMod("CalamityMod") != null)
+            ModLoader.TryGetMod("CalamityMod", out Mod Calamity);
+            if (Calamity != null)
             {
                 tooltipText += "\nCALAMITY PLAYERS: Be aware Calamity bosses increases the price of the Nurse by 5 times what it normally costs to heal if you are within 400 tiles of them.";
             }
 
-            Tooltip.SetDefault(tooltipText);
+            // Tooltip.SetDefault(tooltipText);
         }
 
         public override void SetDefaults()
@@ -41,8 +43,8 @@ namespace NurseHotkey.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Single Band Transceiver");
-            Tooltip.SetDefault("You get the feeling this could somehow be combined with your Nurse badge...");
+            // DisplayName.SetDefault("Single Band Transceiver");
+            // Tooltip.SetDefault("You get the feeling this could somehow be combined with your Nurse badge...");
         }
 
         public override void SetDefaults()
@@ -60,18 +62,19 @@ namespace NurseHotkey.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Nurse's Walkie Talkie");
+            // DisplayName.SetDefault("Nurse's Walkie Talkie");
             string tooltipText = "Using the technology you discovered, the Nurse has developed a way to remain in constant contact with you, and with a press of a button (default G) she can track you and heal you. " +
                 "\nShe tells you she can hit you as long as you stay within a little over one" +
                 "\n\"screen's worth\" of her. Whatever that means." +
                 "\nThe Nurse will only be able to track you as long as you keep this item in your inventory.";
 
             // Check if Calamity Mod is enabled.
-            if (ModLoader.GetMod("CalamityMod") != null)
+            ModLoader.TryGetMod("CalamityMod", out Mod Calamity);
+            if (Calamity != null)
             {
                 tooltipText += "\nCALAMITY PLAYERS: Be aware Calamity bosses increases the price of the Nurse by 5 times what it normally costs to heal if you are within 400 tiles of them.";
             }
-            Tooltip.SetDefault(tooltipText);
+            // Tooltip.SetDefault(tooltipText);
         }
 
         public override void SetDefaults()
@@ -98,8 +101,8 @@ namespace NurseHotkey.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Biotic Rifle");
-            Tooltip.SetDefault("A faint echo of Arabic rings in your ear. Despite it's gun-like shape, you can't wield it. Maybe the Nurse could use it for something...");
+            // DisplayName.SetDefault("Biotic Rifle");
+            // Tooltip.SetDefault("A faint echo of Arabic rings in your ear. Despite it's gun-like shape, you can't wield it. Maybe the Nurse could use it for something...");
         }
 
         public override void SetDefaults()
@@ -116,17 +119,18 @@ namespace NurseHotkey.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Surface Transponder");
+            // DisplayName.SetDefault("Surface Transponder");
             string tooltipText = "With your \"investments\" into the Nurse's new technology, she has found a way to increase her quick heal's range even further, taking her heals to the sky." +
                 "\nIncreases Nurse's quick heal range to anywhere on the surface, plus a decent amount underground." +
                 "\nThe Nurse will only be able to track you as long as you keep this item in your inventory.";
 
             // Check if Calamity Mod is enabled.
-            if (ModLoader.GetMod("CalamityMod") != null)
+            ModLoader.TryGetMod("CalamityMod", out Mod Calamity);
+            if (Calamity != null)
             {
                 tooltipText += "\nCALAMITY PLAYERS: Be aware Calamity bosses increases the price of the Nurse by 5 times what it normally costs to heal if you are within 400 tiles of them.";
             }
-            Tooltip.SetDefault(tooltipText);
+            // Tooltip.SetDefault(tooltipText);
         }
 
         public override void SetDefaults()
@@ -159,8 +163,8 @@ namespace NurseHotkey.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Thruster Components");
-            Tooltip.SetDefault("Why do thrusters make you think of healing? Either the Nurse could use this or you might need some serious medical treatment...");
+            // DisplayName.SetDefault("Thruster Components");
+            // Tooltip.SetDefault("Why do thrusters make you think of healing? Either the Nurse could use this or you might need some serious medical treatment...");
         }
 
         public override void SetDefaults()
@@ -177,7 +181,7 @@ namespace NurseHotkey.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Platinum Insurance");
+            // DisplayName.SetDefault("Platinum Insurance");
             string tooltipText = "She has the technology." +
                 "\nThe Nurse has created an industry, and that industry is booming. Her customers demand range and that's what she plans to deliver with her new satellite network." +
                 "\nAs one of her original clients, she has given you acess to her highest tier of insurance." +
@@ -185,11 +189,12 @@ namespace NurseHotkey.Items
                 "\nThe Nurse will only be able to track you as long as you keep this item in your inventory.";
 
             // Check if Calamity Mod is enabled.
-            if (ModLoader.GetMod("CalamityMod") != null)
+            ModLoader.TryGetMod("CalamityMod", out Mod Calamity);
+            if (Calamity != null)
             {
                 tooltipText += "\nCALAMITY PLAYERS: Be aware Calamity bosses increases the price of the Nurse by 5 times what it normally costs to heal if you are within 400 tiles of them.";
             }
-            Tooltip.SetDefault(tooltipText);
+            // Tooltip.SetDefault(tooltipText);
         }
 
         public override void SetDefaults()

@@ -16,19 +16,31 @@ namespace NurseHotkey
         public override void PostUpdate()
         {
             Player player = Main.LocalPlayer;
-            if (PlayerIsInRangeOfNurse() && PlayerHasTransponder())
+            int nurseNPCID = NPC.FindFirstNPC(NPCID.Nurse);
+
+            if (nurseNPCID != -1)
             {
-                player.AddBuff(ModContent.BuffType<Buffs.NurseInRange>(), 2);
+                if (PlayerIsInRangeOfNurse() && PlayerHasTransponder())
+                {
+                    player.AddBuff(ModContent.BuffType<Buffs.NurseInRange>(), 2);
+                }
             }
         }
 
+
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
-            if (NurseHotkey.NurseHealHotkey.JustPressed)
+            int nurseNPCID = NPC.FindFirstNPC(NPCID.Nurse);
+
+            if (nurseNPCID != -1)
             {
-                NurseHeal();
+                if (NurseHotkey.NurseHealHotkey.JustPressed)
+                {
+                    NurseHeal();
+                }
             }
         }
+
 
         public static bool ExcludedDebuff(int buffType)
         {
@@ -67,17 +79,17 @@ namespace NurseHotkey
 
             if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) == true && debuffCount - 1 > 0)
             {
-                preCost += (debuffCount - 1) * 200;
+                preCost += (debuffCount - 1) * 200; // READ NOTE BELOW AND APPLY TO THIS TOO
             }
 
             else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod"))
             {
-                preCost += debuffCount * 200; // Add the debuff cost to the total cost, multiplied by 2 silver per debuff
+                preCost += debuffCount * 200; // !!!!!!!!!!!!!!!!!!!!!!CHECK THIS WHEN CALAMITY RELEASES 1.4.4. CHECK IF NON-EXPERT, NON-MASTER IS 200. IF NOT, JUST DO THE SAME AS BELOW AND MULTIPLY BY DIFFICULTY FACTOR
             }
 
             else
             {
-                preCost += debuffCount * 100; // Add the debuff cost to the total cost, multiplied by 1 silver per debuff
+                preCost += debuffCount * (100 * difficultyFactor); // Add the debuff cost to the total cost, multiplied by 1 silver per debuff
             }
 
             float calamityBaseCost = 0;
@@ -224,7 +236,6 @@ namespace NurseHotkey
             var currentShoppingSettings = Main.ShopHelper.GetShoppingSettings(Main.LocalPlayer, nurseNPC);
             float nurseHappinessAdjustment = (float)currentShoppingSettings.PriceAdjustment;
             float multiplier = 0;
-            Main.NewText($"happiness {nurseHappinessAdjustment}");
 
             if (nurseHappinessAdjustment < 1.07 && nurseHappinessAdjustment != 1) //
             {
@@ -382,8 +393,8 @@ namespace NurseHotkey
             }
             if (itemType == ModContent.ItemType<NurseWalkieTalkie>())
             {
-                horizontalRange = 3200;
-                verticalRange = 3200;
+                horizontalRange = 1000;
+                verticalRange = 1000;
             }
             if (itemType == ModContent.ItemType<SurfaceTransponder>())
             {
@@ -401,7 +412,7 @@ namespace NurseHotkey
 
         private (int horizontal, int vertical) GetHighestRangeForItems(Player player)
         {
-            int[] itemsTypesToCheck = new int[] 
+            int[] itemsTypesToCheck = new int[]
             {
                 ModContent.ItemType<NurseVIPBadge>(),
                 ModContent.ItemType<NurseWalkieTalkie>(),
@@ -455,241 +466,228 @@ namespace NurseHotkey
         public void NurseHeal()
         {
             NPC nurse = Main.npc[NPC.FindFirstNPC(NPCID.Nurse)];
-            Player player = Main.LocalPlayer;
-            Item[] GetAllItems(int playerIndex)
-            {
-                Player player = Main.player[playerIndex];
-                List<Item> allItems = new List<Item>();
-                Item[] inventory = player.inventory;
-
-                // Add all bank items to the list
-                allItems.AddRange(inventory);
-                allItems.AddRange(player.bank.item);
-                allItems.AddRange(player.bank2.item);
-                allItems.AddRange(player.bank3.item);
-                allItems.AddRange(player.bank4.item);
-
-                return allItems.ToArray();
-            }
-
-            int[] itemsTypesToCheck = new int[]
-            {
-                    ModContent.ItemType<NurseVIPBadge>(),
-                    ModContent.ItemType<NurseWalkieTalkie>(),
-                    ModContent.ItemType<SurfaceTransponder>(),
-                    ModContent.ItemType<PlatinumInsurance>()
-            };
-            (int horizontalRange, int verticalRange) highestRange = (320, 320); // base range
-
-            foreach (int itemType in itemsTypesToCheck)
-            {
-                if (PlayerHasItem(player, itemType))
-                {
-                    (int horizontal, int vertical) rangeForItem = GetRangeForItem(itemType);
-                    highestRange.horizontalRange = Math.Max(highestRange.horizontalRange, rangeForItem.horizontal);
-                    highestRange.verticalRange = Math.Max(highestRange.verticalRange, rangeForItem.vertical);
-                }
-            }
             if (nurse != null)
             {
-                var (highestHorizontalRange, highestVerticalRange) = highestRange;
-
-                bool inHorizontalRange = Math.Abs(player.Center.X - nurse.Center.X) <= highestHorizontalRange;
-                bool inVerticalRange = Math.Abs(player.Center.Y - nurse.Center.Y) <= highestVerticalRange;
-
-                if (inHorizontalRange && inVerticalRange)
+                Player player = Main.LocalPlayer;
+                Item[] GetAllItems(int playerIndex)
                 {
-                    int healthMissing = Player.statLifeMax2 - Player.statLife;
-                    float cost = GetHealCost(healthMissing, Player);
-                    float totalMoney = 0;
-                    float debuffCount = GetDebuffCount(player); // Get the count of debuffs for the 
-                    int GetPlayerTotalMoney(int playerIndex)
-                    {
-                        Player player = Main.player[playerIndex];
+                    Player player = Main.player[playerIndex];
+                    List<Item> allItems = new List<Item>();
+                    Item[] inventory = player.inventory;
 
-                        // Access the player's inventory
-                        //Item[] inventory = player.inventory;
+                    // Add all bank items to the list
+                    allItems.AddRange(inventory);
+                    allItems.AddRange(player.bank.item);
+                    allItems.AddRange(player.bank2.item);
+                    allItems.AddRange(player.bank3.item);
+                    allItems.AddRange(player.bank4.item);
 
-                        // Access all the player's Bank items
-                        Item[] bankItems = GetAllItems(playerIndex);
+                    return allItems.ToArray();
+                }
 
-                        // Calculate the total money from inventory
-                        //int totalMoney = CalculateMoneyFromItems(inventory);
+                        (int highestHorizontalRange, int highestVerticalRange) = GetHighestRangeForItems(player);
+                        bool inHorizontalRange = Math.Abs(player.Center.X - nurse.Center.X) <= highestHorizontalRange;
+                        bool inVerticalRange = Math.Abs(player.Center.Y - nurse.Center.Y) <= highestVerticalRange;
 
-                        // Calculate the total money from all Banks
-                        int totalMoney = CalculateMoneyFromItems(bankItems);
-
-                        // Check if remaining cost is greater than zero
-                        float remainingCost = cost - totalMoney;
-                        return totalMoney;
-                    }
-
-                    // Helper method to calculate money from items
-                    int CalculateMoneyFromItems(Item[] items)
-                    {
-                        for (int i = 0; i < items.Length; i++) // Change the loop condition here
+                        if (inHorizontalRange && inVerticalRange)
                         {
-                            Item item = items[i];
+                            int healthMissing = Player.statLifeMax2 - Player.statLife;
+                            float cost = GetHealCost(healthMissing, Player);
+                            float totalMoney = 0;
+                            float debuffCount = GetDebuffCount(player); // Get the count of debuffs for the 
+                            int GetPlayerTotalMoney(int playerIndex)
+                            {
+                                Player player = Main.player[playerIndex];
 
-                            if (item.type == ItemID.CopperCoin)
-                            {
-                                totalMoney += item.stack;
+                                // Access the player's inventory
+                                //Item[] inventory = player.inventory;
+
+                                // Access all the player's Bank items
+                                Item[] bankItems = GetAllItems(playerIndex);
+
+                                // Calculate the total money from inventory
+                                //int totalMoney = CalculateMoneyFromItems(inventory);
+
+                                // Calculate the total money from all Banks
+                                int totalMoney = CalculateMoneyFromItems(bankItems);
+
+                                // Check if remaining cost is greater than zero
+                                float remainingCost = cost - totalMoney;
+                                return totalMoney;
                             }
-                            else if (item.type == ItemID.SilverCoin)
+
+                            // Helper method to calculate money from items
+                            int CalculateMoneyFromItems(Item[] items)
                             {
-                                totalMoney += item.stack * 100;
+                                for (int i = 0; i < items.Length; i++) // Change the loop condition here
+                                {
+                                    Item item = items[i];
+
+                                    if (item.type == ItemID.CopperCoin)
+                                    {
+                                        totalMoney += item.stack;
+                                    }
+                                    else if (item.type == ItemID.SilverCoin)
+                                    {
+                                        totalMoney += item.stack * 100;
+                                    }
+                                    else if (item.type == ItemID.GoldCoin)
+                                    {
+                                        totalMoney += item.stack * 10000;
+                                    }
+                                    else if (item.type == ItemID.PlatinumCoin)
+                                    {
+                                        totalMoney += item.stack * 1000000;
+                                    }
+                                }
+
+                                return (int)totalMoney;
                             }
-                            else if (item.type == ItemID.GoldCoin)
+
+                            int Wallet = GetPlayerTotalMoney(Main.myPlayer);
+
+                            void HealAndSpend(float cost, Player player, int healthMissing)
                             {
-                                totalMoney += item.stack * 10000;
+                                CureAllDebuffs(player); //debuffs destroyed
+                                float flooredFloatCost = (float)Math.Floor(cost);
+                                int intCost = Convert.ToInt32(flooredFloatCost);
+                                player.BuyItem(intCost); //pay up 
+                                int healAmount = healthMissing; //ok how much this mothasucka need
+                                player.statLife += healAmount; //puts the item in the bag
+                                SoundEngine.PlaySound(SoundID.Item4);
+
+                                if (healAmount > 0) //needed for healing debuffs and no health (i.e. stink potion)
+                                {
+                                    player.HealEffect(healAmount); //"ok here u go sir, have a nice day :)"
+                                }
+
+                                CalculateAndPrintSpending(intCost);
                             }
-                            else if (item.type == ItemID.PlatinumCoin)
+
+                            void CalculateAndPrintSpending(float cost)
                             {
-                                totalMoney += item.stack * 1000000;
+                                //all this shit just calculates your money then gives you a message 
+                                int remainingMoney = (int)cost;
+                                int platRemaining = remainingMoney / 1000000;
+                                int goldRemaining = (remainingMoney % 1000000) / 10000;
+                                int silverRemaining = (remainingMoney % 10000) / 100;
+                                int copperRemaining = remainingMoney % 100;
+
+                                if (platRemaining > 0)
+                                {
+                                    string message = $"You just spent {platRemaining} platinum";
+
+                                    if (goldRemaining == 0 && silverRemaining == 0 && copperRemaining == 0)
+                                    {
+                                        message += $" on quick healing";
+                                    }
+                                    if (goldRemaining > 0 && (silverRemaining > 0 | copperRemaining > 0))
+                                    {
+                                        message += $" {goldRemaining} gold";
+                                    }
+                                    if (goldRemaining > 0 && silverRemaining == 0 && copperRemaining == 0)
+                                    {
+                                        message += $" and {goldRemaining} gold on quick healing.";
+                                    }
+                                    if (silverRemaining > 0 && copperRemaining > 0)
+                                    {
+                                        message += $" {silverRemaining} silver";
+                                    }
+                                    if (silverRemaining > 0 && copperRemaining == 0)
+                                    {
+                                        message += $" and {silverRemaining} silver on quick healing.";
+                                    }
+                                    if (copperRemaining > 0)
+                                    {
+                                        message += $" and {copperRemaining} copper on quick healing.";
+                                    }
+
+                                    Main.NewText(message);
+                                }
+
+                                if (goldRemaining > 0 && platRemaining == 0)
+                                {
+                                    string message = $"You just spent {goldRemaining} gold";
+
+                                    if (silverRemaining == 0 && copperRemaining == 0)
+                                    {
+                                        message += $" on quick healing.";
+                                    }
+                                    if (silverRemaining > 0 && copperRemaining > 0)
+                                    {
+                                        message += $" {silverRemaining} silver";
+                                    }
+                                    if (silverRemaining > 0 && copperRemaining == 0)
+                                    {
+                                        message += $" and {silverRemaining} silver on quick healing.";
+                                    }
+                                    if (copperRemaining > 0)
+                                    {
+                                        message += $" and {copperRemaining} copper on quick healing.";
+                                    }
+                                    Main.NewText(message);
+                                }
+
+                                if (silverRemaining > 0 && platRemaining == 0 && goldRemaining == 0)
+                                {
+                                    string message = $"You just spent {silverRemaining} silver";
+                                    if (copperRemaining == 0)
+                                    {
+                                        message += " on quick healing.";
+                                    }
+                                    if (copperRemaining > 0)
+                                    {
+                                        message += $" and {copperRemaining} copper on quick healing.";
+                                    }
+                                    Main.NewText(message);
+                                }
+                                if (cost > 0 && silverRemaining == 0 && platRemaining == 0 && goldRemaining == 0)
+                                {
+                                    Main.NewText($"You just spent {remainingMoney} copper on quick healing.");
+                                }
+                            }
+
+
+                            if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) && Wallet >= cost && debuffCount > 1 | healthMissing > 0)
+                            {
+                                HealAndSpend(cost, Player, healthMissing);
+                            }
+
+                            else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && !bossCombatCheck(6400f) && Wallet >= cost && debuffCount > 0 | healthMissing > 0)
+                            {
+                                HealAndSpend(cost, Player, healthMissing);
+                            }
+
+                            else if (Wallet >= cost && !ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && debuffCount > 0 | healthMissing > 0)
+                            {
+                                HealAndSpend(cost, Player, healthMissing);
+                            }
+
+                            else if (Wallet < cost)
+                            {
+                                Main.NewText("You don't have enough money to pay for a quick heal.");
+                            }
+
+                            else if ((healthMissing == 0 || debuffCount == 0) && Wallet == 0)
+                            {
+                                Main.NewText("Health full.");
+                            }
+
+                            else if (Wallet > cost && healthMissing == 0 && debuffCount == 0)
+                            {
+                                Main.NewText("Health full.");
+                            }
+
+                            else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) == true && debuffCount == 1 && healthMissing == 0)
+                            {
+                                Main.NewText("Health full.");
+                            }
+                            else
+                            {
+                                Main.NewText("Couldn't quick heal.");
                             }
                         }
-
-                        return (int)totalMoney;
-                    }
-
-                    int Wallet = GetPlayerTotalMoney(Main.myPlayer);
-
-                    void HealAndSpend(float cost, Player player, int healthMissing)
-                    {
-                        CureAllDebuffs(player); //debuffs destroyed
-                        float flooredFloatCost = (float)Math.Floor(cost);
-                        int intCost = Convert.ToInt32(flooredFloatCost);
-                        player.BuyItem(intCost); //pay up 
-                        int healAmount = healthMissing; //ok how much this mothasucka need
-                        player.statLife += healAmount; //puts the item in the bag
-                        SoundEngine.PlaySound(SoundID.Item4);
-
-                        if (healAmount > 0) //needed for healing debuffs and no health (i.e. stink potion)
-                        {
-                            player.HealEffect(healAmount); //"ok here u go sir, have a nice day :)"
-                        }
-
-                        CalculateAndPrintSpending(intCost);
-                    }
-
-                    void CalculateAndPrintSpending(float cost)
-                    {
-                        //all this shit just calculates your money then gives you a message 
-                        int remainingMoney = (int)cost;
-                        int platRemaining = remainingMoney / 1000000;
-                        int goldRemaining = (remainingMoney % 1000000) / 10000;
-                        int silverRemaining = (remainingMoney % 10000) / 100;
-                        int copperRemaining = remainingMoney % 100;
-
-                        if (platRemaining > 0)
-                        {
-                            string message = $"You just spent {platRemaining} platinum";
-
-                            if (goldRemaining == 0 && silverRemaining == 0 && copperRemaining == 0)
-                            {
-                                message += $" on quick healing";
-                            }
-                            if (goldRemaining > 0 && (silverRemaining > 0 | copperRemaining > 0))
-                            {
-                                message += $" {goldRemaining} gold";
-                            }
-                            if (goldRemaining > 0 && silverRemaining == 0 && copperRemaining == 0)
-                            {
-                                message += $" and {goldRemaining} gold on quick healing.";
-                            }
-                            if (silverRemaining > 0 && copperRemaining > 0)
-                            {
-                                message += $" {silverRemaining} silver";
-                            }
-                            if (silverRemaining > 0 && copperRemaining == 0)
-                            {
-                                message += $" and {silverRemaining} silver on quick healing.";
-                            }
-                            if (copperRemaining > 0)
-                            {
-                                message += $" and {copperRemaining} copper on quick healing.";
-                            }
-
-                            Main.NewText(message);
-                        }
-
-                        if (goldRemaining > 0 && platRemaining == 0)
-                        {
-                            string message = $"You just spent {goldRemaining} gold";
-
-                            if (silverRemaining == 0 && copperRemaining == 0)
-                            {
-                                message += $" on quick healing.";
-                            }
-                            if (silverRemaining > 0 && copperRemaining > 0)
-                            {
-                                message += $" {silverRemaining} silver";
-                            }
-                            if (silverRemaining > 0 && copperRemaining == 0)
-                            {
-                                message += $" and {silverRemaining} silver on quick healing.";
-                            }
-                            if (copperRemaining > 0)
-                            {
-                                message += $" and {copperRemaining} copper on quick healing.";
-                            }
-                            Main.NewText(message);
-                        }
-
-                        if (silverRemaining > 0 && platRemaining == 0 && goldRemaining == 0)
-                        {
-                            string message = $"You just spent {silverRemaining} silver";
-                            if (copperRemaining == 0)
-                            {
-                                message += " on quick healing.";
-                            }
-                            if (copperRemaining > 0)
-                            {
-                                message += $" and {copperRemaining} copper on quick healing.";
-                            }
-                            Main.NewText(message);
-                        }
-                        if (cost > 0 && silverRemaining == 0 && platRemaining == 0 && goldRemaining == 0)
-                        {
-                            Main.NewText($"You just spent {remainingMoney} copper on quick healing.");
-                        }
-                    }
-
-
-                    if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) && Wallet >= cost && debuffCount > 1 | healthMissing > 0)
-                    {
-                        HealAndSpend(cost, Player, healthMissing);
-                    }
-
-                    else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && !bossCombatCheck(6400f) && Wallet >= cost && debuffCount > 0 | healthMissing > 0)
-                    {
-                        HealAndSpend(cost, Player, healthMissing);
-                    }
-
-                    else if (Wallet >= cost && !ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && debuffCount > 0 | healthMissing > 0)
-                    {
-                        HealAndSpend(cost, Player, healthMissing);
-                    }
-                    else if (Wallet < cost)
-                    {
-                        Main.NewText("You don't have enough money to pay for a quick heal.");
-                    }
-
-                    else if (Wallet > cost && healthMissing == 0 && debuffCount == 0)
-                    {
-                        Main.NewText("Health full.");
-                    }
-
-                    else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) == true && debuffCount == 1 && healthMissing == 0)
-                    {
-                        Main.NewText("Health full.");
-                    }
-                    else
-                    {
-                        Main.NewText("Couldn't quick heal.");
                     }
                 }
             }
         }
-    }
-}

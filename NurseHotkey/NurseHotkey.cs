@@ -47,11 +47,13 @@ namespace NurseHotkey
     {
         public override void AddRecipes()
         {
+            /* Not balanced with shop prices, could just buy 5 and convert for way cheaper than buying one from the shop
             // Recipe to turn Lesser Healing Potions into a Healing Potion
             Recipe healingPotionRecipe = Recipe.Create(ItemID.HealingPotion);
             healingPotionRecipe.AddIngredient(ItemID.LesserHealingPotion, 5);
             healingPotionRecipe.AddTile(TileID.AlchemyTable);
             healingPotionRecipe.Register();
+            */
 
             // Recipe to turn Healing Potions into a Greater Healing Potion
             Recipe greaterHealingPotionRecipe = Recipe.Create(ItemID.GreaterHealingPotion);

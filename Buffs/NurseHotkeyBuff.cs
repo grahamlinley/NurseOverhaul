@@ -7,8 +7,8 @@ namespace NurseHotkey.Buffs
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("In Range of Nurse");
-            Description.SetDefault("The Nurse is watching and ready to deploy a quick heal at your command");
+            // DisplayName.SetDefault("In Range of Nurse");
+            // Description.SetDefault("The Nurse is watching and ready to deploy a quick heal at your command");
 
             // These settings determine whether the buff can be applied to NPCs or Players, respectively.
             Main.debuff[Type] = false; // If this buff is a debuff that can apply to enemies

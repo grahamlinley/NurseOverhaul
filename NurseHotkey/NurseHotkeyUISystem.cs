@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿/*
+using Microsoft.Xna.Framework;
+using NurseHotkey.NPCs;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
@@ -42,8 +44,10 @@ namespace NurseHotkey
                     "DialogueTweak/Interfaces/Assets/Icon_Default", // The texture's path
                     () =>
                     {
-                        if (Main.mouseLeft)
-                            NurseHotkeyUI.OpenShop(99);
+                        int type = NPCID.Nurse;  // Specify the NPC type.
+                        Chest shop = new Chest(false);  // Create a new Chest object to represent the shop.
+                        int nextSlot = 0;  // Initialize the nextSlot counter.
+                        NurseHotkeyGlobalNPC.SetupShop(type, shop, ref nextSlot);
                     });
             }
         }
@@ -80,3 +84,4 @@ namespace NurseHotkey
         }
     }
 }
+*/
