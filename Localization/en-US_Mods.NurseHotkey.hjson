@@ -1,0 +1,45 @@
+Items: {
+	Thruster: {
+		Tooltip: ""
+		DisplayName: Thruster
+	}
+
+	SurfaceTransponder: {
+		Tooltip: ""
+		DisplayName: Surface Transponder
+	}
+
+	SingleBandTransceiver: {
+		Tooltip: ""
+		DisplayName: Single Band Transceiver
+	}
+
+	PlatinumInsurance: {
+		Tooltip: ""
+		DisplayName: Platinum Insurance
+	}
+
+	NurseWalkieTalkie: {
+		Tooltip: ""
+		DisplayName: Nurse Walkie Talkie
+	}
+
+	NurseVIPBadge: {
+		Tooltip: ""
+		DisplayName: Nurse V I P Badge
+	}
+
+	BioticRifle: {
+		Tooltip: ""
+		DisplayName: Biotic Rifle
+	}
+}
+
+Buffs: {
+	NurseInRange: {
+		Description: Mods.NurseHotkey.Buffs.NurseInRange.Description
+		DisplayName: Nurse In Range
+	}
+}
+
+"Keybinds.Heal in range of Nurse.DisplayName": Heal in range of  Nurse

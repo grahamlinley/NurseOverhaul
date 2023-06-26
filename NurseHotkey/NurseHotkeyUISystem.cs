@@ -1,5 +1,4 @@
-﻿/*
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using NurseHotkey.NPCs;
 using System.Collections.Generic;
 using Terraria;
@@ -44,10 +43,7 @@ namespace NurseHotkey
                     "DialogueTweak/Interfaces/Assets/Icon_Default", // The texture's path
                     () =>
                     {
-                        int type = NPCID.Nurse;  // Specify the NPC type.
-                        Chest shop = new Chest(false);  // Create a new Chest object to represent the shop.
-                        int nextSlot = 0;  // Initialize the nextSlot counter.
-                        NurseHotkeyGlobalNPC.SetupShop(type, shop, ref nextSlot);
+                        NurseHotkeyUI.OpenShop(1);
                     });
             }
         }
@@ -58,7 +54,7 @@ namespace NurseHotkey
             _lastUpdateUiGameTime = gameTime;
 
             // if the player is talking to the Nurse and the new shop isn't opened
-            if (Main.LocalPlayer.talkNPC != -1 && Main.npc[Main.LocalPlayer.talkNPC].type == NPCID.Nurse && Main.npcShop != 99)
+            if (Main.LocalPlayer.talkNPC != -1 && Main.npc[Main.LocalPlayer.talkNPC].type == NPCID.Nurse && Main.npcShop != 1)
             {
                 UserInterface.Update(gameTime);
             }
@@ -74,7 +70,7 @@ namespace NurseHotkey
                     delegate
                     {
                         // if the player is talking to the Nurse, the new shop isn't opened and dialogue tweak mod isn't active.
-                        if (Main.LocalPlayer.talkNPC != -1 && Main.npc[Main.LocalPlayer.talkNPC].type == NPCID.Nurse && Main.npcShop != 99)
+                        if (Main.LocalPlayer.talkNPC != -1 && Main.npc[Main.LocalPlayer.talkNPC].type == NPCID.Nurse && Main.npcShop != 1)
                         {
                             UserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
                         }
@@ -84,4 +80,3 @@ namespace NurseHotkey
         }
     }
 }
-*/

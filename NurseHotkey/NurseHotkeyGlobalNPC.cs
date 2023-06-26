@@ -15,25 +15,6 @@ namespace NurseHotkey.NPCs
 {
     public class NurseHotkeyGlobalNPC : GlobalNPC
     {
-        public static void SetupShop(int type, Chest shop, ref int nextSlot)
-        {
-            if (type == NPCID.Nurse)
-            {
-                shop.item[nextSlot].SetDefaults(ModContent.ItemType<NurseWalkieTalkie>());
-                nextSlot++;
-
-                // We can use shopCustomPrice and shopSpecialCurrency to support custom prices and currency. Usually a shop sells an item for item.value. 
-                // Editing item.value in SetupShop is an incorrect approach.
-                shop.item[nextSlot].SetDefaults(ModContent.ItemType<SurfaceTransponder>());
-                shop.item[nextSlot].shopCustomPrice = 2;
-                shop.item[nextSlot].shopSpecialCurrency = CustomCurrencyID.DefenderMedals; // omit this line if shopCustomPrice should be in regular coins. 
-                nextSlot++;
-
-                shop.item[nextSlot].SetDefaults(ModContent.ItemType<PlatinumInsurance>());
-                shop.item[nextSlot].shopCustomPrice = 3;
-                nextSlot++;
-            }
-        }
         public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
         {
             if (npc.type == NPCID.KingSlime)
