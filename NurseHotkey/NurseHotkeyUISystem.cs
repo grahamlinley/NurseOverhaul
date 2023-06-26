@@ -1,4 +1,3 @@
-﻿/*
 using Microsoft.Xna.Framework;
 using NurseHotkey.NPCs;
 using System.Collections.Generic;
@@ -84,4 +83,4 @@ namespace NurseHotkey
         }
     }
 }
-*/
+
