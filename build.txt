@@ -1,7 +1,8 @@
 displayName = Nurse Overhaul
-author = Sely
-version = 0.11
+author = Selystra
+version = 1.0
 hideCode = true
 hideResources = true
 includeSource = false
 noCompile = false
+modReferences = BossChecklist

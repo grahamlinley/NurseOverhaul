@@ -10,7 +10,12 @@ Mods: {
 		Items: {
 			BioticRifle: {
 				DisplayName: Biotic Rifle
-				Tooltip: A faint echo of Arabic rings in your ear. Despite it's gun-like shape, you can't wield it. Maybe the Nurse could use it for something...
+				Tooltip:
+					'''
+					As you hold the weapon, you hear a faint ehco of a woman yelling "Warium quatik!" 
+					Despite it's gun-like shape, it doesn't seem like something that would be useful to you. 
+					Maybe the Nurse could use it for something...
+					'''
 			}
 
 			NurseVIPBadge: {
@@ -50,7 +55,7 @@ Mods: {
 
 			SingleBandTransceiver: {
 				DisplayName: Single Band Transceiver
-				Tooltip: You get the feeling this could somehow be combined with your Nurse badge...
+				Tooltip: You get the feeling the Nurse could use this for something...
 			}
 
 			SurfaceTransponder: {
@@ -65,7 +70,12 @@ Mods: {
 
 			Thruster: {
 				DisplayName: Thruster Components
-				Tooltip: Why do thrusters make you think of healing? Either the Nurse could use this or you might need some serious medical treatment...
+				Tooltip:
+					'''
+					Why do thrusters make you think of healing? 
+					Either the Nurse could use this or you might need some serious medical treatment...
+					Might as well bring this to her either way.
+					'''
 			}
 		}
 
