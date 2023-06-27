@@ -79,12 +79,12 @@ namespace NurseHotkey
 
             if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) == true && debuffCount - 1 > 0)
             {
-                preCost += (debuffCount - 1) * 200; // READ NOTE BELOW AND APPLY TO THIS TOO
+                preCost += (debuffCount - 1) * (100 * difficultyFactor); // READ NOTE BELOW AND APPLY TO THIS TOO
             }
 
             else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod"))
             {
-                preCost += debuffCount * 200; // !!!!!!!!!!!!!!!!!!!!!!CHECK THIS WHEN CALAMITY RELEASES 1.4.4. CHECK IF NON-EXPERT, NON-MASTER IS 200. IF NOT, JUST DO THE SAME AS BELOW AND MULTIPLY BY DIFFICULTY FACTOR
+                preCost += debuffCount * (100 * difficultyFactor); // !!!!!!!!!!!!!!!!!!!!!!CHECK THIS WHEN CALAMITY RELEASES 1.4.4. CHECK IF NON-EXPERT, NON-MASTER IS 200. IF NOT, JUST DO THE SAME AS BELOW AND MULTIPLY BY DIFFICULTY FACTOR
             }
 
             else
@@ -159,7 +159,6 @@ namespace NurseHotkey
             {
                 finalCost = preCost * GetMultiplier() * nurseHappinessAdjustment; // Multiply the total cost by the boss defeat multiplier
             }
-
             return finalCost;
         }
 
@@ -247,128 +246,33 @@ namespace NurseHotkey
                 multiplier += 1f;
             }
 
-            if (NPC.downedBoss1) // Eye of Cthulhu
+            if (NPC.downedGolemBoss)
             {
-                multiplier += 2f; //2.8499f
+                multiplier += 199f;
             }
-
-            if (NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
+            else if (NPC.downedPlantBoss)
             {
-                multiplier += 7f; //9.4999f or 6.6491 if 6.65 wrong
-                if (!NPC.downedBoss1)
-                {
-                    multiplier += 2f;
-                }
+                multiplier += 149f;
             }
-
-            if (NPC.downedBoss3 | NPC.downedQueenBee) // Skeletron or Queen Bee
+            else if (NPC.downedMechBossAny)
             {
-                multiplier += 15f; //23.7499f
-
-                if (!NPC.downedBoss1)
-                {
-                    multiplier += 2f;
-                }
-                if (!NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
-                {
-                    multiplier += 7f; //9.4999f or 6.6491 if 6.65 wrong
-                }
+                multiplier += 99f;
             }
-
-            if (Main.hardMode) // Wall of Flesh
+            else if (Main.hardMode)
             {
-                multiplier += 35f; //28f fixed
-
-                if (!NPC.downedBoss1)
-                {
-                    multiplier += 2f;
-                }
-                if (!NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
-                {
-                    multiplier += 7f; //9.4999f or 6.6491 if 6.65 wrong
-                }
-                if (!NPC.downedBoss3 && !NPC.downedQueenBee)
-                {
-                    multiplier += 15f;
-                }
+                multiplier += 59f;
             }
-
-            if (NPC.downedMechBossAny) //Any mech boss
+            else if (NPC.downedBoss3 | NPC.downedQueenBee)
             {
-                multiplier += 40f; //94.9999f
-
-                if (!Main.hardMode)
-                {
-                    multiplier += 35f;
-                }
-                if (!NPC.downedBoss1)
-                {
-                    multiplier += 2f;
-                }
-                if (!NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
-                {
-                    multiplier += 7f; //9.4999f or 6.6491 if 6.65 wrong
-                }
-                if (!NPC.downedBoss3 && !NPC.downedQueenBee)
-                {
-                    multiplier += 15f;
-                }
+                multiplier += 24f;
             }
-
-            if (NPC.downedPlantBoss) //Plantera or Calamitas clone
+            else if (NPC.downedBoss2)
             {
-                multiplier += 50f; //142.4999f
-
-                if (!NPC.downedMechBossAny)
-                {
-                    multiplier += 40f;
-                }
-                if (!Main.hardMode)
-                {
-                    multiplier += 35f;
-                }
-                if (!NPC.downedBoss1)
-                {
-                    multiplier += 2f;
-                }
-                if (!NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
-                {
-                    multiplier += 7f; //9.4999f or 6.6491 if 6.65 wrong
-                }
-                if (!NPC.downedBoss3 && !NPC.downedQueenBee)
-                {
-                    multiplier += 15f;
-                }
+                multiplier += 9f;
             }
-
-            if (NPC.downedGolemBoss) // Golem
+            else if (NPC.downedBoss1)
             {
-                multiplier += 50f; //
-
-                if (!NPC.downedPlantBoss)
-                {
-                    multiplier += 50f;
-                }
-                if (!NPC.downedMechBossAny)
-                {
-                    multiplier += 40f;
-                }
-                if (!Main.hardMode)
-                {
-                    multiplier += 35f;
-                }
-                if (!NPC.downedBoss1)
-                {
-                    multiplier += 2f;
-                }
-                if (!NPC.downedBoss2) // Eater of Worlds/Brain of Cthulhu
-                {
-                    multiplier += 7f; //9.4999f or 6.6491 if 6.65 wrong
-                }
-                if (!NPC.downedBoss3 && !NPC.downedQueenBee)
-                {
-                    multiplier += 15f;
-                }
+                multiplier += 2f;
             }
             return multiplier;
         }
@@ -383,13 +287,13 @@ namespace NurseHotkey
             double verticalScaleFactor = (double)Main.maxTilesY / 2400;
 
             // Initialize with some default range, if needed
-            int horizontalRange = 320;
-            int verticalRange = 320;
+            int horizontalRange = 0;
+            int verticalRange = 0;
 
             if (itemType == ModContent.ItemType<NurseVIPBadge>())
             {
-                horizontalRange = 320;
-                verticalRange = 320;
+                horizontalRange = 280;
+                verticalRange = 280;
             }
             if (itemType == ModContent.ItemType<NurseWalkieTalkie>())
             {
@@ -399,7 +303,7 @@ namespace NurseHotkey
             if (itemType == ModContent.ItemType<SurfaceTransponder>())
             {
                 horizontalRange = (int)(80000 * horizontalScaleFactor);
-                verticalRange = (int)(9600 * verticalScaleFactor);
+                verticalRange = (int)(4000 * verticalScaleFactor);
             }
             if (itemType == ModContent.ItemType<PlatinumInsurance>())
             {
@@ -420,8 +324,8 @@ namespace NurseHotkey
                 ModContent.ItemType<PlatinumInsurance>()
             };
 
-            int highestHorizontalRange = 320;
-            int highestVerticalRange = 320;
+            int highestHorizontalRange = 0;
+            int highestVerticalRange = 0;
 
             foreach (int itemType in itemsTypesToCheck)
             {

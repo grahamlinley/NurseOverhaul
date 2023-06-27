@@ -92,7 +92,6 @@ namespace NurseHotkey
             Main.stackSplit = 9999;
             Main.npcChatText = "";
             Main.SetNPCShopIndex(shopIndex);
-            //SetupShop(Main.instance.shop[1]);
             string shopName = NPCShopDatabase.GetShopName(npc.type, "Shop");
             Main.instance.shop[Main.npcShop].SetupShop(shopName, npc);
             SoundEngine.PlaySound(SoundID.MenuTick);
@@ -100,7 +99,6 @@ namespace NurseHotkey
 
         public static List<Item> ModifyActiveShop()
         {
-            // ... Your code to prepare the list of items
             List<Item> itemsToReturn = new List<Item>();
             List<(int id, int price)> items = new List<(int id, int price)>
             {
@@ -137,6 +135,16 @@ namespace NurseHotkey
                                         item.id == ItemID.GreaterHealingPotion ||
                                         item.id == ItemID.LifeforcePotion ||
                                         item.id == ItemID.SuperHealingPotion ||
+                                        item.id == ModContent.ItemType<NurseWalkieTalkie>() ||
+                                        item.id == ModContent.ItemType<SurfaceTransponder>() ||
+                                        item.id == ModContent.ItemType<PlatinumInsurance>());
+            }
+
+            if (!NPC.downedBoss2) {
+                items.RemoveAll(item => item.id == ItemID.RestorationPotion ||
+                                        item.id == ItemID.GreaterHealingPotion ||
+                                        item.id == ItemID.LifeforcePotion ||
+                                        item.id == ItemID.SuperHealingPotion ||
                                         item.id == ModContent.ItemType<SurfaceTransponder>() ||
                                         item.id == ModContent.ItemType<PlatinumInsurance>());
             }
@@ -147,8 +155,7 @@ namespace NurseHotkey
                                         item.id == ItemID.GreaterHealingPotion ||
                                         item.id == ItemID.LifeforcePotion ||
                                         item.id == ItemID.SuperHealingPotion ||
-
-                item.id == ModContent.ItemType<PlatinumInsurance>());
+                                        item.id == ModContent.ItemType<PlatinumInsurance>());
             }
 
             if (!Main.hardMode)

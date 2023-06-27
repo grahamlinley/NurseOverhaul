@@ -1,8 +1,6 @@
 //TO DO: 
 // Icon for tmod and item sprites 
 // readme + tmodloader info file
-// DEBUG. Found error when stacking to chest + some other places (spawned something in and got an error, might be unrelated). Check log trace. 
-// ADD CATCHES FOR IF NURSE DOESN'T EXIST
 // Dialogue for how much you spent at the nurse (button in box? maybe add total spent next to money just spent. could be too cluttery though)
 // WISH Specific equipment item slot that will only take NurseHotkey range modification items 
 // WISH: Maybe resprite or just an animation when you press the hotkey? Would be funny for like an Ana type character that shoots a healing dart at you to heal you past a certain range. Could add when glimmer introduced to tmod
