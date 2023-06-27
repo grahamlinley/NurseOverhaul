@@ -16,7 +16,7 @@ using Terraria.UI.Chat;
 namespace NurseHotkey
 {
     internal class NurseHotkeyUI : UIState
-    {
+        {
         private static object TextDisplayCache => typeof(Main).GetField("_textDisplayCache", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(Main.instance);
         private bool focused;
 
@@ -82,6 +82,8 @@ namespace NurseHotkey
             }
         }
 
+        private static List<Item> shopItems = SetupShop();
+
 
         internal static void OpenShop(int shopIndex)
         {
@@ -91,26 +93,18 @@ namespace NurseHotkey
             Main.npcChatText = "";
             Main.SetNPCShopIndex(shopIndex);
             //SetupShop(Main.instance.shop[1]);
-            List<Item> shopItems = SetupShop();
+
             foreach (Item item in shopItems)
             {
                 Main.instance.shop[Main.npcShop].AddItemToShop(item);
             }
-            Main.instance.shop[Main.npcShop].SetupShop(NPCShopDatabase.GetShopName(NPCID.Nurse, "Shop"), npc);
+           Main.instance.shop[Main.npcShop].SetupShop(NPCShopDatabase.GetShopName(NPCID.Nurse, "Shop"), npc);
             SoundEngine.PlaySound(SoundID.MenuTick);
-        }
-
-        public static void AddShops()
-        {
-            new NPCShop(NPCID.Nurse)
-                .Add<NurseWalkieTalkie>()
-                .Register();
         }
 
         private static List<Item> SetupShop()
         {
             // ... Your code to prepare the list of items
-
             List<Item> itemsToReturn = new List<Item>();
             List<(int id, int price)> items = new List<(int id, int price)>
             {
@@ -134,13 +128,81 @@ namespace NurseHotkey
                 Item newItem = new Item();
                 newItem.SetDefaults(items[i].id);
                 newItem.shopCustomPrice = items[i].price;
+                newItem.isAShopItem = true; 
                 itemsToReturn.Add(newItem);
+            }
+            if (!NPC.downedSlimeKing)
+            {
+                items.RemoveAll(item => item.id == ItemID.HealingPotion ||
+                                        item.id == ItemID.RestorationPotion ||
+                                        item.id == ItemID.GreaterHealingPotion ||
+                                        item.id == ItemID.LifeforcePotion ||
+                                        item.id == ItemID.SuperHealingPotion ||
+                                        item.id == ModContent.ItemType<NurseWalkieTalkie>() ||
+                                        item.id == ModContent.ItemType<SurfaceTransponder>() ||
+                                        item.id == ModContent.ItemType<PlatinumInsurance>());
+            }
+
+            if (!NPC.downedBoss1)
+            {
+                items.RemoveAll(item => item.id == ItemID.RestorationPotion ||
+                                        item.id == ItemID.GreaterHealingPotion ||
+                                        item.id == ItemID.LifeforcePotion ||
+                                        item.id == ItemID.SuperHealingPotion ||
+                                        item.id == ModContent.ItemType<SurfaceTransponder>() ||
+                                        item.id == ModContent.ItemType<PlatinumInsurance>());
+            }
+
+            if (!NPC.downedBoss3)
+            {
+                items.RemoveAll(item => item.id == ItemID.RestorationPotion ||
+                                        item.id == ItemID.GreaterHealingPotion ||
+                                        item.id == ItemID.LifeforcePotion ||
+                                        item.id == ItemID.SuperHealingPotion ||
+
+                item.id == ModContent.ItemType<PlatinumInsurance>());
+            }
+
+            if (!Main.hardMode)
+            {
+                items.RemoveAll(item => item.id == ItemID.LifeforcePotion ||
+                                        item.id == ItemID.SuperHealingPotion);
+            }
+
+            if (!NPC.downedAncientCultist)
+            {
+                items.RemoveAll(item => item.id == ItemID.SuperHealingPotion);
+            }
+
+
+
+            int supremeHealingPotionIndex = -1;
+            int omegaHealingPotionIndex = -1;
+
+
+            ModLoader.TryGetMod("CalamityMod", out Mod Calamity);
+
+            if (Calamity != null && NPC.downedMoonlord && Calamity.TryFind<ModItem>("SupremeHealingPotion", out ModItem supremeHealingPotion))
+            {
+                supremeHealingPotionIndex = items.FindIndex(item => item.id == ItemID.SuperHealingPotion);
+
+                items.Add((supremeHealingPotion.Item.type, 500000));
+
+
+            }
+
+            if (Calamity != null && BossChecklistIntegration.isDevourerDefeated() && Calamity.TryFind<ModItem>("OmegaHealingPotion", out ModItem omegaHealingPotion))
+            {
+                omegaHealingPotionIndex = items.FindIndex(item => item.id == ItemID.SuperHealingPotion);
+
+                items.Add((omegaHealingPotion.Item.type, 1000000));
+
             }
 
             return itemsToReturn;
         }
 
-
+        /*
         private static void SetupShop(Chest shop)
         {
             if (shop == null)
@@ -271,7 +333,7 @@ namespace NurseHotkey
 
         }
         
-
+        */
     }
 }
 
