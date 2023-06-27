@@ -82,27 +82,23 @@ namespace NurseHotkey
             }
         }
 
-        private static List<Item> shopItems = SetupShop();
+        //private static List<Item> shopItems = ModifyActiveShop();
 
 
         internal static void OpenShop(int shopIndex)
         {
-            NPC npc = null;
+            NPC npc = Main.npc[Main.npcShop];
             Main.playerInventory = true;
             Main.stackSplit = 9999;
             Main.npcChatText = "";
             Main.SetNPCShopIndex(shopIndex);
             //SetupShop(Main.instance.shop[1]);
-
-            foreach (Item item in shopItems)
-            {
-                Main.instance.shop[Main.npcShop].AddItemToShop(item);
-            }
-           Main.instance.shop[Main.npcShop].SetupShop(NPCShopDatabase.GetShopName(NPCID.Nurse, "Shop"), npc);
+            string shopName = NPCShopDatabase.GetShopName(npc.type, "Shop");
+            Main.instance.shop[Main.npcShop].SetupShop(shopName, npc);
             SoundEngine.PlaySound(SoundID.MenuTick);
         }
 
-        private static List<Item> SetupShop()
+        public static List<Item> ModifyActiveShop()
         {
             // ... Your code to prepare the list of items
             List<Item> itemsToReturn = new List<Item>();
@@ -123,217 +119,83 @@ namespace NurseHotkey
                 (ModContent.ItemType<PlatinumInsurance>(), 4000000)
             };
 
+            if (!NPC.downedSlimeKing)
+            {
+                items.RemoveAll(item => item.id == ItemID.HealingPotion ||
+                                        item.id == ItemID.RestorationPotion ||
+                                        item.id == ItemID.GreaterHealingPotion ||
+                                        item.id == ItemID.LifeforcePotion ||
+                                        item.id == ItemID.SuperHealingPotion ||
+                                        item.id == ModContent.ItemType<NurseWalkieTalkie>() ||
+                                        item.id == ModContent.ItemType<SurfaceTransponder>() ||
+                                        item.id == ModContent.ItemType<PlatinumInsurance>());
+            }
+
+            if (!NPC.downedBoss1)
+            {
+                items.RemoveAll(item => item.id == ItemID.RestorationPotion ||
+                                        item.id == ItemID.GreaterHealingPotion ||
+                                        item.id == ItemID.LifeforcePotion ||
+                                        item.id == ItemID.SuperHealingPotion ||
+                                        item.id == ModContent.ItemType<SurfaceTransponder>() ||
+                                        item.id == ModContent.ItemType<PlatinumInsurance>());
+            }
+
+            if (!NPC.downedBoss3)
+            {
+                items.RemoveAll(item => item.id == ItemID.RestorationPotion ||
+                                        item.id == ItemID.GreaterHealingPotion ||
+                                        item.id == ItemID.LifeforcePotion ||
+                                        item.id == ItemID.SuperHealingPotion ||
+
+                item.id == ModContent.ItemType<PlatinumInsurance>());
+            }
+
+            if (!Main.hardMode)
+            {
+                items.RemoveAll(item => item.id == ItemID.LifeforcePotion ||
+                                        item.id == ItemID.SuperHealingPotion);
+            }
+
+            if (!NPC.downedAncientCultist)
+            {
+                items.RemoveAll(item => item.id == ItemID.SuperHealingPotion);
+            }
+
+
+            int supremeHealingPotionIndex = -1;
+            int omegaHealingPotionIndex = -1;
+
+
+            ModLoader.TryGetMod("CalamityMod", out Mod Calamity);
+
+            if (Calamity != null && NPC.downedMoonlord && Calamity.TryFind<ModItem>("SupremeHealingPotion", out ModItem supremeHealingPotion))
+            {
+                supremeHealingPotionIndex = items.FindIndex(item => item.id == ItemID.SuperHealingPotion);
+
+                items.Add((supremeHealingPotion.Item.type, 500000));
+
+
+            }
+
+            if (Calamity != null && BossChecklistIntegration.isDevourerDefeated() && Calamity.TryFind<ModItem>("OmegaHealingPotion", out ModItem omegaHealingPotion))
+            {
+                omegaHealingPotionIndex = items.FindIndex(item => item.id == ItemID.SuperHealingPotion);
+
+                items.Add((omegaHealingPotion.Item.type, 1000000));
+
+            }
+
             for (int i = 0; i < items.Count; i++)
             {
                 Item newItem = new Item();
                 newItem.SetDefaults(items[i].id);
                 newItem.shopCustomPrice = items[i].price;
-                newItem.isAShopItem = true; 
+                newItem.isAShopItem = true;
                 itemsToReturn.Add(newItem);
             }
-            if (!NPC.downedSlimeKing)
-            {
-                items.RemoveAll(item => item.id == ItemID.HealingPotion ||
-                                        item.id == ItemID.RestorationPotion ||
-                                        item.id == ItemID.GreaterHealingPotion ||
-                                        item.id == ItemID.LifeforcePotion ||
-                                        item.id == ItemID.SuperHealingPotion ||
-                                        item.id == ModContent.ItemType<NurseWalkieTalkie>() ||
-                                        item.id == ModContent.ItemType<SurfaceTransponder>() ||
-                                        item.id == ModContent.ItemType<PlatinumInsurance>());
-            }
-
-            if (!NPC.downedBoss1)
-            {
-                items.RemoveAll(item => item.id == ItemID.RestorationPotion ||
-                                        item.id == ItemID.GreaterHealingPotion ||
-                                        item.id == ItemID.LifeforcePotion ||
-                                        item.id == ItemID.SuperHealingPotion ||
-                                        item.id == ModContent.ItemType<SurfaceTransponder>() ||
-                                        item.id == ModContent.ItemType<PlatinumInsurance>());
-            }
-
-            if (!NPC.downedBoss3)
-            {
-                items.RemoveAll(item => item.id == ItemID.RestorationPotion ||
-                                        item.id == ItemID.GreaterHealingPotion ||
-                                        item.id == ItemID.LifeforcePotion ||
-                                        item.id == ItemID.SuperHealingPotion ||
-
-                item.id == ModContent.ItemType<PlatinumInsurance>());
-            }
-
-            if (!Main.hardMode)
-            {
-                items.RemoveAll(item => item.id == ItemID.LifeforcePotion ||
-                                        item.id == ItemID.SuperHealingPotion);
-            }
-
-            if (!NPC.downedAncientCultist)
-            {
-                items.RemoveAll(item => item.id == ItemID.SuperHealingPotion);
-            }
-
-
-
-            int supremeHealingPotionIndex = -1;
-            int omegaHealingPotionIndex = -1;
-
-
-            ModLoader.TryGetMod("CalamityMod", out Mod Calamity);
-
-            if (Calamity != null && NPC.downedMoonlord && Calamity.TryFind<ModItem>("SupremeHealingPotion", out ModItem supremeHealingPotion))
-            {
-                supremeHealingPotionIndex = items.FindIndex(item => item.id == ItemID.SuperHealingPotion);
-
-                items.Add((supremeHealingPotion.Item.type, 500000));
-
-
-            }
-
-            if (Calamity != null && BossChecklistIntegration.isDevourerDefeated() && Calamity.TryFind<ModItem>("OmegaHealingPotion", out ModItem omegaHealingPotion))
-            {
-                omegaHealingPotionIndex = items.FindIndex(item => item.id == ItemID.SuperHealingPotion);
-
-                items.Add((omegaHealingPotion.Item.type, 1000000));
-
-            }
-
             return itemsToReturn;
         }
-
-        /*
-        private static void SetupShop(Chest shop)
-        {
-            if (shop == null)
-            {
-                Main.NewText("shop is null");
-                return;
-            }
-            List<(int id, int price)> items = new List<(int id, int price)>
-            {
-                (ItemID.Mushroom, 250),
-                (ItemID.BottledWater, 200),
-                (ItemID.BottledHoney, 400),
-                (ItemID.LesserHealingPotion, 300),
-                (ItemID.RestorationPotion, 15000),
-                (ItemID.HealingPotion, 10000),
-                (ItemID.GreaterHealingPotion, 50000),
-                (ItemID.LifeforcePotion, 10000),
-                (ItemID.SuperHealingPotion, 150000),
-                (ModContent.ItemType<NurseVIPBadge>(), 5000),
-                (ModContent.ItemType<NurseWalkieTalkie>(), 250000),
-                (ModContent.ItemType<SurfaceTransponder>(), 1000000),
-                (ModContent.ItemType<PlatinumInsurance>(), 4000000),
-                (ItemID.None, 0),
-                (ItemID.None, 0),
-                (ItemID.None, 0),
-                (ItemID.None, 0),
-                (ItemID.None, 0),
-                (ItemID.None, 0),
-                (ItemID.None, 0),
-                (ItemID.None, 0),
-                (ItemID.None, 0),
-                (ItemID.None, 0),
-                (ItemID.None, 0),
-                (ItemID.None, 0),
-                (ItemID.None, 0),
-                (ItemID.None, 0),
-                (ItemID.None, 0),
-                (ItemID.None, 0),
-                (ItemID.None, 0),
-                (ItemID.None, 0),
-                (ItemID.None, 0),
-                (ItemID.None, 0),
-                (ItemID.None, 0),
-                (ItemID.None, 0),
-                (ItemID.None, 0),
-                (ItemID.None, 0),
-                (ItemID.None, 0)
-            };
-
-            if (!NPC.downedSlimeKing)
-            {
-                items.RemoveAll(item => item.id == ItemID.HealingPotion ||
-                                        item.id == ItemID.RestorationPotion ||
-                                        item.id == ItemID.GreaterHealingPotion ||
-                                        item.id == ItemID.LifeforcePotion ||
-                                        item.id == ItemID.SuperHealingPotion ||
-                                        item.id == ModContent.ItemType<NurseWalkieTalkie>() ||
-                                        item.id == ModContent.ItemType<SurfaceTransponder>() ||
-                                        item.id == ModContent.ItemType<PlatinumInsurance>());
-            }
-
-            if (!NPC.downedBoss1)
-            {
-                items.RemoveAll(item => item.id == ItemID.RestorationPotion ||
-                                        item.id == ItemID.GreaterHealingPotion ||
-                                        item.id == ItemID.LifeforcePotion ||
-                                        item.id == ItemID.SuperHealingPotion ||
-                                        item.id == ModContent.ItemType<SurfaceTransponder>() ||
-                                        item.id == ModContent.ItemType<PlatinumInsurance>());
-            }
-
-            if (!NPC.downedBoss3)
-            {
-                items.RemoveAll(item => item.id == ItemID.RestorationPotion ||
-                                        item.id == ItemID.GreaterHealingPotion ||
-                                        item.id == ItemID.LifeforcePotion ||
-                                        item.id == ItemID.SuperHealingPotion ||
-
-                item.id == ModContent.ItemType<PlatinumInsurance>());
-            }
-
-            if (!Main.hardMode)
-            {
-                items.RemoveAll(item => item.id == ItemID.LifeforcePotion ||
-                                        item.id == ItemID.SuperHealingPotion);
-            }
-
-            if (!NPC.downedAncientCultist)
-            {
-                items.RemoveAll(item => item.id == ItemID.SuperHealingPotion);
-            }
-
-
-
-            int supremeHealingPotionIndex = -1;
-            int omegaHealingPotionIndex = -1;
-
-
-            ModLoader.TryGetMod("CalamityMod", out Mod Calamity);
-
-            if (Calamity != null && NPC.downedMoonlord && Calamity.TryFind<ModItem>("SupremeHealingPotion", out ModItem supremeHealingPotion))
-            {
-                supremeHealingPotionIndex = items.FindIndex(item => item.id == ItemID.SuperHealingPotion);
-
-                items.Add((supremeHealingPotion.Item.type, 500000));
-
-
-            }
-
-            if (Calamity != null && BossChecklistIntegration.isDevourerDefeated() && Calamity.TryFind<ModItem>("OmegaHealingPotion", out ModItem omegaHealingPotion))
-            {
-                omegaHealingPotionIndex = items.FindIndex(item => item.id == ItemID.SuperHealingPotion);
-
-                items.Add((omegaHealingPotion.Item.type, 1000000));
-
-            }
-
-
-            for (int i = 0; i < items.Count; i++)
-            {
-                Item newItem = new Item();
-                newItem.SetDefaults(items[i].id);
-                newItem.shopCustomPrice = items[i].price;
-                shop.item[i].SetDefaults(newItem.type);
-                shop.item[i].shopCustomPrice = newItem.shopCustomPrice;
-                shop.item[i].isAShopItem = true;
-            }
-
-        }
-        
-        */
     }
 }
 

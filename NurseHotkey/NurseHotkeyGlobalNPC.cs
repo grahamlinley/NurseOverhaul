@@ -15,32 +15,14 @@ namespace NurseHotkey.NPCs
 {
     public class NurseHotkeyGlobalNPC : GlobalNPC
     {
-        public override void ModifyShop(NPCShop shop)
+        public override void ModifyActiveShop(NPC npc, string shopName, Item[] items)
         {
-            if (shop.NpcType == NPCID.Nurse)
+            // Your custom code here
+            // For example, you can call your ModifyActiveShop method:
+            List<Item> customItems = NurseHotkeyUI.ModifyActiveShop();
+            for (int i = 0; i < customItems.Count && i < items.Length; i++)
             {
-                // Adding an item to a vanilla NPC is easy:
-                // This item sells for the normal price.
-                shop.Add<NurseWalkieTalkie>();
-                shop.Add(ItemID.Mushroom);
-                shop.Register();
-
-                // We can use shopCustomPrice and shopSpecialCurrency to support custom prices and currency. Usually a shop sells an item for item.value.
-                // Editing item.value in SetupShop is an incorrect approach.
-                /*
-                // This shop entry sells for 2 Defenders Medals.
-                shop.Add(new Item(ModContent.ItemType<ExampleMountItem>())
-                {
-                    shopCustomPrice = 2,
-                    shopSpecialCurrency = CustomCurrencyID.DefenderMedals // omit this line if shopCustomPrice should be in regular coins.
-                });
-
-                // This shop entry sells for 3 of a custom currency added in our mod.
-                shop.Add(new Item(ModContent.ItemType<ExampleMountItem>())
-                {
-                    shopCustomPrice = 2,
-                    shopSpecialCurrency = ExampleMod.ExampleCustomCurrencyId
-                });*/
+                items[i] = customItems[i];
             }
         }
         public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
