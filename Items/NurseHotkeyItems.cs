@@ -33,13 +33,13 @@ namespace NurseHotkey.Items
         {
             Item.width = 20;
             Item.height = 20;
-            Item.value = Item.sellPrice(0, 0, 1, 0); // Set the item's value
-            Item.rare = ItemRarityID.Green; // Set the item's rarity
+            Item.value = Item.sellPrice(0, 0, 15, 0); // Set the item's value
+            Item.rare = ItemRarityID.Blue; // Set the item's rarity
             Item.accessory = false; // Make the item an accessory
         }
     }
 
-    public class SingleBandTransceiver : ModItem
+    public class BrokenWalkieTalkie : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -51,7 +51,7 @@ namespace NurseHotkey.Items
         {
             Item.width = 20;
             Item.height = 20;
-            Item.value = Item.sellPrice(0, 0, 1, 0); // Set the item's value
+            Item.value = Item.sellPrice(0, 5, 0, 0); // Set the item's value
             Item.rare = ItemRarityID.Green; // Set the item's rarity
             Item.accessory = false; // Make the item an accessory
         }
@@ -81,8 +81,8 @@ namespace NurseHotkey.Items
         {
             Item.width = 20;
             Item.height = 20;
-            Item.value = Item.sellPrice(0, 1, 0, 0); // Set the item's value
-            Item.rare = ItemRarityID.Orange; // Set the item's rarity
+            Item.value = Item.sellPrice(0, 7, 50, 0); // Set the item's value
+            Item.rare = ItemRarityID.Green; // Set the item's rarity
             Item.accessory = false; // Make the item an accessory
         }
 
@@ -92,7 +92,7 @@ namespace NurseHotkey.Items
             Recipe recipe = CreateRecipe();
             recipe.AddIngredient(ItemID.GoldCoin, 1);
             recipe.AddIngredient(ModContent.ItemType<NurseVIPBadge>(), 1);
-            recipe.AddIngredient(ModContent.ItemType<SingleBandTransceiver>(), 1);
+            recipe.AddIngredient(ModContent.ItemType<BrokenWalkieTalkie>(), 1);
             recipe.Register();
         }
     }
@@ -109,7 +109,7 @@ namespace NurseHotkey.Items
         {
             Item.width = 20;
             Item.height = 20;
-            Item.value = Item.sellPrice(0, 0, 1, 0); // Set the item's value
+            Item.value = Item.sellPrice(0, 7, 50, 0); // Set the item's value
             Item.rare = ItemRarityID.Orange; // Set the item's rarity
             Item.accessory = false; // Make the item an accessory
         }
@@ -138,7 +138,7 @@ namespace NurseHotkey.Items
             Item.width = 20;
             Item.height = 20;
             Item.value = Item.sellPrice(0, 20, 0, 0); // Set the item's value
-            Item.rare = ItemRarityID.LightPurple; // Set the item's rarity
+            Item.rare = ItemRarityID.Orange; // Set the item's rarity
             Item.accessory = false; // Make the item an accessory
         }
 
@@ -171,8 +171,8 @@ namespace NurseHotkey.Items
         {
             Item.width = 20;
             Item.height = 20;
-            Item.value = Item.sellPrice(0, 0, 1, 0); // Set the item's value
-            Item.rare = ItemRarityID.Yellow; // Set the item's rarity
+            Item.value = Item.sellPrice(0, 10, 0, 0); // Set the item's value
+            Item.rare = ItemRarityID.LightPurple; // Set the item's rarity
             Item.accessory = false; // Make the item an accessory
         }
     }
@@ -201,8 +201,8 @@ namespace NurseHotkey.Items
         {
             Item.width = 20;
             Item.height = 20;
-            Item.value = Item.sellPrice(0, 20, 0, 0); // Set the item's value
-            Item.rare = ItemRarityID.Red; // Set the item's rarity
+            Item.value = Item.sellPrice(1, 50, 0, 0); // Set the item's value
+            Item.rare = ItemRarityID.Yellow; // Set the item's rarity
             Item.accessory = false; // Make the item an accessory
         }
 

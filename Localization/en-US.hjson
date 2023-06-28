@@ -34,9 +34,10 @@ Mods: {
 				DisplayName: Nurse's Walkie Talkie
 				Tooltip:
 					'''
-					Using the technology you discovered, the Nurse has developed a way to remain in constant contact with you, and with a press of a button (default G) she can track you and heal you. 
-					She tells you she can hit you as long as you stay within a little over one
-					"screen's worth" of her. Whatever that means.
+					Gives you a direct line to the Nurse, although the range isn't that far... 
+					The Nurse can now remain in constant contact with you, and with a press of a button (default G) 
+					she can pinpoint you and heal you as long as you're nearby. She tells you she can hit you as long 
+					as you stay within a little over one "screen's worth" of her. Whatever that means.
 					The Nurse will only be able to track you as long as you keep this item in your inventory.
 					'''
 			}
@@ -46,24 +47,27 @@ Mods: {
 				Tooltip:
 					'''
 					She has the technology.
-					The Nurse has created an industry, and that industry is booming. Her customers demand range and that's what she plans to deliver with her new satellite network.
-					As one of her original clients, she has given you acess to her highest tier of insurance.
+					The Nurse has created an industry, and that industry is booming. Her customers demand range and that's 
+					what she plans to deliver with her new satellite network. As one of her original clients, she has given 
+					you acess to her highest tier of insurance and her "preferred client pricing schedule," though it looks
+					like the same prices that she's always had.
 					Increases's Nurse's quick range to anywhere in the world.
 					The Nurse will only be able to track you as long as you keep this item in your inventory.
 					'''
 			}
 
-			SingleBandTransceiver: {
-				DisplayName: Single Band Transceiver
-				Tooltip: You get the feeling the Nurse could use this for something...
+			BrokenWalkieTalkie: {
+				DisplayName: Broken Walkie Talkie
+				Tooltip: It looks like junk, but on the bottom there is a slot for a card and a coin.
 			}
 
 			SurfaceTransponder: {
 				DisplayName: Surface Transponder
 				Tooltip:
 					'''
-					With your "investments" into the Nurse's new technology, she has found a way to increase her quick heal's range even further, taking her heals to the sky.
-					Increases Nurse's quick heal range to anywhere on the surface, plus a decent amount underground.
+					With the technology you've found, the Nurse tells you she can track and deploy her quick heal 
+					even further than before. Increases Nurse's quick heal range to anywhere on the surface, plus 
+					a decent amount underground.
 					The Nurse will only be able to track you as long as you keep this item in your inventory.
 					'''
 			}

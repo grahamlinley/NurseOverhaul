@@ -30,7 +30,7 @@ namespace NurseHotkey.NPCs
             if (npc.type == NPCID.KingSlime)
             {
                 // This is where we add item drop rules for VampireBat, here is a simple example:
-                npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<SingleBandTransceiver>(), 1, 1, 1));
+                npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<BrokenWalkieTalkie>(), 1, 1, 1));
             }
             if (npc.type == NPCID.EyeofCthulhu)
             {

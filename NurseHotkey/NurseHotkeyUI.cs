@@ -106,67 +106,38 @@ namespace NurseHotkey
                 (ItemID.BottledWater, 200),
                 (ItemID.BottledHoney, 400),
                 (ItemID.LesserHealingPotion, 300),
-                (ItemID.RestorationPotion, 15000),
-                (ItemID.HealingPotion, 10000),
-                (ItemID.GreaterHealingPotion, 50000),
-                (ItemID.LifeforcePotion, 10000),
-                (ItemID.SuperHealingPotion, 150000),
-                (ModContent.ItemType<NurseVIPBadge>(), 5000),
-                (ModContent.ItemType<NurseWalkieTalkie>(), 250000),
-                (ModContent.ItemType<SurfaceTransponder>(), 1000000),
-                (ModContent.ItemType<PlatinumInsurance>(), 4000000)
             };
 
-            if (!NPC.downedSlimeKing)
+            if (NPC.downedSlimeKing)
             {
-                items.RemoveAll(item => item.id == ItemID.HealingPotion ||
-                                        item.id == ItemID.RestorationPotion ||
-                                        item.id == ItemID.GreaterHealingPotion ||
-                                        item.id == ItemID.LifeforcePotion ||
-                                        item.id == ItemID.SuperHealingPotion ||
-                                        item.id == ModContent.ItemType<NurseWalkieTalkie>() ||
-                                        item.id == ModContent.ItemType<SurfaceTransponder>() ||
-                                        item.id == ModContent.ItemType<PlatinumInsurance>());
+                items.Add((ItemID.HealingPotion, 10000));
             }
 
-            if (!NPC.downedBoss1)
+            if (NPC.downedBoss1)
             {
-                items.RemoveAll(item => item.id == ItemID.RestorationPotion ||
-                                        item.id == ItemID.GreaterHealingPotion ||
-                                        item.id == ItemID.LifeforcePotion ||
-                                        item.id == ItemID.SuperHealingPotion ||
-                                        item.id == ModContent.ItemType<NurseWalkieTalkie>() ||
-                                        item.id == ModContent.ItemType<SurfaceTransponder>() ||
-                                        item.id == ModContent.ItemType<PlatinumInsurance>());
+                items.Add((ItemID.RestorationPotion, 15000));
+                items.Add((ModContent.ItemType<NurseWalkieTalkie>(), 250000));
             }
 
-            if (!NPC.downedBoss2) {
-                items.RemoveAll(item => item.id == ItemID.RestorationPotion ||
-                                        item.id == ItemID.GreaterHealingPotion ||
-                                        item.id == ItemID.LifeforcePotion ||
-                                        item.id == ItemID.SuperHealingPotion ||
-                                        item.id == ModContent.ItemType<SurfaceTransponder>() ||
-                                        item.id == ModContent.ItemType<PlatinumInsurance>());
+            if (NPC.downedBoss2) 
+            {
+                items.Add((ModContent.ItemType<SurfaceTransponder>(), 1000000));
             }
 
-            if (!NPC.downedBoss3)
+            if (NPC.downedBoss3)
             {
-                items.RemoveAll(item => item.id == ItemID.RestorationPotion ||
-                                        item.id == ItemID.GreaterHealingPotion ||
-                                        item.id == ItemID.LifeforcePotion ||
-                                        item.id == ItemID.SuperHealingPotion ||
-                                        item.id == ModContent.ItemType<PlatinumInsurance>());
+                items.Add((ModContent.ItemType<PlatinumInsurance>(), 4000000));
             }
 
-            if (!Main.hardMode)
+            if (Main.hardMode)
             {
-                items.RemoveAll(item => item.id == ItemID.LifeforcePotion ||
-                                        item.id == ItemID.SuperHealingPotion);
+                items.Add((ItemID.LifeforcePotion, 10000));
+                items.Add((ItemID.GreaterHealingPotion, 50000));
             }
 
-            if (!NPC.downedAncientCultist)
+            if (NPC.downedAncientCultist)
             {
-                items.RemoveAll(item => item.id == ItemID.SuperHealingPotion);
+                items.Add((ItemID.SuperHealingPotion, 150000));
             }
 
 
