@@ -1,5 +1,5 @@
+// All of this taken from AnglerShop with permission (ty mr notle0n), will commment 1.4.4 changes and Nurse specific changes
 using Microsoft.Xna.Framework;
-using NurseHotkey.NPCs;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
@@ -19,7 +19,7 @@ namespace NurseHotkey
         {
             if (!Main.dedServ)
             {
-                UI = new NurseHotkeyUI();
+                UI = new NurseHotkeyUI(); //What's going to be drawn
                 UI.Activate();
                 UserInterface = new UserInterface();
                 UserInterface.SetState(UI);
@@ -38,12 +38,12 @@ namespace NurseHotkey
             {
                 dialogueTweakLoaded = true;
                 dialogueTweak.Call("AddButton",
-                    NPCID.Nurse, // NPC ID
+                    NPCID.Nurse, // Changed, but only useful for DialogueTweak
                     () => Language.GetTextValue("LegacyInterface.28"),
                     "DialogueTweak/Interfaces/Assets/Icon_Default", // The texture's path
                     () =>
                     {
-                        NurseHotkeyUI.OpenShop(1);
+                        NurseHotkeyUI.OpenShop(1); //SHop button in DialogueTweak will call our OpenShop method 
                     });
             }
         }
@@ -54,6 +54,7 @@ namespace NurseHotkey
             _lastUpdateUiGameTime = gameTime;
 
             // if the player is talking to the Nurse and the new shop isn't opened
+            // changes index from original angler shop
             if (Main.LocalPlayer.talkNPC != -1 && Main.npc[Main.LocalPlayer.talkNPC].type == NPCID.Nurse && Main.npcShop != 1)
             {
                 UserInterface.Update(gameTime);
@@ -70,7 +71,8 @@ namespace NurseHotkey
                     delegate
                     {
                         // if the player is talking to the Nurse, the new shop isn't opened and dialogue tweak mod isn't active.
-                        if (Main.LocalPlayer.talkNPC != -1 && Main.npc[Main.LocalPlayer.talkNPC].type == NPCID.Nurse && Main.npcShop != 1)
+                        // changes index from original angler shop
+                        if (Main.LocalPlayer.talkNPC != -1 && Main.npc[Main.LocalPlayer.talkNPC].type == NPCID.Nurse && Main.npcShop != 1 && !dialogueTweakLoaded)
                         {
                             UserInterface.Draw(Main.spriteBatch, _lastUpdateUiGameTime);
                         }

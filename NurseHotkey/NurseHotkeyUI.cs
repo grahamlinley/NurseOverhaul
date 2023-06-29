@@ -17,6 +17,7 @@ namespace NurseHotkey
 {
     internal class NurseHotkeyUI : UIState
         {
+        // The next 75 lines are responsible for drawing the shop button. We're going to do some special things for the Nurse shop button though.
         private static object TextDisplayCache => typeof(Main).GetField("_textDisplayCache", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(Main.instance);
         private bool focused;
 
@@ -25,7 +26,7 @@ namespace NurseHotkey
             base.Draw(spriteBatch);
 
             Vector2 scale = new Vector2(0.9f);
-            string text = Language.GetTextValue("LegacyInterface.28"); // "Shop"
+            string text = Language.GetTextValue("LegacyInterface.28"); // "Shop" = LegacyInterface.28. This is the actual "shop button"
             int numLines = (int)TextDisplayCache.GetType().GetProperty("AmountOfLines", BindingFlags.Instance | BindingFlags.Public).GetValue(TextDisplayCache);
             Vector2 stringSize = ChatManager.GetStringSize(FontAssets.MouseText.Value, text, scale);
 
@@ -34,9 +35,9 @@ namespace NurseHotkey
                 value2.X *= 260f / stringSize.X;
 
             Player player = Main.LocalPlayer;
-            float debuffCount = NurseHotkeyPlayer.GetDebuffCount(player);
+            float debuffCount = NurseHotkeyPlayer.GetDebuffCount(player); // We're bringing these in so when the heal button is active, it doesn't mess with the our drawn shop button. The heal text's length is dynamic, and the shop button is fixed in place, so the text will be jumbled if we don't do this
 
-            if (!Main.LocalPlayer.ghost && Main.LocalPlayer.statLife == Main.LocalPlayer.statLifeMax2 && debuffCount == 0)
+            if (!Main.LocalPlayer.ghost && Main.LocalPlayer.statLife == Main.LocalPlayer.statLifeMax2 && debuffCount == 0) //the player must not be able to be healed by the nurse for us to draw the shop button
             {
                 float posButton1 = 180 + (Main.screenWidth - 800) / 2;
                 float posButton2 = posButton1 + ChatManager.GetStringSize(FontAssets.MouseText.Value, Language.GetTextValue("LegacyInterface.54"), scale).X + 30f;
@@ -67,45 +68,44 @@ namespace NurseHotkey
                     focused = false;
                 }
 
-                ChatManager.DrawColorCodedStringShadow(spriteBatch, FontAssets.MouseText.Value, text, position + stringSize * value2 * 0.5f, (!focused) ? Color.Black : Color.Brown, 0f, stringSize * 0.5f, scale * value2);
+                ChatManager.DrawColorCodedStringShadow(spriteBatch, FontAssets.MouseText.Value, text, position + stringSize * value2 * 0.5f, (!focused) ? Color.Black : Color.Brown, 0f, stringSize * 0.5f, scale * value2); // condensed version of AnglerShop
                 ChatManager.DrawColorCodedString(spriteBatch, FontAssets.MouseText.Value, text, position + stringSize * value2 * 0.5f, !focused ? new Color(228, 206, 114, Main.mouseTextColor / 2) : new Color(255, 231, 69), 0f, stringSize * 0.5f, scale);
             }
         }
 
+        //from here on, the logic is similar to AnglerShop but things are changed drastically for 1.4.4 compatability such as how we're calling the shop, where it's stored etc.
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
             if (focused && Main.mouseLeft)
             {
-                OpenShop(1);
+                OpenShop(1); //No one will care about this when you're reading it, but index has dropped from 99 to 1. Index maxes out at 2 in 1.4.4
             }
         }
 
-        //private static List<Item> shopItems = ModifyActiveShop();
-
-
         internal static void OpenShop(int shopIndex)
         {
-            NPC npc = Main.npc[Main.npcShop];
-            Main.playerInventory = true;
+            NPC npc = Main.npc[Main.npcShop]; // I think we're creating a shop at the npc we're interacting with when OpenShop(1) is being called, instead of creating our own shop. That's what it looks like to me anyway
+            Main.playerInventory = true; //shop stuff
             Main.stackSplit = 9999;
             Main.npcChatText = "";
-            Main.SetNPCShopIndex(shopIndex);
+            Main.SetNPCShopIndex(shopIndex); 
             string shopName = NPCShopDatabase.GetShopName(npc.type, "Shop");
-            Main.instance.shop[Main.npcShop].SetupShop(shopName, npc);
+            Main.instance.shop[Main.npcShop].SetupShop(shopName, npc); //Creating the actual shop
             SoundEngine.PlaySound(SoundID.MenuTick);
         }
 
-        public static List<Item> ModifyActiveShop()
+        public static List<Item> ModifyActiveShop() //theoretically we could change this to something else less confusing as NurseHotkeyGlobalNPC is using ModifyActiveShop as 1.4.4 intends, and I don't think UIState uses ModifyActiveShop, but I'm fearful of changes after getting it to work
         {
-            List<Item> itemsToReturn = new List<Item>();
+            List<Item> itemsToReturn = new List<Item>();  //Next 50+ lines are intuitive shop logic. Check repo history for examples of stage progression item removal, i.e. if you kill EoC, you still have to kill King Slime to unlock everything. Not a fan so we went with individual boss checks.
             List<(int id, int price)> items = new List<(int id, int price)>
             {
                 (ItemID.Mushroom, 250),
                 (ItemID.BottledWater, 200),
                 (ItemID.BottledHoney, 400),
                 (ItemID.LesserHealingPotion, 300),
+                (ModContent.ItemType<NurseVIPBadge>(), 5000)
             };
 
             if (NPC.downedSlimeKing)
@@ -144,7 +144,7 @@ namespace NurseHotkey
             int supremeHealingPotionIndex = -1;
             int omegaHealingPotionIndex = -1;
 
-
+            // Calamity weak references, not to worried about name changes. If they do it should just not populate anyway
             ModLoader.TryGetMod("CalamityMod", out Mod Calamity);
 
             if (Calamity != null && NPC.downedMoonlord && Calamity.TryFind<ModItem>("SupremeHealingPotion", out ModItem supremeHealingPotion))
@@ -164,7 +164,7 @@ namespace NurseHotkey
 
             }
 
-            for (int i = 0; i < items.Count; i++)
+            for (int i = 0; i < items.Count; i++) // very important for making shop items actually shop items, at least it was in 1.4.3. With 1.4.4 shop changes might not be important but it works so I'm keeping it
             {
                 Item newItem = new Item();
                 newItem.SetDefaults(items[i].id);
@@ -172,7 +172,7 @@ namespace NurseHotkey
                 newItem.isAShopItem = true;
                 itemsToReturn.Add(newItem);
             }
-            return itemsToReturn;
+            return itemsToReturn; //What is used in GlobalNPC to populate the items in our shop
         }
     }
 }

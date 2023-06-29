@@ -12,21 +12,19 @@ Mods: {
 				DisplayName: Biotic Rifle
 				Tooltip:
 					'''
-					As you hold the weapon, you hear a faint ehco of a woman yelling "Warium quatik!" 
-					Despite it's gun-like shape, it doesn't seem like something that would be useful to you. 
-					Maybe the Nurse could use it for something...
+					As you hold the weapon, you hear a faint echo of a woman yelling "Warium quatik!" 
+					Despite its gun-like shape, you feel like it might be more useful to the Nurse
 					'''
 			}
 
 			NurseVIPBadge: {
-				DisplayName: Nurse VIP Badge
+				DisplayName: Nurse's VIP Badge
 				Tooltip:
 					'''
-					The Nurse will be watching for your signal. 
-					When you're close to her, and you give her the signal (default key G when bound),
-					she will drop everything she's doing to heal you.
-					The Nurse will only be able to track you as long as you keep this item in your inventory.
-					If you lose it, she'll sell you another at her "discounted rate."
+					The Nurse will be watching for your signal
+					When you're close to her, and you signal her (default key G when bound),
+					she will drop everything she's doing to heal you
+					She'll only heal you if you keep this in your inventory
 					'''
 			}
 
@@ -34,25 +32,24 @@ Mods: {
 				DisplayName: Nurse's Walkie Talkie
 				Tooltip:
 					'''
-					Gives you a direct line to the Nurse, although the range isn't that far... 
-					The Nurse can now remain in constant contact with you, and with a press of a button (default G) 
-					she can pinpoint you and heal you as long as you're nearby. She tells you she can hit you as long 
-					as you stay within a little over one "screen's worth" of her. Whatever that means.
-					The Nurse will only be able to track you as long as you keep this item in your inventory.
+					With this in your inventory, the Nurse can now remain 
+					in constant contact with you and track your whereabouts
+					as long as you remain close by
+					She says when you give the signal (default key G)
+					she'll be able to hit you with her stim pistol 
+					as long as you're within about one "screen's worth" of her. 
+					Whatever that means.
 					'''
 			}
 
 			PlatinumInsurance: {
-				DisplayName: Platinum Insurance
+				DisplayName: Nurse Nourishment Diamond
 				Tooltip:
 					'''
-					She has the technology.
-					The Nurse has created an industry, and that industry is booming. Her customers demand range and that's 
-					what she plans to deliver with her new satellite network. As one of her original clients, she has given 
-					you acess to her highest tier of insurance and her "preferred client pricing schedule," though it looks
-					like the same prices that she's always had.
+					Her customers demand range and that's what she plans to deliver
+					With her new network of satellites armed with her latest invention, the biotic canon,
 					Increases's Nurse's quick range to anywhere in the world.
-					The Nurse will only be able to track you as long as you keep this item in your inventory.
+					The satellites will only be able to track you as long as you keep this item in your inventory.
 					'''
 			}
 
@@ -65,9 +62,9 @@ Mods: {
 				DisplayName: Surface Transponder
 				Tooltip:
 					'''
-					With the technology you've found, the Nurse tells you she can track and deploy her quick heal 
-					even further than before. Increases Nurse's quick heal range to anywhere on the surface, plus 
-					a decent amount underground.
+					Armed with her new rifle, the Nurse tells you she'll be able to track and deploy her quick heal 
+					even further than before. Just give her the signal (default keybind G), and she'll hit you instantly.
+					Increases Nurse's quick heal range to anywhere on the surface, plus a decent amount underground.
 					The Nurse will only be able to track you as long as you keep this item in your inventory.
 					'''
 			}
@@ -77,12 +74,16 @@ Mods: {
 				Tooltip:
 					'''
 					Why do thrusters make you think of healing? 
-					Either the Nurse could use this or you might need some serious medical treatment...
+					Either the Nurse could use this or you 
+					might need some serious medical treatment...
 					Might as well bring this to her either way.
 					'''
 			}
 		}
 
-		"Keybinds.Heal in range of Nurse.DisplayName": Heal in range of  Nurse
+		Keybinds: {
+			"Heal in range of Nurse.DisplayName": Heal in range of  Nurse
+			"Quick Heal button.DisplayName": Quick  Heal button
+		}
 	}
 }
