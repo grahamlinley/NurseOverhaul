@@ -1,17 +1,16 @@
 //TO DO: 
+// Add weak references to Calamity when 1.4.4 preview released? Remove bosschecklistintegration?
 // IMMPORTANT CALAMITY CHECK. SEE IF DIFFICULTY FACTOR * 100 WORKS FOR DEBUFF CALC IN PLAYER. VERY IMPORTANT
-// Icon for tmod and item sprites 
-// readme + tmodloader info file
-// Dialogue for how much you spent at the nurse (button in box? maybe add total spent next to money just spent. could be too cluttery though)
+// WISH: Dialogue for how much you spent at the nurse (button in box? maybe add total spent next to money just spent. could be too cluttery though)
 // WISH Specific equipment item slot that will only take NurseHotkey range modification items 
 // WISH: Maybe resprite or just an animation when you press the hotkey? Would be funny for like an Ana type character that shoots a healing dart at you to heal you past a certain range. Could add when glimmer introduced to tmod
-// Potentially add lifeforce/jungle heart if people want
+// Potentially add life crystal/jungle heart if people want
 
 using Terraria.ModLoader;
 
-namespace NurseHotkey
+namespace NurseOverhaul
 {
-    public class NurseHotkey : Mod
+    public class NurseOverhaul : Mod
     {
         // vessel for keybind
         internal static ModKeybind NurseHealHotkey;

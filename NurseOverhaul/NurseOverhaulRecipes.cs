@@ -2,9 +2,9 @@
 using Terraria;
 using Terraria.ID;
 
-namespace NurseHotkey
+namespace NurseOverhaul
 {
-    public class NurseHotkeyRecipes : ModSystem
+    public class NurseOverhaulRecipes : ModSystem
     {
         public override void AddRecipes()
         {

@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace NurseHotkey.Items
+namespace NurseOverhaul.Items
 {
     public class NurseVIPBadge : ModItem
     {
@@ -33,7 +33,7 @@ namespace NurseHotkey.Items
             Item.width = 20;
             Item.height = 20;
             Item.value = Item.sellPrice(0, 0, 15, 0); // Set the item's value
-            Item.rare = ItemRarityID.Blue; // Set the item's rarity
+            Item.rare = ItemRarityID.Green; // Set the item's rarity
             Item.accessory = false; // Make the item an accessory
         }
     }
@@ -51,7 +51,7 @@ namespace NurseHotkey.Items
             Item.width = 20;
             Item.height = 20;
             Item.value = Item.sellPrice(0, 5, 0, 0); // Set the item's value
-            Item.rare = ItemRarityID.Green; // Set the item's rarity
+            Item.rare = ItemRarityID.Orange; // Set the item's rarity
             Item.accessory = false; // Make the item an accessory
         }
     }
@@ -81,7 +81,7 @@ namespace NurseHotkey.Items
             Item.width = 20;
             Item.height = 20;
             Item.value = Item.sellPrice(0, 7, 50, 0); // Set the item's value
-            Item.rare = ItemRarityID.Green; // Set the item's rarity
+            Item.rare = ItemRarityID.LightRed; // Set the item's rarity
             Item.accessory = false; // Make the item an accessory
         }
 
@@ -109,7 +109,7 @@ namespace NurseHotkey.Items
             Item.width = 20;
             Item.height = 20;
             Item.value = Item.sellPrice(0, 7, 50, 0); // Set the item's value
-            Item.rare = ItemRarityID.Orange; // Set the item's rarity
+            Item.rare = ItemRarityID.Lime; // Set the item's rarity
             Item.accessory = false; // Make the item an accessory
         }
     }
@@ -137,7 +137,7 @@ namespace NurseHotkey.Items
             Item.width = 20;
             Item.height = 20;
             Item.value = Item.sellPrice(0, 20, 0, 0); // Set the item's value
-            Item.rare = ItemRarityID.Orange; // Set the item's rarity
+            Item.rare = ItemRarityID.Yellow; // Set the item's rarity
             Item.accessory = false; // Make the item an accessory
         }
 
@@ -171,7 +171,7 @@ namespace NurseHotkey.Items
             Item.width = 20;
             Item.height = 20;
             Item.value = Item.sellPrice(0, 10, 0, 0); // Set the item's value
-            Item.rare = ItemRarityID.LightPurple; // Set the item's rarity
+            Item.rare = ItemRarityID.Cyan; // Set the item's rarity
             Item.accessory = false; // Make the item an accessory
         }
     }
@@ -201,7 +201,7 @@ namespace NurseHotkey.Items
             Item.width = 20;
             Item.height = 20;
             Item.value = Item.sellPrice(1, 50, 0, 0); // Set the item's value
-            Item.rare = ItemRarityID.Yellow; // Set the item's rarity
+            Item.rare = ItemRarityID.Red; // Set the item's rarity
             Item.accessory = false; // Make the item an accessory
         }
 

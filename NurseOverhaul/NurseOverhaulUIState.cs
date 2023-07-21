@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NurseHotkey.Items;
+using NurseOverhaul;
+using NurseOverhaul.Items;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Terraria;
@@ -13,9 +15,9 @@ using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
 
-namespace NurseHotkey
+namespace NurseOverhual
 {
-    internal class NurseHotkeyUI : UIState
+    internal class NurseOverhaulUIState : UIState
         {
         // The next 75 lines are responsible for drawing the shop button. We're going to do some special things for the Nurse shop button though.
         private static object TextDisplayCache => typeof(Main).GetField("_textDisplayCache", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(Main.instance);
@@ -35,7 +37,7 @@ namespace NurseHotkey
                 value2.X *= 260f / stringSize.X;
 
             Player player = Main.LocalPlayer;
-            float debuffCount = NurseHotkeyPlayer.GetDebuffCount(player); // We're bringing these in so when the heal button is active, it doesn't mess with the our drawn shop button. The heal text's length is dynamic, and the shop button is fixed in place, so the text will be jumbled if we don't do this
+            float debuffCount = NurseOverhaulPlayer.GetDebuffCount(player); // We're bringing these in so when the heal button is active, it doesn't mess with the our drawn shop button. The heal text's length is dynamic, and the shop button is fixed in place, so the text will be jumbled if we don't do this
 
             if (!Main.LocalPlayer.ghost && Main.LocalPlayer.statLife == Main.LocalPlayer.statLifeMax2 && debuffCount == 0) //the player must not be able to be healed by the nurse for us to draw the shop button
             {
@@ -80,25 +82,31 @@ namespace NurseHotkey
 
             if (focused && Main.mouseLeft)
             {
-                OpenShop(1); //No one will care about this when you're reading it, but index has dropped from 99 to 1. Index maxes out at 2 in 1.4.4
+                OpenShop(1);
             }
         }
 
         internal static void OpenShop(int shopIndex)
         {
-            NPC npc = Main.npc[Main.npcShop]; // I think we're creating a shop at the npc we're interacting with when OpenShop(1) is being called, instead of creating our own shop. That's what it looks like to me anyway
-            Main.playerInventory = true; //shop stuff
+            int nurseNPCId = NPC.FindFirstNPC(NPCID.Nurse);
+            NPC nurseNPC = Main.npc[nurseNPCId]; // IS IT A NURSE?
+            NPC npc = Main.npc[1];
+            Main.playerInventory = true;
             Main.stackSplit = 9999;
             Main.npcChatText = "";
-            Main.SetNPCShopIndex(shopIndex); 
-            string shopName = NPCShopDatabase.GetShopName(npc.type, "Shop");
-            Main.instance.shop[Main.npcShop].SetupShop(shopName, npc); //Creating the actual shop
+            Main.SetNPCShopIndex(shopIndex);
+            //string shopName = NPCShopDatabase.GetShopName(npc.type, "NurseShop");
+            //Main.NewText($"Opening shop: {shopName}"); // Print the shop name
+            Chest chest = Main.instance.shop[1];
+            chest.SetupShop("NurseShop", nurseNPC);
             SoundEngine.PlaySound(SoundID.MenuTick);
         }
 
-        public static List<Item> ModifyActiveShop() //theoretically we could change this to something else less confusing as NurseHotkeyGlobalNPC is using ModifyActiveShop as 1.4.4 intends, and I don't think UIState uses ModifyActiveShop, but I'm fearful of changes after getting it to work
+        public static List<Item> NurseShopItems() //theoretically we could change this to something else less confusing as NurseHotkeyGlobalNPC is using
+                                                    //ModifyActiveShop as 1.4.4 intends, and I don't think UIState uses ModifyActiveShop, but I'm fearful of changes after getting it to work
         {
-            List<Item> itemsToReturn = new List<Item>();  //Next 50+ lines are intuitive shop logic. Check repo history for examples of stage progression item removal, i.e. if you kill EoC, you still have to kill King Slime to unlock everything. Not a fan so we went with individual boss checks.
+            List<Item> itemsToReturn = new List<Item>();  //Next 50+ lines are intuitive shop logic. Check repo history for examples of stage progression item
+                                                          //removal, i.e. if you kill EoC, you still have to kill King Slime to unlock everything. Not a fan so we went with individual boss checks.
             List<(int id, int price)> items = new List<(int id, int price)>
             {
                 (ItemID.Mushroom, 250),
@@ -116,23 +124,23 @@ namespace NurseHotkey
             if (NPC.downedBoss1)
             {
                 items.Add((ItemID.RestorationPotion, 15000));
-                items.Add((ModContent.ItemType<NurseWalkieTalkie>(), 250000));
             }
 
             if (NPC.downedBoss2) 
             {
-                items.Add((ModContent.ItemType<SurfaceTransponder>(), 1000000));
+                items.Add((ModContent.ItemType<NurseWalkieTalkie>(), 250000));
             }
 
             if (NPC.downedBoss3)
             {
-                items.Add((ModContent.ItemType<PlatinumInsurance>(), 4000000));
+                items.Add((ModContent.ItemType<SurfaceTransponder>(), 1000000));
             }
 
             if (Main.hardMode)
             {
                 items.Add((ItemID.LifeforcePotion, 10000));
                 items.Add((ItemID.GreaterHealingPotion, 50000));
+                items.Add((ModContent.ItemType<PlatinumInsurance>(), 4000000));
             }
 
             if (NPC.downedAncientCultist)

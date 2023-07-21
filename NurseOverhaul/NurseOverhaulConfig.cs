@@ -5,7 +5,7 @@ using Terraria.IO;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 
-namespace NurseHotkey
+namespace NurseOverhaul
 { 
 
 /*

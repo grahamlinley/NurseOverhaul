@@ -1,9 +1,14 @@
 Mods: {
-	NurseHotkey: {
+	NurseOverhaul: {
 		Buffs: {
 			NurseInRange: {
 				DisplayName: In Range of Nurse
 				Description: The Nurse is watching and ready to deploy a quick heal at your command
+			}
+
+			NurseSweetSpot: {
+				DisplayName: Nurse's Sweet Spot
+				Description: You're close enough for reduced priced Nurse quick heals
 			}
 		}
 
@@ -12,8 +17,10 @@ Mods: {
 				DisplayName: Biotic Rifle
 				Tooltip:
 					'''
-					As you hold the weapon, you hear a faint echo of a woman yelling "Warium quatik!" 
-					Despite its gun-like shape, you feel like it might be more useful to the Nurse
+					As you hold the weapon, you hear the faint echo of 
+					a woman yelling in a language you don't recognize.
+					Despite its gun-like shape, you somehow feel like 
+					it might be more useful to someone else.
 					'''
 			}
 
@@ -21,10 +28,11 @@ Mods: {
 				DisplayName: Nurse's VIP Badge
 				Tooltip:
 					'''
-					The Nurse will be watching for your signal
-					When you're close to her, and you signal her (default key G when bound),
-					she will drop everything she's doing to heal you
-					She'll only heal you if you keep this in your inventory
+					When you're close to the Nurse and you 
+					give her the signal (default key G when bound),
+					she will drop everything and heal you.
+					She tells you to keep it on your person at all 
+					times or you'll need to talk to her like everyone else.
 					'''
 			}
 
@@ -34,11 +42,14 @@ Mods: {
 					'''
 					With this in your inventory, the Nurse can now remain 
 					in constant contact with you and track your whereabouts
-					as long as you remain close by
-					She says when you give the signal (default key G)
-					she'll be able to hit you with her stim pistol 
-					as long as you're within about one "screen's worth" of her. 
-					Whatever that means.
+					as long as you remain really close by... and for the right price.
+					She says when you give the signal (default key G) 
+					she'll hit you with her newly developed ranged heal.
+					To fund this, healing outside a certain range 
+					increases prices by 3 times her normal rates.
+					If you're close to her, rates are normal.
+					Buffs will show when you're in her extended range 
+					and when prices are reduced.
 					'''
 			}
 
@@ -46,26 +57,37 @@ Mods: {
 				DisplayName: Nurse Nourishment Diamond
 				Tooltip:
 					'''
-					Her customers demand range and that's what she plans to deliver
-					With her new network of satellites armed with her latest invention, the biotic canon,
-					Increases's Nurse's quick range to anywhere in the world.
-					The satellites will only be able to track you as long as you keep this item in your inventory.
+					Her customers demand range and that's what she aims to deliver.
+					Can quick heal from anywhere in the world.
+					Proof of insurance must be carried at all times for treatment.
+					Triples the range of the Nurse's reduced pricing from 
+					Nurse's Walkie Talkie.
+					Price per quick heal outside the sweet spot increased 
+					by 3 times the Nurse's normal rate.
 					'''
 			}
 
 			BrokenWalkieTalkie: {
 				DisplayName: Broken Walkie Talkie
-				Tooltip: It looks like junk, but on the bottom there is a slot for a card and a coin.
+				Tooltip: On first glance it looks like junk, but on the bottom there looks like there's a slot for a card and a coin
 			}
 
 			SurfaceTransponder: {
-				DisplayName: Surface Transponder
+				DisplayName: Nurse's Painted Shirt
 				Tooltip:
 					'''
-					Armed with her new rifle, the Nurse tells you she'll be able to track and deploy her quick heal 
-					even further than before. Just give her the signal (default keybind G), and she'll hit you instantly.
-					Increases Nurse's quick heal range to anywhere on the surface, plus a decent amount underground.
-					The Nurse will only be able to track you as long as you keep this item in your inventory.
+					Armed with her new rifle, the Nurse tells you 
+					she'll be able to track and deploy her quick heal 
+					even further than before. Just give her the signal 
+					(default keybind G), and she'll find you
+					Increases Nurse's quick heal range to anywhere 
+					on the surface, plus a decent amount underground.
+					The Nurse will only be able to track you as long 
+					as you keep this item in your inventory.
+					Doubles the range of the Nurse's reduced pricing from 
+					Nurse's Walkie Talkie.
+					Price per quick heal outside the sweet spot increased 
+					by 3 times the Nurse's normal rate.
 					'''
 			}
 
@@ -76,7 +98,6 @@ Mods: {
 					Why do thrusters make you think of healing? 
 					Either the Nurse could use this or you 
 					might need some serious medical treatment...
-					Might as well bring this to her either way.
 					'''
 			}
 		}

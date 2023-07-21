@@ -1,5 +1,6 @@
 // All of this taken from AnglerShop with permission (ty mr notle0n), will commment 1.4.4 changes and Nurse specific changes
 using Microsoft.Xna.Framework;
+using NurseOverhual;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
@@ -7,7 +8,7 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace NurseHotkey
+namespace NurseOverhaul
 {
     internal class UISystem : ModSystem
     {
@@ -19,7 +20,7 @@ namespace NurseHotkey
         {
             if (!Main.dedServ)
             {
-                UI = new NurseHotkeyUI(); //What's going to be drawn
+                UI = new NurseOverhaulUIState(); //What's going to be drawn
                 UI.Activate();
                 UserInterface = new UserInterface();
                 UserInterface.SetState(UI);
@@ -43,7 +44,7 @@ namespace NurseHotkey
                     "DialogueTweak/Interfaces/Assets/Icon_Default", // The texture's path
                     () =>
                     {
-                        NurseHotkeyUI.OpenShop(1); //SHop button in DialogueTweak will call our OpenShop method 
+                        NurseOverhaulUIState.OpenShop(1); //SHop button in DialogueTweak will call our OpenShop method 
                     });
             }
         }

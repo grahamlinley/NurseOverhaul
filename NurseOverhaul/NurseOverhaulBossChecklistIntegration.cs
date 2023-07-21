@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Terraria.ModLoader;
 
-namespace NurseHotkey
+namespace NurseOverhaul
 {
     public class BossChecklistIntegration : ModSystem
     {
