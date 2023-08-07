@@ -1,4 +1,6 @@
-﻿using System;
+﻿// 1.4.4 broke this, switching to weak references
+/*
+using System;
 using System.Collections.Generic;
 using Terraria.ModLoader;
 
@@ -196,3 +198,4 @@ namespace NurseOverhaul
         }
     }
 }
+*/
