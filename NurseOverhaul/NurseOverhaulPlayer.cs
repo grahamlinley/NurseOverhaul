@@ -27,7 +27,7 @@ namespace NurseOverhaul
 
                 if (PlayerHasItem(player, ModContent.ItemType<NurseWalkieTalkie>()) && PlayerIsInSmallSweetSpot())
                 {
-                    player.AddBuff(ModContent.BuffType<Buffs.NurseSweetSpot>(), 2); 
+                    player.AddBuff(ModContent.BuffType<Buffs.NurseSweetSpot>(), 2);
                 }
                 if (PlayerHasItem(player, ModContent.ItemType<SurfaceTransponder>()) && PlayerIsInMediumSweetSpot())
                 {
@@ -116,6 +116,7 @@ namespace NurseOverhaul
             }
 
             float calamityBaseCost = 0;
+            ModLoader.TryGetMod("CalamityMod", out Mod Calamity);
 
             if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && debuffCount > 0 || healthMissing > 0) //increases base cost by set amount based on https://calamitymod.fandom.com/wiki/Town_NPCs/Nurse_Price_Scaling
                                                                                                               //NOTE: Not sure if the prices are inaacurate on that page or if the scaling is different,
@@ -123,15 +124,15 @@ namespace NurseOverhaul
                                                                                                               //1. Max health 1 debuff 2. Missing 10 health 3. Missing 490 health (for decimal accuracy)
                                                                                                               //4. Missing somewhere in between those two number to test general accuracy
             {
-                if (BossChecklistIntegration.isYharonDefeated()) // Start at last boss then else if for everything else descending below. This way, will check if you killed last boss first, then apply pricing.
+                if ((bool)Calamity.Call("Downed", "yharon")) // Start at last boss then else if for everything else descending below. This way, will check if you killed last boss first, then apply pricing.
                 {
                     calamityBaseCost = 89700; //8 gold 97 silver base
                 }
-                else if (BossChecklistIntegration.isDevourerDefeated())
+                else if ((bool)Calamity.Call("Downed", "devourer"))
                 {
                     calamityBaseCost = 59700; //5 gold 97 silver base
                 }
-                else if (BossChecklistIntegration.isProvidenceDefeated())
+                else if ((bool)Calamity.Call("Downed", "providence"))
                 {
                     calamityBaseCost = 31700; //3 gold 17 silver base
                 }
@@ -139,7 +140,7 @@ namespace NurseOverhaul
                 {
                     calamityBaseCost = 19700; // 1 gold 97 silver base
                 }
-                else if (NPC.downedFishron | BossChecklistIntegration.isPlaguebringerDefeated() | BossChecklistIntegration.isRavagerDefeated()) // Duke Fishron ir Plaguebringer Goliath or Ravager defeated
+                else if (NPC.downedFishron | ((bool)Calamity.Call("Downed", "plaguebringer")) | ((bool)Calamity.Call("Downed", "ravager"))) // Duke Fishron ir Plaguebringer Goliath or Ravager defeated
                 {
                     calamityBaseCost = 11700; // 1 gold 17 silver base
                 }
@@ -147,7 +148,7 @@ namespace NurseOverhaul
                 {
                     calamityBaseCost = 8700; // 87 silver base
                 }
-                else if (NPC.downedPlantBoss | BossChecklistIntegration.isCalamitasCloneDefeated()) // Plantera defeated
+                else if (NPC.downedPlantBoss | ((bool)Calamity.Call("Downed", "calamitas"))) // Plantera defeated
                 {
                     calamityBaseCost = 5700; // 57 silver base
                 }
@@ -206,7 +207,7 @@ namespace NurseOverhaul
             else
                 finalCost = flooredDisplayCost;
             return finalCost;
-            }
+        }
 
         public static bool bossCombatCheck(float range) // Checks if a boss is alive in a certain range
         {
@@ -231,7 +232,7 @@ namespace NurseOverhaul
             // No boss found within range
             return false;
         }
-        
+
         //Check for if the player is in an event
         public static bool IsEventActive(Player player)
         {
@@ -289,7 +290,7 @@ namespace NurseOverhaul
         }
 
         // My finest work
-        private static float GetMultiplier() 
+        private static float GetMultiplier()
         {
             int nurseNPCId = NPC.FindFirstNPC(NPCID.Nurse);
             NPC nurseNPC = Main.npc[nurseNPCId]; // IS IT A NURSE?
@@ -409,7 +410,7 @@ namespace NurseOverhaul
             NPC nurse = Main.npc[NPC.FindFirstNPC(NPCID.Nurse)];
 
             bool inHorizontalRange = Math.Abs(player.Center.X - nurse.Center.X) <= 320; // Takes the absolute value regardless of axis of the player from the Nurse, and determines
-                                                                                                           // if it is less than or equal to the highest range allowed by the Nurse items to see if it's true
+                                                                                        // if it is less than or equal to the highest range allowed by the Nurse items to see if it's true
             bool inVerticalRange = Math.Abs(player.Center.Y - nurse.Center.Y) <= 320;
 
             return inHorizontalRange && inVerticalRange;
@@ -431,7 +432,7 @@ namespace NurseOverhaul
             NPC nurse = Main.npc[NPC.FindFirstNPC(NPCID.Nurse)];
 
             bool inHorizontalRange = Math.Abs(player.Center.X - nurse.Center.X) <= 1280; // Takes the absolute value regardless of axis of the player from the Nurse, and determines
-                                                                                        // if it is less than or equal to the highest range allowed by the Nurse items to see if it's true
+                                                                                         // if it is less than or equal to the highest range allowed by the Nurse items to see if it's true
             bool inVerticalRange = Math.Abs(player.Center.Y - nurse.Center.Y) <= 1280;
 
             return inHorizontalRange && inVerticalRange;
@@ -456,7 +457,7 @@ namespace NurseOverhaul
             Player player = Main.LocalPlayer;
             NPC nurse = Main.npc[NPC.FindFirstNPC(NPCID.Nurse)];
 
-            var (highestHorizontalRange, highestVerticalRange) = (64, 64); 
+            var (highestHorizontalRange, highestVerticalRange) = (64, 64);
 
             bool inHorizontalRange = Math.Abs(player.Center.X - nurse.Center.X) <= highestHorizontalRange; // Takes the absolute value regardless of axis of the player from the Nurse, and determines
                                                                                                            // if it is less than or equal to the highest range allowed by the Nurse items to see if it's true
@@ -480,7 +481,7 @@ namespace NurseOverhaul
         }
 
         // Main course
-        public void NurseHeal() 
+        public void NurseHeal()
         {
             NPC nurse = Main.npc[NPC.FindFirstNPC(NPCID.Nurse)];
             if (nurse != null) // Only will execute if the Nurse exists
@@ -621,7 +622,7 @@ namespace NurseOverhaul
                                     {
                                         message += " and ";
                                     }
-                                        message += $"curing {debuffCount} debuffs";
+                                    message += $"curing {debuffCount} debuffs";
                                 }
                                 else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) && debuffCount == 2)
                                 {
