@@ -118,7 +118,7 @@ namespace NurseOverhaul
             float calamityBaseCost = 0;
             ModLoader.TryGetMod("CalamityMod", out Mod Calamity);
 
-            if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && debuffCount > 0 || healthMissing > 0) //increases base cost by set amount based on https://calamitymod.fandom.com/wiki/Town_NPCs/Nurse_Price_Scaling
+            if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && debuffCount > 0 | healthMissing > 0) //increases base cost by set amount based on https://calamitymod.fandom.com/wiki/Town_NPCs/Nurse_Price_Scaling
                                                                                                               //NOTE: Not sure if the prices are inaacurate on that page or if the scaling is different,
                                                                                                               //but values derived below are hand tested in multiple scenarios with these 4 tests:
                                                                                                               //1. Max health 1 debuff 2. Missing 10 health 3. Missing 490 health (for decimal accuracy)
@@ -128,7 +128,7 @@ namespace NurseOverhaul
                 {
                     calamityBaseCost = 89700; //8 gold 97 silver base
                 }
-                else if ((bool)Calamity.Call("Downed", "devourer"))
+                else if ((bool)Calamity.Call("Downed", "dog"))
                 {
                     calamityBaseCost = 59700; //5 gold 97 silver base
                 }
@@ -140,7 +140,7 @@ namespace NurseOverhaul
                 {
                     calamityBaseCost = 19700; // 1 gold 97 silver base
                 }
-                else if (NPC.downedFishron | ((bool)Calamity.Call("Downed", "plaguebringer")) | ((bool)Calamity.Call("Downed", "ravager"))) // Duke Fishron ir Plaguebringer Goliath or Ravager defeated
+                else if (NPC.downedFishron | ((bool)Calamity.Call("Downed", "plaguebringer goliath")) | ((bool)Calamity.Call("Downed", "ravager"))) // Duke Fishron ir Plaguebringer Goliath or Ravager defeated
                 {
                     calamityBaseCost = 11700; // 1 gold 17 silver base
                 }
@@ -148,7 +148,7 @@ namespace NurseOverhaul
                 {
                     calamityBaseCost = 8700; // 87 silver base
                 }
-                else if (NPC.downedPlantBoss | ((bool)Calamity.Call("Downed", "calamitas"))) // Plantera defeated
+                else if (NPC.downedPlantBoss | ((bool)Calamity.Call("Downed", "calamitas doppelganger"))) // Plantera defeated
                 {
                     calamityBaseCost = 5700; // 57 silver base
                 }
@@ -494,8 +494,19 @@ namespace NurseOverhaul
                         List<Item> allItems = new List<Item>();
                         Item[] inventory = player.inventory;
 
+                        // Add coins from coin slots (Copper, Silver, Gold, Platinum)
+                        allItems.Add(inventory[58]); // Copper Coin slot
+                        allItems.Add(inventory[57]); // Silver Coin slot
+                        allItems.Add(inventory[56]); // Gold Coin slot
+                        allItems.Add(inventory[55]); // Platinum Coin slot
+
+                        // Add all other items from the player's inventory
+                        for (int i = 0; i < inventory.Length - 4; i++) // Excluding coin slots
+                        {
+                            allItems.Add(inventory[i]);
+                        }
+
                         // Add all bank items to the list
-                        allItems.AddRange(inventory);
                         allItems.AddRange(player.bank.item);
                         allItems.AddRange(player.bank2.item);
                         allItems.AddRange(player.bank3.item);
@@ -507,10 +518,10 @@ namespace NurseOverhaul
                     if (PlayerIsInRangeOfNurse() == true) // Checking if the player meets vertical and horizontal range requirements
                     {
                         int healthMissing = Player.statLifeMax2 - Player.statLife; // Max Life - Current life = a new locally stored integer
+                        int debuffCount = GetDebuffCount(player); // Always have to check debuffs
                         float cost = GetHealCost(healthMissing, Player); // Plugging this number, derived from the player, into our method with multipliers
                                                                          // and base costs to get a number we're going to use for a lot of things
                         float totalMoney = 0; // Initialized at 0 because it's going to go through some stuff
-                        float debuffCount = GetDebuffCount(player); // Always have to check debuffs
                         int GetPlayerTotalMoney(int playerIndex) // Might be able to delete palyerIndex from everything. Could be an online compatability thing?
                         {
 
@@ -562,13 +573,12 @@ namespace NurseOverhaul
                             float flooredFloatCost = (float)Math.Floor(cost);
                             int intCost = Convert.ToInt32(flooredFloatCost);
                             player.BuyItem(intCost); //pay up 
-                            int healAmount = healthMissing; //ok how much this mothasucka need
-                            player.statLife += healAmount; //puts the item in the bag
-                            SoundEngine.PlaySound(SoundID.Item4);
 
-                            if (healAmount > 0) //needed for healing debuffs and no health (i.e. stink potion)
+                            if (healthMissing > 0) //needed for healing debuffs and no health (i.e. stink potion)
                             {
-                                player.HealEffect(healAmount); //"ok here u go sir, have a nice day :)"
+                                player.statLife += healthMissing; //puts the item in the bag
+                                SoundEngine.PlaySound(SoundID.Item4);
+                                player.HealEffect(healthMissing); //"ok here u go sir, have a nice day :)"
                             }
 
                             CalculateAndPrintSpending(intCost);

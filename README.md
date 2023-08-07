@@ -78,6 +78,14 @@ And thanks to the community in general for having so many resources. A lot of wo
 
 Recent Changes
 
+1.0.3
+Removed BossChecklist as a reference
+Fixed a bug where Calamity prices were miscalculated due to 1.4.4 changes
+Fixed a bug that caused debuffs to be cured but not charged for
+
+1.0.2
+Icon resized for mod browser
+
 1.0.1
 Readme changes, description changes
 

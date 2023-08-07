@@ -164,7 +164,7 @@ namespace NurseOverhual
 
             }
 
-            if (Calamity != null && BossChecklistIntegration.isDevourerDefeated() && Calamity.TryFind<ModItem>("OmegaHealingPotion", out ModItem omegaHealingPotion))
+            if (Calamity != null && (bool)Calamity.Call("Downed", "devourer") && Calamity.TryFind<ModItem>("OmegaHealingPotion", out ModItem omegaHealingPotion))
             {
                 omegaHealingPotionIndex = items.FindIndex(item => item.id == ItemID.SuperHealingPotion);
 
