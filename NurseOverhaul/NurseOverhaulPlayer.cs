@@ -838,6 +838,7 @@ namespace NurseOverhaul
 
                         else if (Wallet < cost) // Message displayed if money found in all inventory slots checked is less than the cost
                         {
+                            Main.NewText($"Wallet = {Wallet}");
                             Main.NewText("You don't have enough money to pay for a quick heal.");
                         }
 
