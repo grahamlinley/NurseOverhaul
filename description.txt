@@ -78,6 +78,13 @@ And thanks to the community in general for having so many resources. A lot of wo
 
 Recent Changes
 
+1.0.4
+Fixed a bug where if you had more than 1 stack of platinum, your money would be calculated as negative and you would not receive a heal
+Fixed a main chat output when healing debuffs during Calamity boss fights so that it states the correct amount of debuffs being cured
+
+1.0.3.1 to 1.0.3.6
+Icon issues
+
 1.0.3
 Removed BossChecklist as a reference
 Fixed a bug where Calamity prices were miscalculated due to 1.4.4 changes

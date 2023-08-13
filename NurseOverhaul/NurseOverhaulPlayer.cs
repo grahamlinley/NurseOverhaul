@@ -592,6 +592,7 @@ namespace NurseOverhaul
                             int goldRemaining = (remainingMoney % 1000000) / 10000;
                             int silverRemaining = (remainingMoney % 10000) / 100;
                             int copperRemaining = remainingMoney % 100;
+                            int calamityBossDebuffCount = debuffCount - 1;
 
                             if (platRemaining > 0)
                             {
@@ -632,7 +633,7 @@ namespace NurseOverhaul
                                     {
                                         message += " and ";
                                     }
-                                    message += $"curing {debuffCount} debuffs";
+                                    message += $"curing {calamityBossDebuffCount} debuffs";
                                 }
                                 else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) && debuffCount == 2)
                                 {
@@ -640,7 +641,7 @@ namespace NurseOverhaul
                                     {
                                         message += " and ";
                                     }
-                                    message += $"curing {debuffCount} debuff";
+                                    message += $"curing {calamityBossDebuffCount} debuff";
                                 }
                                 else if (debuffCount > 1)
                                 {
@@ -693,7 +694,7 @@ namespace NurseOverhaul
                                     {
                                         message += " and ";
                                     }
-                                    message += $"curing {debuffCount} debuffs";
+                                    message += $"curing {calamityBossDebuffCount} debuffs";
                                 }
                                 else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) && debuffCount == 2)
                                 {
@@ -701,7 +702,7 @@ namespace NurseOverhaul
                                     {
                                         message += " and ";
                                     }
-                                    message += $"curing {debuffCount} debuff";
+                                    message += $"curing {calamityBossDebuffCount} debuff";
                                 }
                                 else if (debuffCount > 1)
                                 {
@@ -745,7 +746,7 @@ namespace NurseOverhaul
                                     {
                                         message += " and ";
                                     }
-                                    message += $"curing {debuffCount} debuffs";
+                                    message += $"curing {calamityBossDebuffCount} debuffs";
                                 }
                                 else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) && debuffCount == 2)
                                 {
@@ -753,7 +754,7 @@ namespace NurseOverhaul
                                     {
                                         message += " and ";
                                     }
-                                    message += $"curing {debuffCount} debuff";
+                                    message += $"curing {calamityBossDebuffCount} debuff";
                                 }
                                 else if (debuffCount > 1)
                                 {
@@ -788,7 +789,7 @@ namespace NurseOverhaul
                                     {
                                         message += " and ";
                                     }
-                                    message += $"curing {debuffCount} debuffs";
+                                    message += $"curing {calamityBossDebuffCount} debuffs";
                                 }
                                 else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) && debuffCount == 2)
                                 {
@@ -796,7 +797,7 @@ namespace NurseOverhaul
                                     {
                                         message += " and ";
                                     }
-                                    message += $"curing {debuffCount} debuff";
+                                    message += $"curing {calamityBossDebuffCount} debuff";
                                 }
                                 else if (debuffCount > 1)
                                 {
@@ -820,18 +821,18 @@ namespace NurseOverhaul
                         }
 
 
-                        if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) && Wallet >= cost && debuffCount > 1 | healthMissing > 0) // Pesudo weak reference to Calamity's boss debuff again,
+                        if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) && (Wallet >= cost | Wallet == -2147483648) && debuffCount > 1 | healthMissing > 0) // Pesudo weak reference to Calamity's boss debuff again,
                                                                                                                                                                      // outlining general healing conditions besides that
                         {
                             HealAndSpend(cost, Player, healthMissing);
                         }
 
-                        else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && !bossCombatCheck(6400f) && Wallet >= cost && debuffCount > 0 | healthMissing > 0) // Non-boss combat check healing conditions
+                        else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && !bossCombatCheck(6400f) && (Wallet >= cost | Wallet == -2147483648) && debuffCount > 0 | healthMissing > 0) // Non-boss combat check healing conditions
                         {
                             HealAndSpend(cost, Player, healthMissing);
                         }
 
-                        else if (Wallet >= cost && debuffCount > 0 | healthMissing > 0) // Vanilla healing conditions
+                        else if ((Wallet >= cost | Wallet == -2147483648) && debuffCount > 0 | healthMissing > 0) // Vanilla healing conditions
                         {
                             HealAndSpend(cost, Player, healthMissing);
                         }
