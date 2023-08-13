@@ -1,6 +1,5 @@
 // All of this taken from AnglerShop with permission (ty mr notle0n), will commment 1.4.4 changes and Nurse specific changes
 using Microsoft.Xna.Framework;
-using NurseOverhual;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
@@ -44,7 +43,7 @@ namespace NurseOverhaul
                     "DialogueTweak/Interfaces/Assets/Icon_Default", // The texture's path
                     () =>
                     {
-                        NurseOverhaulUIState.OpenShop(1); //SHop button in DialogueTweak will call our OpenShop method 
+                        NurseOverhaulUIState.OpenShop(99); //Shop button in DialogueTweak will call our OpenShop method 
                     });
             }
         }
