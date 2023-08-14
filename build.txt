@@ -1,6 +1,6 @@
 displayName = Nurse Overhaul
 author = Selystra
-version = 1.0.4
+version = 1.0.4.2
 hideCode = true
 hideResources = true
 includeSource = false

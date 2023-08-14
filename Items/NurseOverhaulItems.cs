@@ -52,7 +52,8 @@ namespace NurseOverhaul.Items
             Tooltip.SetDefault("With this in your inventory, the Nurse can now remain " +
                 "\nin constant contact with you and track your whereabouts" +
                 "\nas long as you remain really close by... and for the right price." +
-                "\nShe says when you give the signal (default key G) she'll hit you with her newly developed ranged heal." +
+                "\nShe says when you give the signal (default key G) " +
+                "\nshe'll hit you with her newly developed ranged heal." +
                 "\nTo fund this, healing outside a certain range" +
                 "\nincreases prices by 3 times her normal rates." +
                 "\nIf you're close to her, rates are normal." +
