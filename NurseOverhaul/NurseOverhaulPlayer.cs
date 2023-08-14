@@ -837,18 +837,17 @@ namespace NurseOverhaul
                             HealAndSpend(cost, Player, healthMissing);
                         }
 
-                        else if (Wallet < cost) // Message displayed if money found in all inventory slots checked is less than the cost
+                        else if (Wallet < cost && Wallet != -2147483648) // Message displayed if money found in all inventory slots checked is less than the cost
                         {
-                            Main.NewText($"Wallet = {Wallet}");
                             Main.NewText("You don't have enough money to pay for a quick heal.");
                         }
 
-                        else if (Wallet >= cost && healthMissing == 0 && debuffCount == 0) // If your health is full
+                        else if ((Wallet >= cost | Wallet == -2147483648) && healthMissing == 0 && debuffCount == 0) // If your health is full
                         {
                             Main.NewText("Health full.");
                         }
 
-                        else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) == true && debuffCount == 1 && healthMissing == 0) // If your health is full and you're fighting a boss in Calamity
+                        else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && (Wallet >= cost | Wallet == -2147483648) && bossCombatCheck(6400f) == true && debuffCount == 1 && healthMissing == 0) // If your health is full and you're fighting a boss in Calamity
                         {
                             Main.NewText("Health full.");
                         }
