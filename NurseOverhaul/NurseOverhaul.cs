@@ -7,6 +7,7 @@
 // Potentially add life crystal/jungle heart if people want
 
 using Terraria.ModLoader;
+using Terraria.ModLoader.Config;
 
 namespace NurseOverhaul
 {

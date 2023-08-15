@@ -112,8 +112,7 @@ namespace NurseOverhual
                 (ItemID.Mushroom, 250),
                 (ItemID.BottledWater, 200),
                 (ItemID.BottledHoney, 400),
-                (ItemID.LesserHealingPotion, 300),
-                (ModContent.ItemType<NurseVIPBadge>(), 5000)
+                (ItemID.LesserHealingPotion, 300)
             };
 
             if (NPC.downedSlimeKing)
@@ -126,22 +125,12 @@ namespace NurseOverhual
                 items.Add((ItemID.RestorationPotion, 15000));
             }
 
-            if (NPC.downedBoss2) 
-            {
-                items.Add((ModContent.ItemType<NurseWalkieTalkie>(), 250000));
-            }
-
-            if (NPC.downedBoss3)
-            {
-                items.Add((ModContent.ItemType<SurfaceTransponder>(), 1000000));
-            }
-
             if (Main.hardMode)
             {
                 items.Add((ItemID.LifeforcePotion, 10000));
                 items.Add((ItemID.GreaterHealingPotion, 50000));
-                items.Add((ModContent.ItemType<PlatinumInsurance>(), 4000000));
             }
+            
 
             if (NPC.downedAncientCultist)
             {
@@ -164,12 +153,58 @@ namespace NurseOverhual
 
             }
 
-            if (Calamity != null && (bool)Calamity.Call("Downed", "devourer") && Calamity.TryFind<ModItem>("OmegaHealingPotion", out ModItem omegaHealingPotion))
+            if (Calamity != null && (bool)Calamity.Call("Downed", "dog") && Calamity.TryFind<ModItem>("OmegaHealingPotion", out ModItem omegaHealingPotion))
             {
                 omegaHealingPotionIndex = items.FindIndex(item => item.id == ItemID.SuperHealingPotion);
 
                 items.Add((omegaHealingPotion.Item.type, 1000000));
 
+            }
+
+            if (ModContent.GetInstance<NurseOverhaulConfig>().NurseVIPBadgeEnabled)
+            {
+                items.Add((ModContent.ItemType<NurseVIPBadge>(), 5000));
+            }
+
+            if (NPC.downedBoss2)
+            {
+                if (ModContent.GetInstance<NurseOverhaulConfig>().NursesWalkieTalkieEnabled)
+                {
+                    items.Add((ModContent.ItemType<NurseWalkieTalkie>(), 250000));
+                }
+            }
+
+            if (NPC.downedBoss3)
+            {
+                if (ModContent.GetInstance<NurseOverhaulConfig>().NursesPaintedShirtEnabled)
+                {
+                    items.Add((ModContent.ItemType<SurfaceTransponder>(), 1000000));
+                }
+            }
+
+            if (Main.hardMode)
+            {
+                if (ModContent.GetInstance<NurseOverhaulConfig>().NurseNourishmentDiamondEnabled)
+                {
+                    items.Add((ModContent.ItemType<PlatinumInsurance>(), 4000000));
+                }
+            }
+
+
+            if (NPC.downedBoss1)
+            {
+                if (ModContent.GetInstance<NurseOverhaulConfig>().LifeCrystalInShop)
+                {
+                    items.Add((ItemID.LifeCrystal, 1000000));
+                }
+            }
+
+            if (NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3)
+            {
+                if (ModContent.GetInstance<NurseOverhaulConfig>().LifeFruitInShop)
+                {
+                    items.Add((ItemID.LifeFruit, 2000000));
+                }
             }
 
             for (int i = 0; i < items.Count; i++) // very important for making shop items actually shop items, at least it was in 1.4.3. With 1.4.4 shop changes might not be important but it works so I'm keeping it

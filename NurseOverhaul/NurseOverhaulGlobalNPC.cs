@@ -43,15 +43,15 @@ namespace NurseOverhaul.NPCs
         // Adds Nurse component items to bosses listed
         public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
         {
-            if (npc.type == NPCID.KingSlime)
+            if (npc.type == NPCID.KingSlime && (ModContent.GetInstance<NurseOverhaulConfig>().NursesWalkieTalkieEnabled))
             {
                 npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<BrokenWalkieTalkie>(), 1, 1, 1));
             }
-            if (npc.type == NPCID.EyeofCthulhu)
+            if (npc.type == NPCID.EyeofCthulhu && (ModContent.GetInstance<NurseOverhaulConfig>().NursesPaintedShirtEnabled))
             {
                 npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<BioticRifle>(), 1, 1, 1));
             }
-            if (npc.type == NPCID.SkeletronHead)
+            if (npc.type == NPCID.SkeletronHead && (ModContent.GetInstance<NurseOverhaulConfig>().NurseNourishmentDiamondEnabled))
             {
                 npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Thruster>(), 1, 1, 1));
             }

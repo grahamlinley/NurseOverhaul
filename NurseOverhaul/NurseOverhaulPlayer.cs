@@ -22,18 +22,18 @@ namespace NurseOverhaul
             {
                 if (PlayerIsInRangeOfNurse() && PlayerHasTransponder())
                 {
-                    player.AddBuff(ModContent.BuffType<Buffs.NurseInRange>(), 2); // Applies our custom buff if the player is in range of the nurse and has a transponder item
+                    player.AddBuff(ModContent.BuffType<Buffs.NurseInRange>(), 2); // Applies our custom buff if the player is in range of the nurse and has a transponder item, if they have 
                 }
 
-                if (PlayerHasItem(player, ModContent.ItemType<NurseWalkieTalkie>()) && PlayerIsInSmallSweetSpot())
+                if (PlayerHasItem(player, ModContent.ItemType<NurseWalkieTalkie>()) && PlayerIsInSmallSweetSpot() && ModContent.GetInstance<NurseOverhaulConfig>().NursesWalkieTalkieEnabled)
                 {
                     player.AddBuff(ModContent.BuffType<Buffs.NurseSweetSpot>(), 2);
                 }
-                if (PlayerHasItem(player, ModContent.ItemType<SurfaceTransponder>()) && PlayerIsInMediumSweetSpot())
+                if (PlayerHasItem(player, ModContent.ItemType<SurfaceTransponder>()) && PlayerIsInMediumSweetSpot() && ModContent.GetInstance<NurseOverhaulConfig>().NursesPaintedShirtEnabled)
                 {
                     player.AddBuff(ModContent.BuffType<Buffs.NurseSweetSpot>(), 2);
                 }
-                if (PlayerHasItem(player, ModContent.ItemType<PlatinumInsurance>()) && PlayerIsInLargeSweetSpot())
+                if (PlayerHasItem(player, ModContent.ItemType<PlatinumInsurance>()) && PlayerIsInLargeSweetSpot() && ModContent.GetInstance<NurseOverhaulConfig>().NurseNourishmentDiamondEnabled)
                 {
                     player.AddBuff(ModContent.BuffType<Buffs.NurseSweetSpot>(), 2);
                 }
@@ -119,10 +119,10 @@ namespace NurseOverhaul
             ModLoader.TryGetMod("CalamityMod", out Mod Calamity);
 
             if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && debuffCount > 0 | healthMissing > 0) //increases base cost by set amount based on https://calamitymod.fandom.com/wiki/Town_NPCs/Nurse_Price_Scaling
-                                                                                                              //NOTE: Not sure if the prices are inaacurate on that page or if the scaling is different,
-                                                                                                              //but values derived below are hand tested in multiple scenarios with these 4 tests:
-                                                                                                              //1. Max health 1 debuff 2. Missing 10 health 3. Missing 490 health (for decimal accuracy)
-                                                                                                              //4. Missing somewhere in between those two number to test general accuracy
+                                                                                                             //NOTE: Not sure if the prices are inaacurate on that page or if the scaling is different,
+                                                                                                             //but values derived below are hand tested in multiple scenarios with these 4 tests:
+                                                                                                             //1. Max health 1 debuff 2. Missing 10 health 3. Missing 490 health (for decimal accuracy)
+                                                                                                             //4. Missing somewhere in between those two number to test general accuracy
             {
                 if ((bool)Calamity.Call("Downed", "yharon")) // Start at last boss then else if for everything else descending below. This way, will check if you killed last boss first, then apply pricing.
                 {
@@ -191,21 +191,30 @@ namespace NurseOverhaul
             // Custom pricing to prevent spam abuse
             float finalCost;
             float flooredDisplayCost = (float)Math.Floor(nurseDisplayCost);
+            bool walkieTalkie = PlayerHasItem(player, ModContent.ItemType<NurseWalkieTalkie>());
+            bool walkieTalkieEnabled = ModContent.GetInstance<NurseOverhaulConfig>().NursesWalkieTalkieEnabled;
+            bool nurseShirt = PlayerHasItem(player, ModContent.ItemType<SurfaceTransponder>());
+            bool nurseShirtEnabled = ModContent.GetInstance<NurseOverhaulConfig>().NursesPaintedShirtEnabled;
+            bool diamondInsurance = PlayerHasItem(player, ModContent.ItemType<PlatinumInsurance>());
+            bool diamondInsuranceEnabled = ModContent.GetInstance<NurseOverhaulConfig>().NurseNourishmentDiamondEnabled;
 
-            if (PlayerHasItem(player, ModContent.ItemType<NurseWalkieTalkie>()) && !PlayerIsInSmallSweetSpot())
+            finalCost = flooredDisplayCost;
+
+            // Basically this is what this section does: If any of the Nurse healing extension items are present and
+            //if you are outside the small sweet spot, and you have the Nurse's Walkie Talkie Enabled and you don't have the Nurse's Shirt in your inventory, or if you have it in your inventory but it's not enabled,
+            //and if you don't have Nurse Nourishment Diamond, or if you do have Nurse Nourishment Diamond but don't have it enabled
+            //Or if you are outside the medium sweetspot and you have the Nurse's Shirt enabled, and you don't have diamond insurance in your inventory, or if you do have it in your inventory and don't have it enabled
+            //Or if you are outside the large sweetspot and you have the diamond insurance enabled
+            //Then just multiply the floored cost by 3, ez pz man
+            //(side note: god bless GPT)
+            if ((walkieTalkie || nurseShirt || diamondInsurance) && 
+                ((!PlayerIsInSmallSweetSpot() && walkieTalkieEnabled && (!nurseShirt || (nurseShirt && !nurseShirtEnabled)) && (!diamondInsurance || (diamondInsurance && !diamondInsuranceEnabled))) || 
+                 (!PlayerIsInMediumSweetSpot() && nurseShirtEnabled && (!diamondInsurance || (diamondInsurance && !diamondInsuranceEnabled))) ||
+                 (!PlayerIsInLargeSweetSpot() && diamondInsuranceEnabled)))
             {
                 finalCost = flooredDisplayCost * 3;
             }
-            else if (PlayerHasItem(player, ModContent.ItemType<SurfaceTransponder>()) && !PlayerIsInMediumSweetSpot())
-            {
-                finalCost = flooredDisplayCost * 3;
-            }
-            else if (PlayerHasItem(player, ModContent.ItemType<PlatinumInsurance>()) && !PlayerIsInLargeSweetSpot())
-            {
-                finalCost = flooredDisplayCost * 3;
-            }
-            else
-                finalCost = flooredDisplayCost;
+
             return finalCost;
         }
 
@@ -378,16 +387,41 @@ namespace NurseOverhaul
 
             return (horizontalRange, verticalRange);
         }
+        /*
+            else if (PlayerHasItem(player, ModContent.ItemType<SurfaceTransponder>()) && !ModContent.GetInstance<NurseOverhaulConfig>().NursesPaintedShirtEnabled)
+            {
+                finalCost = flooredDisplayCost* 3;
+            }
+            else if (PlayerHasItem(player, ModContent.ItemType<NurseWalkieTalkie>()) && !ModContent.GetInstance<NurseOverhaulConfig>().NursesWalkieTalkieEnabled)
+            {
+                finalCost = flooredDisplayCost* 3;
+            }
+            else if (PlayerHasItem(player, ModContent.ItemType<NurseVIPBadge>()) && !ModContent.GetInstance<NurseOverhaulConfig>().NurseVIPBadgeEnabled)
+{
+    finalCost = flooredDisplayCost * 3;
+}
+        */
 
         private static (int horizontal, int vertical) GetHighestRangeForItems(Player player) //Checks highest item range, for if you have multiple items in your inventory
         {
-            int[] itemsTypesToCheck = new int[]
+            List<int> itemsTypesToCheck = new List<int>();
+
+            if (ModContent.GetInstance<NurseOverhaulConfig>().NurseNourishmentDiamondEnabled)
             {
-                ModContent.ItemType<NurseVIPBadge>(),
-                ModContent.ItemType<NurseWalkieTalkie>(),
-                ModContent.ItemType<SurfaceTransponder>(),
-                ModContent.ItemType<PlatinumInsurance>()
-            };
+                itemsTypesToCheck.Add(ModContent.ItemType<PlatinumInsurance>());
+            }
+            if (ModContent.GetInstance<NurseOverhaulConfig>().NursesPaintedShirtEnabled)
+            {
+                itemsTypesToCheck.Add(ModContent.ItemType<SurfaceTransponder>());
+            }
+            if (ModContent.GetInstance<NurseOverhaulConfig>().NursesWalkieTalkieEnabled)
+            {
+                itemsTypesToCheck.Add(ModContent.ItemType<NurseWalkieTalkie>());
+            }
+            if (ModContent.GetInstance<NurseOverhaulConfig>().NurseVIPBadgeEnabled)
+            {
+                itemsTypesToCheck.Add(ModContent.ItemType<NurseVIPBadge>());
+            }
 
             int highestHorizontalRange = 0;
             int highestVerticalRange = 0;
@@ -420,8 +454,7 @@ namespace NurseOverhaul
             Player player = Main.LocalPlayer;
             NPC nurse = Main.npc[NPC.FindFirstNPC(NPCID.Nurse)];
 
-            bool inHorizontalRange = Math.Abs(player.Center.X - nurse.Center.X) <= 640; // Takes the absolute value regardless of axis of the player from the Nurse, and determines
-                                                                                        // if it is less than or equal to the highest range allowed by the Nurse items to see if it's true
+            bool inHorizontalRange = Math.Abs(player.Center.X - nurse.Center.X) <= 640;
             bool inVerticalRange = Math.Abs(player.Center.Y - nurse.Center.Y) <= 640;
 
             return inHorizontalRange && inVerticalRange;
@@ -431,8 +464,7 @@ namespace NurseOverhaul
             Player player = Main.LocalPlayer;
             NPC nurse = Main.npc[NPC.FindFirstNPC(NPCID.Nurse)];
 
-            bool inHorizontalRange = Math.Abs(player.Center.X - nurse.Center.X) <= 1280; // Takes the absolute value regardless of axis of the player from the Nurse, and determines
-                                                                                         // if it is less than or equal to the highest range allowed by the Nurse items to see if it's true
+            bool inHorizontalRange = Math.Abs(player.Center.X - nurse.Center.X) <= 1280;
             bool inVerticalRange = Math.Abs(player.Center.Y - nurse.Center.Y) <= 1280;
 
             return inHorizontalRange && inVerticalRange;
@@ -501,7 +533,7 @@ namespace NurseOverhaul
                         allItems.Add(inventory[55]); // Platinum Coin slot
 
                         // Add all other items from the player's inventory
-                        for (int i = 0; i < inventory.Length - 4; i++) // Excluding coin slots
+                        for (int i = 0; i < inventory.Length - 4; i++) // Excluding supposed "coin slots" that won't be considered by code
                         {
                             allItems.Add(inventory[i]);
                         }
@@ -822,7 +854,7 @@ namespace NurseOverhaul
 
 
                         if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) && (Wallet >= cost | Wallet == -2147483648) && debuffCount > 1 | healthMissing > 0) // Pesudo weak reference to Calamity's boss debuff again,
-                                                                                                                                                                     // outlining general healing conditions besides that
+                                                                                                                                                                                               // outlining general healing conditions besides that
                         {
                             HealAndSpend(cost, Player, healthMissing);
                         }
@@ -837,7 +869,7 @@ namespace NurseOverhaul
                             HealAndSpend(cost, Player, healthMissing);
                         }
 
-                        else if (Wallet < cost && Wallet !=-2147483648) // Message displayed if money found in all inventory slots checked is less than the cost
+                        else if (Wallet < cost && Wallet != -2147483648) // Message displayed if money found in all inventory slots checked is less than the cost
                         {
                             Main.NewText("You don't have enough money to pay for a quick heal.");
                         }

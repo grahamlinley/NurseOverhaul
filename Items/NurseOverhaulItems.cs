@@ -30,6 +30,10 @@ namespace NurseOverhaul.Items
 
         public override void SetDefaults()
         {
+            if (!ModContent.GetInstance<NurseOverhaulConfig>().NurseVIPBadgeEnabled)
+            {
+                return;
+            }
             Item.width = 20;
             Item.height = 20;
             Item.value = Item.sellPrice(0, 0, 15, 0); // Set the item's value
@@ -48,6 +52,10 @@ namespace NurseOverhaul.Items
 
         public override void SetDefaults()
         {
+            if (!ModContent.GetInstance<NurseOverhaulConfig>().NursesWalkieTalkieEnabled) 
+            {
+                return;
+            }
             Item.width = 20;
             Item.height = 20;
             Item.value = Item.sellPrice(0, 5, 0, 0); // Set the item's value
@@ -78,6 +86,10 @@ namespace NurseOverhaul.Items
 
         public override void SetDefaults()
         {
+            if (!ModContent.GetInstance<NurseOverhaulConfig>().NursesWalkieTalkieEnabled)
+            {
+                return;
+            }
             Item.width = 20;
             Item.height = 20;
             Item.value = Item.sellPrice(0, 7, 50, 0); // Set the item's value
@@ -106,6 +118,10 @@ namespace NurseOverhaul.Items
 
         public override void SetDefaults()
         {
+            if (!ModContent.GetInstance<NurseOverhaulConfig>().NursesPaintedShirtEnabled)
+            {
+                return;
+            }
             Item.width = 20;
             Item.height = 20;
             Item.value = Item.sellPrice(0, 7, 50, 0); // Set the item's value
@@ -134,19 +150,16 @@ namespace NurseOverhaul.Items
 
         public override void SetDefaults()
         {
+            if (!ModContent.GetInstance<NurseOverhaulConfig>().NursesPaintedShirtEnabled)
+            {
+                return;
+            }
             Item.width = 20;
             Item.height = 20;
             Item.value = Item.sellPrice(0, 20, 0, 0); // Set the item's value
             Item.rare = ItemRarityID.Yellow; // Set the item's rarity
             Item.accessory = false; // Make the item an accessory
         }
-
-        public override void UpdateAccessory(Player player, bool hideVisual)
-        {
-            // Add any functionality you want the accessory to have when equipped here
-            //player.moveSpeed += 0.1f; // Example: Increase player's movement speed
-        }
-
         public override void AddRecipes()
         {
             // Add any crafting recipe for the item here if desired
@@ -168,6 +181,10 @@ namespace NurseOverhaul.Items
 
         public override void SetDefaults()
         {
+            if (!ModContent.GetInstance<NurseOverhaulConfig>().NurseNourishmentDiamondEnabled)
+            {
+                return;
+            }
             Item.width = 20;
             Item.height = 20;
             Item.value = Item.sellPrice(0, 10, 0, 0); // Set the item's value
@@ -198,6 +215,10 @@ namespace NurseOverhaul.Items
 
         public override void SetDefaults()
         {
+            if (!ModContent.GetInstance<NurseOverhaulConfig>().NurseNourishmentDiamondEnabled)
+            {
+                return;
+            }
             Item.width = 20;
             Item.height = 20;
             Item.value = Item.sellPrice(1, 50, 0, 0); // Set the item's value
