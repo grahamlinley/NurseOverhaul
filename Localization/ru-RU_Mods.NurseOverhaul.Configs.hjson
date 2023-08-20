@@ -1,0 +1,33 @@
+NurseOverhaulConfig: {
+	// DisplayName: Nurse Overhaul Config
+
+	NurseVIPBadgeEnabled: {
+		// Label: Включить VIP Бейдж медсестры
+		// Tooltip: Включено по умолчанию
+	}
+
+	NursesWalkieTalkieEnabled: {
+		// Label: Включить специальную рацию медсестры
+		// Tooltip: Включено по умолчанию
+	}
+
+	NursesPaintedShirtEnabled: {
+		// Label: Включить футболку с принтом медсестры
+		// Tooltip: Включено по умолчанию
+	}
+
+	NurseNourishmentDiamondEnabled: {
+		// Label: Включить персональную систему оповещения медсестры
+		// Tooltip: Включено по умолчанию
+	}
+
+	LifeCrystalInShop: {
+		// Label: Включить продажу кристаллов жизни после победы над глазом Ктулху
+		// Tooltip: Выключено по умолчанию
+	}
+
+	LifeFruitInShop: {
+		// Label: Включить продажу фруктов жизни после победы на механическими босами
+		// Tooltip: Выключено по умолчанию
+	}
+}

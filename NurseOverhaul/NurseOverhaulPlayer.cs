@@ -200,7 +200,7 @@ namespace NurseOverhaul
 
             finalCost = flooredDisplayCost;
 
-            // Basically this is what this section does: If any of the Nurse healing extension items are present and
+            // Basically : If any of the Nurse healing extension items are present and
             //if you are outside the small sweet spot, and you have the Nurse's Walkie Talkie Enabled and you don't have the Nurse's Shirt in your inventory, or if you have it in your inventory but it's not enabled,
             //and if you don't have Nurse Nourishment Diamond, or if you do have Nurse Nourishment Diamond but don't have it enabled
             //Or if you are outside the medium sweetspot and you have the Nurse's Shirt enabled, and you don't have diamond insurance in your inventory, or if you do have it in your inventory and don't have it enabled
@@ -553,8 +553,7 @@ namespace NurseOverhaul
                         int debuffCount = GetDebuffCount(player); // Always have to check debuffs
                         float cost = GetHealCost(healthMissing, Player); // Plugging this number, derived from the player, into our method with multipliers
                                                                          // and base costs to get a number we're going to use for a lot of things
-                        float totalMoney = 0; // Initialized at 0 because it's going to go through some stuff
-                        int GetPlayerTotalMoney(int playerIndex) // Might be able to delete palyerIndex from everything. Could be an online compatability thing?
+                        long GetPlayerTotalMoney(int playerIndex) // Might be able to delete palyerIndex from everything. Could be an online compatability thing?
                         {
 
                             // Access all the player's items
@@ -562,16 +561,16 @@ namespace NurseOverhaul
 
 
                             // Calculate the total money from all Banks
-                            int totalMoney = CalculateMoneyFromItems(allItems);
+                            long totalMoney = CalculateMoneyFromItems(allItems);
 
-                            // Check if remaining cost is greater than zero
-                            float remainingCost = cost - totalMoney;
                             return totalMoney;
                         }
 
                         // Helper method to calculate money from items
-                        int CalculateMoneyFromItems(Item[] items)
+                        long CalculateMoneyFromItems(Item[] items)
                         {
+                            long totalMoney = 0;
+
                             for (int i = 0; i < items.Length; i++)
                             {
                                 Item item = items[i];
@@ -594,10 +593,13 @@ namespace NurseOverhaul
                                 }
                             }
 
-                            return (int)totalMoney;
+                            return (long)totalMoney;
                         }
 
-                        int Wallet = GetPlayerTotalMoney(Main.myPlayer); // Get's the player's money from all their items
+
+                        long preWallet = GetPlayerTotalMoney(Main.myPlayer); // Get's the player's money from all their items
+                        long Wallet = Math.Abs(preWallet); // This is a bandaid solution for overflow issues. My players are psychotic and regularly having thousands of plat.
+                                                           // There may be a way to reduce the number being calculated, so there's no risk of overflow, but want to patch with this for live players
 
                         void HealAndSpend(float cost, Player player, int healthMissing) //We'll be calling this method in all conditions where the player can heal
                         {
@@ -853,33 +855,35 @@ namespace NurseOverhaul
                         }
 
 
-                        if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) && (Wallet >= cost | Wallet == -2147483648) && debuffCount > 1 | healthMissing > 0) // Pesudo weak reference to Calamity's boss debuff again,
+                        if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) && (Wallet >= cost | Wallet <= -1) && debuffCount > 1 | healthMissing > 0) // Pesudo weak reference to Calamity's boss debuff again,
                                                                                                                                                                                                // outlining general healing conditions besides that
                         {
                             HealAndSpend(cost, Player, healthMissing);
                         }
 
-                        else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && !bossCombatCheck(6400f) && (Wallet >= cost | Wallet == -2147483648) && debuffCount > 0 | healthMissing > 0) // Non-boss combat check healing conditions
+                        else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && !bossCombatCheck(6400f) && (Wallet >= cost | Wallet <= -1) && debuffCount > 0 | healthMissing > 0) // Non-boss combat check healing conditions
+                        {
+                            //Main.NewText($"{Wallet}");
+                            HealAndSpend(cost, Player, healthMissing);
+                        }
+
+                        else if ((Wallet >= cost | Wallet <= -1) && debuffCount > 0 | healthMissing > 0) // Vanilla healing conditions
                         {
                             HealAndSpend(cost, Player, healthMissing);
                         }
 
-                        else if ((Wallet >= cost | Wallet == -2147483648) && debuffCount > 0 | healthMissing > 0) // Vanilla healing conditions
+                        else if (Wallet < cost) // Message displayed if money found in all inventory slots checked is less than the cost
                         {
-                            HealAndSpend(cost, Player, healthMissing);
-                        }
-
-                        else if (Wallet < cost && Wallet != -2147483648) // Message displayed if money found in all inventory slots checked is less than the cost
-                        {
+                            //Main.NewText($"{Wallet}");
                             Main.NewText("You don't have enough money to pay for a quick heal.");
                         }
 
-                        else if ((Wallet >= cost | Wallet == -2147483648) && healthMissing == 0 && debuffCount == 0) // If your health is full
+                        else if ((Wallet >= cost | Wallet <= -1) && healthMissing == 0 && debuffCount == 0) // If your health is full
                         {
                             Main.NewText("Health full.");
                         }
 
-                        else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && (Wallet >= cost | Wallet == -2147483648) && bossCombatCheck(6400f) == true && debuffCount == 1 && healthMissing == 0) // If your health is full and you're fighting a boss in Calamity
+                        else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && Wallet >= cost && bossCombatCheck(6400f) == true && debuffCount == 1 && healthMissing == 0) // If your health is full and you're fighting a boss in Calamity
                         {
                             Main.NewText("Health full.");
                         }

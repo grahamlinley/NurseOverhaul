@@ -78,6 +78,9 @@ And thanks to the community in general for having so many resources. A lot of wo
 
 Recent Changes
 
+1.0.6
+Further changes to internal money calculation, should be able to handle most extreme values of platinum now
+
 1.0.5
 Updates will no longer be fully applied to the 1.4.3 version of Nurse Overhaul in lockstep with the live 1.4.4 version moving forward. Significant systemic changes to tmodloader shop framework as well as the localization system being the main input for items/config/buffs etc makes backpatching changes made in this version of Nurse Overhaul more difficult than before. 
 Added config options for enabling and disabling Nurse healing items for full customization of your extended healing experience. Disabling an item will also disable the components needed to build said item and the dropping of those items from their corresponding bosses
