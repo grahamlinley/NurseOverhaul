@@ -13,7 +13,7 @@ namespace NurseOverhaul.NPCs
         
         public override void ModifyActiveShop(NPC npc, string shopName, Item[] items)
         {
-            // debugging
+            // KEEP debugging KEEP ALL
             /*
             static string GetShopName(int npcType, string shopName = "Shop")
             {

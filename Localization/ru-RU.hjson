@@ -2,95 +2,102 @@ Mods: {
 	NurseOverhaul: {
 		Buffs: {
 			NurseInRange: {
-				// DisplayName: Готовность к лечению
-				// Description: Медсестра готова излечить вас по вашей команде
+				// DisplayName: In Range of Nurse
+				// Description: The Nurse is watching and ready to deploy a quick heal at your command
 			}
 
 			NurseSweetSpot: {
-				// DisplayName: Быстрый осмотр
-				// Description: Вы достаточно близко к медсестре, что бы не переплачивать за возможно не нужные медикаменты
+				// DisplayName: Nurse's Sweet Spot
+				// Description: You're close enough for reduced priced Nurse quick heals
 			}
 		}
 
 		Items: {
 			BioticRifle: {
-				// DisplayName: Дистанционный инъектор
+				// DisplayName: Biotic Rifle
 				/* Tooltip:
 					'''
-					Подняв этот инструмент, ты видишь на нём женские 
-					инициалы и красное сердце.
-					Хоть этот инструмент скорее похоже на оружие, вы не знаете как
-					им воспользоваться. Скорее всего кто нибудь другой
-					найдет для него лучшее применение.
+					As you hold the weapon, you hear the faint echo of 
+					a woman yelling in a language you don't recognize.
+					Despite its gun-like shape, you somehow feel like 
+					it might be more useful to someone else.
 					''' */
 			}
 
 			NurseVIPBadge: {
-				// DisplayName: VIP Бейдж медсестры
+				// DisplayName: Nurse's VIP Badge
 				/* Tooltip:
 					'''
-					Когда вы находитесь рядом с медсестрой 
-					дайте ей сигнал(key G по умолчанию),
-					она бросит свои дела и исцелит тебя.
-					Медсестра просит тебя держать этот бейдж при себе,
-					что бы не стоять в очереди на исцеление, и не 
-					заполнять каждый раз новый талон во время разговора.
+					When you're close to the Nurse and you 
+					give her the signal (default key G when bound),
+					she will drop everything and heal you.
+					She tells you to keep it on your person at all 
+					times or you'll need to talk to her like everyone else.
 					''' */
 			}
 
 			NurseWalkieTalkie: {
-				// DisplayName: Спец. медицинская рация
+				// DisplayName: Nurse's Walkie Talkie
 				/* Tooltip:
 					'''
-					Когда у вас есть эта рация, медсестра может оставаться
-					с вами на связи и отслеживать ваше местоположение на некоторой дистанции.
-					Когда вы дадите сигнал по рации(key G по умолчанию),
-					медсестра бросит вам все имеющиеся медикаменты,
-					(возможно не все вам понадобятся, но заплатить придется)
-					что будет стоить в три раза дороже чем при обычном осмотре.
-					Быстрый удаленный осмотр теперь со скидкой!
-					Что бы узнать стоимость дистанционного лечения следите за баффами.
+					With this in your inventory, the Nurse can now remain 
+					in constant contact with you and track your whereabouts
+					as long as you remain really close by... and for the right price.
+					She says when you give the signal (default key G) 
+					she'll hit you with her newly developed ranged heal.
+					To fund this, healing outside a certain range 
+					increases prices by 3 times her normal rates.
+					If you're close to her, rates are normal.
+					Buffs will show when you're in her extended range 
+					and when prices are reduced.
 					''' */
 			}
 
 			PlatinumInsurance: {
-				// DisplayName: Персональная система оповещения медсестры
+				// DisplayName: Nurse Nourishment Diamond
 				/* Tooltip:
 					'''
-					Продвинутая система связи позволяет подать вам сигнал медсестре из любой точки мира.
-					Датчики положения этой системы передадут медсестре ваши точные координаты
-					для того что бы вы могли получить медицинскую помощь в самых удаленных местах.
-					Датчики здоровья позволяют проводить быстрый осмотр втрое большем радиусе чем раньше.
+					Her customers demand range and that's what she aims to deliver.
+					Can quick heal from anywhere in the world.
+					Proof of insurance must be carried at all times for treatment.
+					Triples the range of the Nurse's reduced pricing from 
+					Nurse's Walkie Talkie.
+					Price per quick heal outside the sweet spot increased 
+					by 3 times the Nurse's normal rate.
 					''' */
 			}
 
 			BrokenWalkieTalkie: {
-				// DisplayName: Неактивная рация
-				// Tooltip: На первый взгляд это металлолом. Но тут есть слот для какой то карты и монетоприёмник...
+				// DisplayName: Broken Walkie Talkie
+				// Tooltip: On first glance it looks like junk, but on the bottom there looks like there's a slot for a card and a coin
 			}
 
 			SurfaceTransponder: {
-				// DisplayName: Футболка с принтом от медсестры
+				// DisplayName: Nurse's Painted Shirt
 				/* Tooltip:
 					'''
-					Вооружившись инъектором, медсестра сможет лечить
-					вас на большем расстоянии. Позволяет лечиться
-					в любом месте на поверхности и достаточно глубоко под землей.
-					Медсестра может отслеживать вас только по этому предмету
-					в вашем инвентаре. Постоянная передача данных по рации
-					увеличивает дальность быстрого осмотра в два раза.
-					Удаленное лечение за пределами быстрого сомотра все ещё
-					стоит в три раза дороже чем обычное.
+					Armed with her new rifle, the Nurse tells you 
+					she'll be able to track and deploy her quick heal 
+					even further than before. Just give her the signal 
+					(default keybind G), and she'll find you
+					Increases Nurse's quick heal range to anywhere 
+					on the surface, plus a decent amount underground.
+					The Nurse will only be able to track you as long 
+					as you keep this item in your inventory.
+					Doubles the range of the Nurse's reduced pricing from 
+					Nurse's Walkie Talkie.
+					Price per quick heal outside the sweet spot increased 
+					by 3 times the Nurse's normal rate.
 					''' */
 			}
 
 			Thruster: {
-				// DisplayName: Медицинские датчики здоровья
+				// DisplayName: Thruster Components
 				/* Tooltip:
 					'''
-					Как эти устройства помогут с лечением? 
-					Они могут понадобиться медсестре, что бы знать,
-					что вам нужна срочная медицинская помощь.
+					Why do thrusters make you think of healing? 
+					Either the Nurse could use this or you 
+					might need some serious medical treatment...
 					''' */
 			}
 		}

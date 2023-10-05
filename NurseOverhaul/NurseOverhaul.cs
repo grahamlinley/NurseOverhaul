@@ -1,5 +1,4 @@
 //TO DO: 
-// Add weak references to Calamity when 1.4.4 preview released? Remove bosschecklistintegration?
 // IMMPORTANT CALAMITY CHECK. SEE IF DIFFICULTY FACTOR * 100 WORKS FOR DEBUFF CALC IN PLAYER. VERY IMPORTANT
 // WISH: Dialogue for how much you spent at the nurse (button in box? maybe add total spent next to money just spent. could be too cluttery though)
 // WISH Specific equipment item slot that will only take NurseHotkey range modification items 

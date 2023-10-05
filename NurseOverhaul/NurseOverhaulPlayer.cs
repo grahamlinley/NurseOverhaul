@@ -40,7 +40,6 @@ namespace NurseOverhaul
             }
         }
 
-
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
             int nurseNPCID = NPC.FindFirstNPC(NPCID.Nurse);
@@ -53,7 +52,6 @@ namespace NurseOverhaul
                 }
             }
         }
-
 
         public static bool ExcludedDebuff(int buffType)
         {
@@ -200,13 +198,15 @@ namespace NurseOverhaul
 
             finalCost = flooredDisplayCost;
 
+            // Very simply, the code below checks if you have any of the nurse items, what settings you have enabled/disabled, and if you are in the sweet spot that the correct item. Meme explanation below 
+
             // Basically : If any of the Nurse healing extension items are present and
             //if you are outside the small sweet spot, and you have the Nurse's Walkie Talkie Enabled and you don't have the Nurse's Shirt in your inventory, or if you have it in your inventory but it's not enabled,
             //and if you don't have Nurse Nourishment Diamond, or if you do have Nurse Nourishment Diamond but don't have it enabled
             //Or if you are outside the medium sweetspot and you have the Nurse's Shirt enabled, and you don't have diamond insurance in your inventory, or if you do have it in your inventory and don't have it enabled
             //Or if you are outside the large sweetspot and you have the diamond insurance enabled
             //Then just multiply the floored cost by 3, ez pz man
-            //(side note: god bless GPT)
+            //(side note: god bless gpt)
             if ((walkieTalkie || nurseShirt || diamondInsurance) && 
                 ((!PlayerIsInSmallSweetSpot() && walkieTalkieEnabled && (!nurseShirt || (nurseShirt && !nurseShirtEnabled)) && (!diamondInsurance || (diamondInsurance && !diamondInsuranceEnabled))) || 
                  (!PlayerIsInMediumSweetSpot() && nurseShirtEnabled && (!diamondInsurance || (diamondInsurance && !diamondInsuranceEnabled))) ||
@@ -242,21 +242,6 @@ namespace NurseOverhaul
             return false;
         }
 
-        //Check for if the player is in an event
-        public static bool IsEventActive(Player player)
-        {
-
-            if (Main.eclipse) return true;  // Solar Eclipse
-            if (Main.bloodMoon) return true;  // Blood Moon
-            if (Main.slimeRain) return true;  // Slime Rain
-            if (Main.pumpkinMoon) return true;  // Pumpkin Moon
-            if (Main.snowMoon) return true;  // Frost Moon
-            if (Main.invasionType > 0 && Main.invasionSize > 0) return true; // Goblin Army, Martian Madness, Pirate Invasion, etc
-
-            // No event is active
-            return false;
-        }
-
         public static int GetDebuffCount(Player player) // How many debuffs we got boss
         {
             int debuffCount = 0; // None
@@ -285,7 +270,8 @@ namespace NurseOverhaul
                 }
             }
         }
-
+        
+        // Weak reference to Calamity Mod's Nurse price increase during boss fights we'll be using
         public static bool IsBossAlive(string bossName)
         {
             foreach (NPC npc in Main.npc)
@@ -305,7 +291,7 @@ namespace NurseOverhaul
             NPC nurseNPC = Main.npc[nurseNPCId]; // IS IT A NURSE?
             var currentShoppingSettings = Main.ShopHelper.GetShoppingSettings(Main.LocalPlayer, nurseNPC); // HOW HAPPY
             float nurseHappinessAdjustment = (float)currentShoppingSettings.PriceAdjustment; // HOW HAPPY, BUT IN A FLOAT PLEASE
-            float multiplier = 0; // Initializing at 0 so we can add specific multipliers to our float based on the happiness value. You might think I'm crazy, but this is what I got from my tests
+            float multiplier = 0; // Initializing at 0 so we can add specific multipliers to our float based on the happiness value
 
             if (nurseHappinessAdjustment < 1.07 && nurseHappinessAdjustment != 1) // If the Nurse is at 1.07 happiness or below, all the way to 1 (but specifically NOT 1), the base multiplier is a
                                                                                   // a decimal roughly equal to the one below (.9995f). This specific value will yield us the most accurate results,
@@ -355,6 +341,8 @@ namespace NurseOverhaul
         {
             return player.inventory.Any(i => i.type == itemType);
         }
+
+        // Sets the range a player can heal with each item
         private static (int horizontal, int vertical) GetRangeForItem(int itemType)
         {
             double horizontalScaleFactor = (double)Main.maxTilesX / 8400; // Scaling for smaller worlds
@@ -387,20 +375,6 @@ namespace NurseOverhaul
 
             return (horizontalRange, verticalRange);
         }
-        /*
-            else if (PlayerHasItem(player, ModContent.ItemType<SurfaceTransponder>()) && !ModContent.GetInstance<NurseOverhaulConfig>().NursesPaintedShirtEnabled)
-            {
-                finalCost = flooredDisplayCost* 3;
-            }
-            else if (PlayerHasItem(player, ModContent.ItemType<NurseWalkieTalkie>()) && !ModContent.GetInstance<NurseOverhaulConfig>().NursesWalkieTalkieEnabled)
-            {
-                finalCost = flooredDisplayCost* 3;
-            }
-            else if (PlayerHasItem(player, ModContent.ItemType<NurseVIPBadge>()) && !ModContent.GetInstance<NurseOverhaulConfig>().NurseVIPBadgeEnabled)
-{
-    finalCost = flooredDisplayCost * 3;
-}
-        */
 
         private static (int horizontal, int vertical) GetHighestRangeForItems(Player player) //Checks highest item range, for if you have multiple items in your inventory
         {
@@ -438,6 +412,8 @@ namespace NurseOverhaul
 
             return (highestHorizontalRange, highestVerticalRange);
         }
+
+        //sweet spots for items
         private static bool PlayerIsInSmallSweetSpot()
         {
             Player player = Main.LocalPlayer;
@@ -483,21 +459,6 @@ namespace NurseOverhaul
 
             return inHorizontalRange && inVerticalRange;
         }
-
-        public static bool PlayerCanShopAtNurse()
-        {
-            Player player = Main.LocalPlayer;
-            NPC nurse = Main.npc[NPC.FindFirstNPC(NPCID.Nurse)];
-
-            var (highestHorizontalRange, highestVerticalRange) = (64, 64);
-
-            bool inHorizontalRange = Math.Abs(player.Center.X - nurse.Center.X) <= highestHorizontalRange; // Takes the absolute value regardless of axis of the player from the Nurse, and determines
-                                                                                                           // if it is less than or equal to the highest range allowed by the Nurse items to see if it's true
-            bool inVerticalRange = Math.Abs(player.Center.Y - nurse.Center.Y) <= highestVerticalRange;
-
-            return inHorizontalRange && inVerticalRange;
-        }
-
 
         private static bool PlayerHasTransponder() // Checks if you have any nurse item in your inventory
         {
