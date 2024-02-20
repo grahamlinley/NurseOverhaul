@@ -22,17 +22,19 @@ namespace NurseOverhaul
             {
                 if (PlayerIsInRangeOfNurse() && PlayerHasTransponder())
                 {
-                    player.AddBuff(ModContent.BuffType<Buffs.NurseInRange>(), 2); // Applies our custom buff if the player is in range of the nurse and has a transponder item, if they have 
+                    player.AddBuff(ModContent.BuffType<Buffs.NurseInRange>(), 2); // Applies our custom buff if the player is in range of the nurse and has a transponder item, other lines do the same
                 }
 
                 if (PlayerHasItem(player, ModContent.ItemType<NurseWalkieTalkie>()) && PlayerIsInSmallSweetSpot() && ModContent.GetInstance<NurseOverhaulConfig>().NursesWalkieTalkieEnabled)
                 {
                     player.AddBuff(ModContent.BuffType<Buffs.NurseSweetSpot>(), 2);
                 }
+
                 if (PlayerHasItem(player, ModContent.ItemType<SurfaceTransponder>()) && PlayerIsInMediumSweetSpot() && ModContent.GetInstance<NurseOverhaulConfig>().NursesPaintedShirtEnabled)
                 {
                     player.AddBuff(ModContent.BuffType<Buffs.NurseSweetSpot>(), 2);
                 }
+
                 if (PlayerHasItem(player, ModContent.ItemType<PlatinumInsurance>()) && PlayerIsInLargeSweetSpot() && ModContent.GetInstance<NurseOverhaulConfig>().NurseNourishmentDiamondEnabled)
                 {
                     player.AddBuff(ModContent.BuffType<Buffs.NurseSweetSpot>(), 2);
@@ -69,15 +71,14 @@ namespace NurseOverhaul
         public static float GetHealCost(int healthMissing, Player player)
         {
             int nurseNPCId = NPC.FindFirstNPC(NPCID.Nurse);
-            NPC nurseNPC = Main.npc[nurseNPCId];
+            NPC nurseNPC = Main.npc[nurseNPCId]; // Find the Nurse
             var currentShoppingSettings = Main.ShopHelper.GetShoppingSettings(Main.LocalPlayer, nurseNPC); // Accesses an actual number representing how the Nurse feels towards you
             float nurseHappinessAdjustment = (float)currentShoppingSettings.PriceAdjustment; // Floated number for Nurse's happiness
             float difficultyFactor = 1; // Set the difficulty factor to 1 by default
-            float baseCost = healthMissing;
+            float baseCost = healthMissing; // Our base cost number is going to be equal to our max health - current health
             float debuffCount = GetDebuffCount(player); // Get the count of debuffs for the player
             float bossRange = 6400f; // Range of 6400 units
-            bool isBossInRange = bossCombatCheck(bossRange);
-
+            bool isBossInRange = bossCombatCheck(bossRange); // Needed for Calamity debuff check
 
             if (Main.expertMode)
             {
@@ -91,14 +92,13 @@ namespace NurseOverhaul
             float preCost = (baseCost * difficultyFactor); // First step, we need to multiply the raw health number with the difficulty factor. This establishes our "preCost"
 
 
-            if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) == true && debuffCount - 1 > 0) //This specific check is important for Calamity as a pseudo weak reference to
+            if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) == true && debuffCount >= 1) //This specific check is important for Calamity as a pseudo weak reference to
                                                                                                                                //Calamity's Boss Debuff. Because Calamity bosses give a debuff when you're
                                                                                                                                //within a certain range and our mod cures debuffs and charges people for it,
                                                                                                                                //you charge people everytime for 1 debuff worth of healing even if they are
                                                                                                                                //at full health without this check.
             {
-                preCost += (debuffCount - 1) * (100 * difficultyFactor); // READ NOTE BELOW AND APPLY TO THIS TOO
-                                                                         // Logic for next 3 if statements are similar. Takes debuff count, multiplies that by 100 or 200 if master/expert.
+                preCost += (debuffCount - 1) * (100 * difficultyFactor); // Logic for next 3 if statements are similar. Takes debuff count, multiplies that by 100 or 200 if master/expert.
                                                                          // This is because the cost of healing 1 debuff is the same as 100 health in normal mode
             }
 
@@ -177,6 +177,19 @@ namespace NurseOverhaul
                                                                                           // heal or modify based on conditions like the ones set out below. Also adds it to Calamity's base price
                 nurseDisplayCost = calamityBaseCost * 5; // Manually calculating 5 times price increase of Calamity
             }
+
+            else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) == true && debuffCount == 1 && healthMissing == 0) // Another weak reference check for Calamity boss debuff
+            {
+                nurseDisplayCost = 0;
+                Main.NewText("Health full.");
+            }
+
+            else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && bossCombatCheck(6400f) == true && debuffCount == 1 && healthMissing > 0) // Another weak reference check for Calamity boss debuff
+            {
+                calamityBaseCost += preCost * GetMultiplier() * nurseHappinessAdjustment; 
+                nurseDisplayCost = calamityBaseCost * 5; 
+            }
+
             else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod")) // Condition needed because Calamity's base cost system works differently from Vanilla
             {
                 nurseDisplayCost = calamityBaseCost + (preCost * GetMultiplier() * nurseHappinessAdjustment);
@@ -185,6 +198,7 @@ namespace NurseOverhaul
             {
                 nurseDisplayCost = preCost * GetMultiplier() * nurseHappinessAdjustment; // Multiply the total cost by the boss defeat multiplier
             }
+
 
             // Custom pricing to prevent spam abuse
             float finalCost;
@@ -369,7 +383,7 @@ namespace NurseOverhaul
             }
             if (itemType == ModContent.ItemType<PlatinumInsurance>())
             {
-                horizontalRange = (int)(134400 * horizontalScaleFactor);
+                horizontalRange = (int)(80000 * horizontalScaleFactor);
                 verticalRange = (int)(38400 * verticalScaleFactor);
             }
 
@@ -638,7 +652,8 @@ namespace NurseOverhaul
                                     }
                                     message += $"curing {calamityBossDebuffCount} debuff";
                                 }
-                                else if (debuffCount > 1)
+
+                                else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && !bossCombatCheck(6400f) && debuffCount > 1)
                                 {
                                     if (healthMissing > 0)
                                     {
@@ -646,7 +661,24 @@ namespace NurseOverhaul
                                     }
                                     message += $"curing {debuffCount} debuffs";
                                 }
-                                else if (debuffCount == 1)
+                                else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && !bossCombatCheck(6400f) && debuffCount == 1)
+                                {
+                                    if (healthMissing > 0)
+                                    {
+                                        message += " and ";
+                                    }
+                                    message += $"curing {debuffCount} debuff";
+                                }
+
+                                else if (!ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && debuffCount > 1)
+                                {
+                                    if (healthMissing > 0)
+                                    {
+                                        message += " and ";
+                                    }
+                                    message += $"curing {debuffCount} debuffs";
+                                }
+                                else if (!ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && debuffCount == 1)
                                 {
                                     if (healthMissing > 0)
                                     {
@@ -699,7 +731,8 @@ namespace NurseOverhaul
                                     }
                                     message += $"curing {calamityBossDebuffCount} debuff";
                                 }
-                                else if (debuffCount > 1)
+
+                                else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && !bossCombatCheck(6400f) && debuffCount > 1)
                                 {
                                     if (healthMissing > 0)
                                     {
@@ -707,7 +740,24 @@ namespace NurseOverhaul
                                     }
                                     message += $"curing {debuffCount} debuffs";
                                 }
-                                else if (debuffCount == 1)
+                                else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && !bossCombatCheck(6400f) && debuffCount == 1)
+                                {
+                                    if (healthMissing > 0)
+                                    {
+                                        message += " and ";
+                                    }
+                                    message += $"curing {debuffCount} debuff";
+                                }
+
+                                else if (!ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && debuffCount > 1)
+                                {
+                                    if (healthMissing > 0)
+                                    {
+                                        message += " and ";
+                                    }
+                                    message += $"curing {debuffCount} debuffs";
+                                }
+                                else if (!ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && debuffCount == 1)
                                 {
                                     if (healthMissing > 0)
                                     {
@@ -751,7 +801,8 @@ namespace NurseOverhaul
                                     }
                                     message += $"curing {calamityBossDebuffCount} debuff";
                                 }
-                                else if (debuffCount > 1)
+
+                                else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && !bossCombatCheck(6400f) && debuffCount > 1)
                                 {
                                     if (healthMissing > 0)
                                     {
@@ -759,7 +810,23 @@ namespace NurseOverhaul
                                     }
                                     message += $"curing {debuffCount} debuffs";
                                 }
-                                else if (debuffCount == 1)
+                                else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && !bossCombatCheck(6400f) && debuffCount == 1)
+                                {
+                                    if (healthMissing > 0)
+                                    {
+                                        message += " and ";
+                                    }
+                                    message += $"curing {debuffCount} debuff";
+                                }
+                                else if (!ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && debuffCount > 1)
+                                {
+                                    if (healthMissing > 0)
+                                    {
+                                        message += " and ";
+                                    }
+                                    message += $"curing {debuffCount} debuffs";
+                                }
+                                else if (!ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && debuffCount == 1)
                                 {
                                     if (healthMissing > 0)
                                     {
@@ -794,7 +861,24 @@ namespace NurseOverhaul
                                     }
                                     message += $"curing {calamityBossDebuffCount} debuff";
                                 }
-                                else if (debuffCount > 1)
+
+                                else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && !bossCombatCheck(6400f) && debuffCount > 1)
+                                {
+                                    if (healthMissing > 0)
+                                    {
+                                        message += " and ";
+                                    }
+                                    message += $"curing {calamityBossDebuffCount} debuffs";
+                                }
+                                else if (ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && !bossCombatCheck(6400f) && debuffCount == 1)
+                                {
+                                    if (healthMissing > 0)
+                                    {
+                                        message += " and ";
+                                    }
+                                    message += $"curing {calamityBossDebuffCount} debuff";
+                                }
+                                else if (!ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && debuffCount > 1)
                                 {
                                     if (healthMissing > 0)
                                     {
@@ -802,7 +886,7 @@ namespace NurseOverhaul
                                     }
                                     message += $"curing {debuffCount} debuffs";
                                 }
-                                else if (debuffCount == 1)
+                                else if (!ModLoader.Mods.Any(mod => mod.Name == "CalamityMod") && debuffCount == 1)
                                 {
                                     if (healthMissing > 0)
                                     {
@@ -837,6 +921,11 @@ namespace NurseOverhaul
                         {
                             //Main.NewText($"{Wallet}");
                             Main.NewText("You don't have enough money to pay for a quick heal.");
+                        }
+
+                        else if (cost == 0) // If your health is full
+                        {
+                            Main.NewText("Health full.");
                         }
 
                         else if ((Wallet >= cost | Wallet <= -1) && healthMissing == 0 && debuffCount == 0) // If your health is full

@@ -1,6 +1,4 @@
-﻿// Nurse VIP Badge, Local Transponder, Surface Transponder, Global Transponder 
-// other ideas: walkie talkie, Nurse's Platinum Insurance, Eye of Horus /the nurse, Holy Word: Salvation/nurse, Goro Goro no Mi, Chiyu Chiyu no Mi
-using Terraria;
+﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 

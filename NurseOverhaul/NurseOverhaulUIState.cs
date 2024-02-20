@@ -82,140 +82,22 @@ namespace NurseOverhual
 
             if (focused && Main.mouseLeft)
             {
-                OpenShop(1);
+                OpenShop();
             }
         }
 
-        internal static void OpenShop(int shopIndex)
+        internal static void OpenShop()
         {
-            int nurseNPCId = NPC.FindFirstNPC(NPCID.Nurse);
-            NPC nurseNPC = Main.npc[nurseNPCId]; // IS IT A NURSE?
-            NPC npc = Main.npc[1];
             Main.playerInventory = true;
             Main.stackSplit = 9999;
             Main.npcChatText = "";
-            Main.SetNPCShopIndex(shopIndex);
+            Main.SetNPCShopIndex(1);
             //string shopName = NPCShopDatabase.GetShopName(npc.type, "NurseShop");
             //Main.NewText($"Opening shop: {shopName}"); // Print the shop name
-            Chest chest = Main.instance.shop[1];
-            chest.SetupShop("NurseShop", nurseNPC);
+            //Chest chest = Main.instance.shop[1];
+            //chest.SetupShop("NurseShop", nurseNPC);
+            Main.instance.shop[Main.npcShop].SetupShop("Terraria/Nurse/Shop", Main.LocalPlayer.TalkNPC);
             SoundEngine.PlaySound(SoundID.MenuTick);
-        }
-
-        public static List<Item> NurseShopItems() //theoretically we could change this to something else less confusing as NurseHotkeyGlobalNPC is using
-                                                    //ModifyActiveShop as 1.4.4 intends, and I don't think UIState uses ModifyActiveShop, but I'm fearful of changes after getting it to work
-        {
-            List<Item> itemsToReturn = new List<Item>();  //Next 50+ lines are intuitive shop logic. Check repo history for examples of stage progression item
-                                                          //removal, i.e. if you kill EoC, you still have to kill King Slime to unlock everything. Not a fan so we went with individual boss checks.
-            List<(int id, int price)> items = new List<(int id, int price)>
-            {
-                (ItemID.Mushroom, 250),
-                (ItemID.BottledWater, 200),
-                (ItemID.BottledHoney, 400),
-                (ItemID.LesserHealingPotion, 300)
-            };
-
-            if (NPC.downedSlimeKing)
-            {
-                items.Add((ItemID.HealingPotion, 10000));
-            }
-
-            if (NPC.downedBoss1)
-            {
-                items.Add((ItemID.RestorationPotion, 15000));
-            }
-
-            if (Main.hardMode)
-            {
-                items.Add((ItemID.LifeforcePotion, 10000));
-                items.Add((ItemID.GreaterHealingPotion, 50000));
-            }
-            
-
-            if (NPC.downedAncientCultist)
-            {
-                items.Add((ItemID.SuperHealingPotion, 150000));
-            }
-
-
-            int supremeHealingPotionIndex = -1;
-            int omegaHealingPotionIndex = -1;
-
-            // Calamity weak references, not to worried about name changes. If they do it should just not populate anyway
-            ModLoader.TryGetMod("CalamityMod", out Mod Calamity);
-
-            if (Calamity != null && NPC.downedMoonlord && Calamity.TryFind<ModItem>("SupremeHealingPotion", out ModItem supremeHealingPotion))
-            {
-                supremeHealingPotionIndex = items.FindIndex(item => item.id == ItemID.SuperHealingPotion);
-
-                items.Add((supremeHealingPotion.Item.type, 500000));
-
-
-            }
-
-            if (Calamity != null && (bool)Calamity.Call("Downed", "dog") && Calamity.TryFind<ModItem>("OmegaHealingPotion", out ModItem omegaHealingPotion))
-            {
-                omegaHealingPotionIndex = items.FindIndex(item => item.id == ItemID.SuperHealingPotion);
-
-                items.Add((omegaHealingPotion.Item.type, 1000000));
-
-            }
-
-            if (ModContent.GetInstance<NurseOverhaulConfig>().NurseVIPBadgeEnabled)
-            {
-                items.Add((ModContent.ItemType<NurseVIPBadge>(), 5000));
-            }
-
-            if (NPC.downedBoss2)
-            {
-                if (ModContent.GetInstance<NurseOverhaulConfig>().NursesWalkieTalkieEnabled)
-                {
-                    items.Add((ModContent.ItemType<NurseWalkieTalkie>(), 250000));
-                }
-            }
-
-            if (NPC.downedBoss3)
-            {
-                if (ModContent.GetInstance<NurseOverhaulConfig>().NursesPaintedShirtEnabled)
-                {
-                    items.Add((ModContent.ItemType<SurfaceTransponder>(), 1000000));
-                }
-            }
-
-            if (Main.hardMode)
-            {
-                if (ModContent.GetInstance<NurseOverhaulConfig>().NurseNourishmentDiamondEnabled)
-                {
-                    items.Add((ModContent.ItemType<PlatinumInsurance>(), 4000000));
-                }
-            }
-
-
-            if (NPC.downedBoss1)
-            {
-                if (ModContent.GetInstance<NurseOverhaulConfig>().LifeCrystalInShop)
-                {
-                    items.Add((ItemID.LifeCrystal, 1000000));
-                }
-            }
-
-            if (NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3)
-            {
-                if (ModContent.GetInstance<NurseOverhaulConfig>().LifeFruitInShop)
-                {
-                    items.Add((ItemID.LifeFruit, 2000000));
-                }
-            }
-
-            for (int i = 0; i < items.Count; i++) // very important for making shop items actually shop items, at least it was in 1.4.3. With 1.4.4 shop changes might not be important but it works so I'm keeping it
-            {
-                Item newItem = new Item();
-                newItem.SetDefaults(items[i].id);
-                newItem.shopCustomPrice = items[i].price;
-                newItem.isAShopItem = true;
-                itemsToReturn.Add(newItem);
-            }
-            return itemsToReturn; //What is used in GlobalNPC to populate the items in our shop
         }
     }
 }

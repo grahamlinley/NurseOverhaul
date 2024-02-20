@@ -44,7 +44,7 @@ namespace NurseOverhaul
                     "DialogueTweak/Interfaces/Assets/Icon_Default", // The texture's path
                     () =>
                     {
-                        NurseOverhaulUIState.OpenShop(1); //SHop button in DialogueTweak will call our OpenShop method 
+                        NurseOverhaulUIState.OpenShop(); //SHop button in DialogueTweak will call our OpenShop method 
                     });
             }
         }
