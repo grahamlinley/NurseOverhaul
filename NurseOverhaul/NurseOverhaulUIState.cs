@@ -86,6 +86,7 @@ namespace NurseOverhual
             }
         }
 
+        // How the shop actually opens. The method above is executing this, so we're going to need to do a couple things here
         internal static void OpenShop(int shopIndex)
         {
             int nurseNPCId = NPC.FindFirstNPC(NPCID.Nurse);
@@ -95,18 +96,15 @@ namespace NurseOverhual
             Main.stackSplit = 9999;
             Main.npcChatText = "";
             Main.SetNPCShopIndex(shopIndex);
-            //string shopName = NPCShopDatabase.GetShopName(npc.type, "NurseShop");
-            //Main.NewText($"Opening shop: {shopName}"); // Print the shop name
             Chest chest = Main.instance.shop[1];
             chest.SetupShop("NurseShop", nurseNPC);
             SoundEngine.PlaySound(SoundID.MenuTick);
         }
 
-        public static List<Item> NurseShopItems() //theoretically we could change this to something else less confusing as NurseHotkeyGlobalNPC is using
-                                                    //ModifyActiveShop as 1.4.4 intends, and I don't think UIState uses ModifyActiveShop, but I'm fearful of changes after getting it to work
+        public static List<Item> NurseShopItems() 
         {
-            List<Item> itemsToReturn = new List<Item>();  //Next 50+ lines are intuitive shop logic. Check repo history for examples of stage progression item
-                                                          //removal, i.e. if you kill EoC, you still have to kill King Slime to unlock everything. Not a fan so we went with individual boss checks.
+            List<Item> itemsToReturn = new List<Item>();  //Next 50+ lines are intuitive shop logic. Check repo history for examples of stage progression item removal
+                                                          //i.e. if you kill EoC, you still have to kill King Slime to unlock everything. Not a fan so we went with individual boss checks.
             List<(int id, int price)> items = new List<(int id, int price)>
             {
                 (ItemID.Mushroom, 250),
@@ -141,7 +139,7 @@ namespace NurseOverhual
             int supremeHealingPotionIndex = -1;
             int omegaHealingPotionIndex = -1;
 
-            // Calamity weak references, not to worried about name changes. If they do it should just not populate anyway
+            // Not too worried about Calamity weak references as if the reference breaks the shop just won't populate. Don't think Calamity will change names either.
             ModLoader.TryGetMod("CalamityMod", out Mod Calamity);
 
             if (Calamity != null && NPC.downedMoonlord && Calamity.TryFind<ModItem>("SupremeHealingPotion", out ModItem supremeHealingPotion))

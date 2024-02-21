@@ -1,4 +1,4 @@
-﻿// 1.4.4 broke this, switching to weak references
+﻿// 1.4.4 broke this, switched from strong references to weak references in rest of code. Keeping in case I change my mind 
 /*
 using System;
 using System.Collections.Generic;

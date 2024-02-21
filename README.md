@@ -12,8 +12,6 @@ Things to note:
 
 You need to bind quick heal to a button manually in the Settings -> Controls -> Mod Controls menu.
 
-Should be compatible with Calamity, although unchecked for 1.4.4 currently. Uses BossChecklist for stronger references to Calamity bosses currently.
-
 Items that increase the Nurse's range will do so at a price. The first item you get will just let you heal from the same room, the next will increase the range by triple that, but if you heal outside the room prices increase by 3 times the normal rate. Upgrades will increase the quick heals range further, from one screen to the entire surface to the entire world. However, the sweet spot will increase only by small amounts. You can easily tell if you are in either the normal range of the item or the sweet spot as you will have buffs for when you are in range of either. So go ahead and hit that quick heal while you're digging up that hellstone, just check with your financial advisor before you do.
 
 For the Nurse quick heal at range items, King Slime, Eye of Cthulhu, and Brain of Cthulhu/Eater of Worlds all drop component items to upgrade the base Nurse VIP Badge which is sold in the Nurse's shop. You will also be able to buy these items from her shop as you progress, however it is significantly cheaper to build by just killing the bosses. 
@@ -78,61 +76,4 @@ And thanks to the community in general for having so many resources. A lot of wo
 
 Recent Changes
 
-1.0.6
-Further changes to internal money calculation, should be able to handle most extreme values of platinum now
-
-1.0.5
-Updates will no longer be fully applied to the 1.4.3 version of Nurse Overhaul in lockstep with the live 1.4.4 version moving forward. Significant systemic changes to tmodloader shop framework as well as the localization system being the main input for items/config/buffs etc makes backpatching changes made in this version of Nurse Overhaul more difficult than before. 
-Added config options for enabling and disabling Nurse healing items for full customization of your extended healing experience. Disabling an item will also disable the components needed to build said item and the dropping of those items from their corresponding bosses
-Added the ability to toggle in Life Crystal's and Life Fruit to the shop. Crystals will be available to purchase for 1 plat a piece after you beat Eye of Cthulhu, while Fruits will be available after you beat all mech bosses for 2 plat a piece. Would still recommend picking up the free ones off the ground, but the option is there for those who want it
-Made changes to the ordering of the shop. Items will now be categorized by their general item type (Potions, Nurse Items, Health Increasing items)
-Fixed a bug where Omega Healing Potions weren't correctly being added to the shop for Calamity players after they beat Devourer of Gods
-
-
-1.0.4
-Fixed a bug where if you had more than 1 stack of platinum, your money would be calculated as negative and you would not receive a heal
-Fixed a main chat output when healing debuffs during Calamity boss fights so that it states the correct amount of debuffs being cured
-
-1.0.3.1 to 1.0.3.6
-Icon issues
-
-1.0.3
-Removed BossChecklist as a reference
-Fixed a bug where Calamity prices were miscalculated due to 1.4.4 changes
-Fixed a bug that caused debuffs to be cured but not charged for
-
-1.0.2
-Icon resized for mod browser
-
-1.0.1
-Readme changes, description changes
-
-1.0
-Ready for 1.4.4 release
-Better sprites added
-Items text, rarity, and names changed
-Sweet spot healing functionality added
-Sweet spot buff added
-Extended healing range numbers changed
-Buffs added as nonremovable
-Rarities readjusted
-Item text changes
-Icon added
-Readme changes
-
-
-0.9.3
-Further changes to items
-Code cleanup. Added comments and more organization to the file structure. Prepped for 1.4.4 publish and 1.4.3 ready once commented out sections re-added
-
-0.9.2
-Changed shop from stage progression unlock style to just needing to kill individual bosses 
-Nurse items renamed, tooltips changed, rarities adjusted, sell prices adjusted to their corresponding tiers
-Readme changes
-
-0.9.1
-Readme changes
-
-0.9
-Initial release prepared
-[quote=tModLoader]Developed By Selystra[/quote]
+For a list of the most recent changes, check out Nurse Overhaul's Terraria forum page.

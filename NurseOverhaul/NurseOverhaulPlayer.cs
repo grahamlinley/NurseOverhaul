@@ -478,10 +478,10 @@ namespace NurseOverhaul
             NPC nurse = Main.npc[NPC.FindFirstNPC(NPCID.Nurse)];
             if (nurse != null) // Only will execute if the Nurse exists
             {
-                if (Player.statLife > 0) // Won't execute if dead
+                if (Player.statLife > 0) // Won't execute if player is dead
                 {
                     Player player = Main.LocalPlayer;
-                    Item[] GetAllItems(int playerIndex) // Getting every item the player owns and adding it to an array
+                    Item[] GetAllItems(int playerIndex) // Getting every item the player owns (including different banks, etc) and adding it to an array
                     {
                         List<Item> allItems = new List<Item>();
                         Item[] inventory = player.inventory;
@@ -578,6 +578,7 @@ namespace NurseOverhaul
                             CalculateAndPrintSpending(intCost);
                         }
 
+                        // I'm guessing there is about a 95% chance there is a way to print specific messages to the console earlier. But somehow this works, wouldn't touch.
                         void CalculateAndPrintSpending(int cost)
                         {
                             // Calculates your momney and outputs a message in the main chat depending on the cost
@@ -834,7 +835,7 @@ namespace NurseOverhaul
 
                         else if (Wallet < cost) // Message displayed if money found in all inventory slots checked is less than the cost
                         {
-                            //Main.NewText($"{Wallet}");
+                            //Main.NewText($"{Wallet}"); DEBUGGING
                             Main.NewText("You don't have enough money to pay for a quick heal.");
                         }
 
@@ -847,7 +848,7 @@ namespace NurseOverhaul
                         {
                             Main.NewText("Health full.");
                         }
-                        else // Something goes terribly, terribly, terribly, and I mean terribly wrong. This should not be possible
+                        else // Something goes terribly, terribly, terribly, and I mean terribly wrong. This should not be possible. Ever.
                         {
                             Main.NewText("Couldn't quick heal.");
                         }

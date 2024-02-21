@@ -13,21 +13,21 @@ namespace NurseOverhaul.NPCs
         
         public override void ModifyActiveShop(NPC npc, string shopName, Item[] items)
         {
-            // KEEP debugging KEEP ALL
+            // KEEP FOR DEBUGGING KEEP ALL
             /*
             static string GetShopName(int npcType, string shopName = "Shop")
             {
                 return $"{(npcType < NPCID.Count ? $"Terraria/{NPCID.Search.GetName(npcType)}" : NPCLoader.GetNPC(npcType).FullName)}/{shopName}";
             }
-            */
-            // Checks what shop you're interacting with (debugging)
+            // Checks what shop you're interacting with 
             //Main.NewText($"{GetShopName(Main.npcShop)})");
             //Main.NewText($"Interacted with NPC type: {npc.type}");
             //Main.NewText($"{Main.npcShop == npc.whoAmI}");
+            */
             if (npc.type == NPCID.Nurse)
             {
-                // Confirms you're in the right shop (debugging)
-               // Main.NewText("The shop is being called correctly for the Nurse.");
+                // Confirms you're in the right shop (DEBUGGING)
+                // Main.NewText("The shop is being called correctly for the Nurse.");
                 //Main.NewText($"{Main.npcShop == npc.whoAmI}");
 
                 // Calls listed items in NurseHotkeyUI's ModifyActiveShop method
