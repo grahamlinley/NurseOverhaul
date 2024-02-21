@@ -1,33 +1,33 @@
 NurseOverhaulConfig: {
-	// DisplayName: Options
+	// DisplayName: Nurse Overhaul Config
 
 	NurseVIPBadgeEnabled: {
-		// Label: Enable Nurse's VIP Badge
+		// Label: Nurse's VIP Badge Enabled
 		// Tooltip: Enabled by default
 	}
 
 	NursesWalkieTalkieEnabled: {
-		// Label: Enable Nurse's Walkie Talkie
+		// Label: Nurse's Walkie Talkie Enabled
 		// Tooltip: Enabled by default
 	}
 
 	NursesPaintedShirtEnabled: {
-		// Label: Enable Nurse's Painted Shirt
+		// Label: Nurse's Painted Shirt Enabled
 		// Tooltip: Enabled by default
 	}
 
 	NurseNourishmentDiamondEnabled: {
-		// Label: Enable Nurse Nourishment Diamond
+		// Label: Nurse Nourishment Diamond Enabled
 		// Tooltip: Enabled by default
 	}
 
 	LifeCrystalInShop: {
-		// Label: Enables Life Crystals in the Nurse's shop after defeating Eye of Cthulhu
+		// Label: Enables Life Crystal in the Nurse's Shop after defeating Eye of Cthulhu
 		// Tooltip: Disabled by default
 	}
 
 	LifeFruitInShop: {
-		// Label: Enables Life Fruit in the Nurse's shop after defeating all Mech Bosses
+		// Label: Enables Life Shop in the Nurse's Shop after defeating Mech Bosses
 		// Tooltip: Disabled by default
 	}
 }
