@@ -39,7 +39,8 @@ namespace NurseOverhaul
                 supremeHealingPotionRecipe.Register();
             }
 
-            /* don't really want to touch this for now. haven't played in a while and not sure how balanced something like this would be
+            /* don't really want to touch this for now. haven't played in a while and not sure how balanced something like this would be'
+             * (checking soon)
              * 
             if (Calamity != null && Calamity.TryFind<ModItem>("OmegaHealingPotion", out ModItem omegaHealingPotion))
             {
