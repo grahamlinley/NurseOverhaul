@@ -17,10 +17,10 @@ Mods: {
 				DisplayName: Biotic Rifle
 				Tooltip:
 					'''
-					As your hands grasp the weapon, you hear the faint
-					echo of a woman yelling in a language you don't recognize.
-					Despite its gun-like shape, you somehow feel like it might
-					be more useful to someone else.
+					As you hold the weapon, you hear the faint echo of 
+					a woman yelling in a language you don't recognize.
+					Despite its gun-like shape, you somehow feel like 
+					it might be more useful to someone else.
 					'''
 			}
 
