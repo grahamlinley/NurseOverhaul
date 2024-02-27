@@ -936,7 +936,7 @@ namespace NurseOverhaul
                         {
                             Main.NewText("Health full.");
                         }
-                        else // Something goes terribly, terribly, terribly, and I mean terribly wrong. This should not be possible
+                        else // Something goes terribly, terribly, terribly, and I mean terribly wrong. This should not be possible 
                         {
                             Main.NewText("Couldn't quick heal.");
                         }
