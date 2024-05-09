@@ -198,14 +198,15 @@ namespace NurseOverhaul
 
             finalCost = flooredDisplayCost;
 
-            // More simply than below, what comes next checks if you have any of the nurse items, what settings you have enabled/disabled, and if you are in the sweet spot that the correct item. Meme explanation below 
+            // Very simply, what comes next checks if you have any of the nurse items, what settings you have enabled/disabled, and if you are in the sweet spot that the correct item. Meme explanation below 
 
             // Basically, line by line: If any of the Nurse healing extension items are present and
             //if you are outside the small sweet spot, and you have the Nurse's Walkie Talkie Enabled and you don't have the Nurse's Shirt in your inventory, or if you have it in your inventory but it's not enabled,
             //and if you don't have Nurse Nourishment Diamond, or if you do have Nurse Nourishment Diamond but don't have it enabled
             //Or if you are outside the medium sweetspot and you have the Nurse's Shirt enabled, and you don't have diamond insurance in your inventory, or if you do have it in your inventory and don't have it enabled
             //Or if you are outside the large sweetspot and you have the diamond insurance enabled
-            //Then just multiply the floored cost by 3, ez pz man
+            //Then just multiply the floored cost by 3. ez pz man
+            
             if ((walkieTalkie || nurseShirt || diamondInsurance) && 
                 ((!PlayerIsInSmallSweetSpot() && walkieTalkieEnabled && (!nurseShirt || (nurseShirt && !nurseShirtEnabled)) && (!diamondInsurance || (diamondInsurance && !diamondInsuranceEnabled))) || 
                  (!PlayerIsInMediumSweetSpot() && nurseShirtEnabled && (!diamondInsurance || (diamondInsurance && !diamondInsuranceEnabled))) ||

@@ -69,7 +69,7 @@ Mods: {
 
 			BrokenWalkieTalkie: {
 				DisplayName: Broken Walkie Talkie
-				Tooltip: On first glance it looks like junk, but on the bottom there looks like there's a slot for a card and a coin
+				Tooltip: On first glance it looks like junk, but on the bottom there looks like there's a slot for a card and a coin.
 			}
 
 			SurfaceTransponder: {

@@ -17,7 +17,15 @@ namespace NurseOverhaul
         public bool NursesWalkieTalkieEnabled { get; set; } = true;
         public bool NursesPaintedShirtEnabled { get; set; } = true;
         public bool NurseNourishmentDiamondEnabled { get; set; } = true;
+
+        [DefaultValue(30)]
+        [Range(5, int.MaxValue)]
+        public int LifeCrystalPrice { get; set; } = 30;
         public bool LifeCrystalInShop { get; set; } = false;
+
+        [DefaultValue(35)]
+        [Range(8, int.MaxValue)]
+        public int LifeFruitPrice { get; set; } = 35;
         public bool LifeFruitInShop { get; set; } = false;
 
     }

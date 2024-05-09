@@ -188,12 +188,12 @@ namespace NurseOverhual
                 }
             }
 
-
             if (NPC.downedBoss1)
             {
                 if (ModContent.GetInstance<NurseOverhaulConfig>().LifeCrystalInShop)
                 {
-                    items.Add((ItemID.LifeCrystal, 1000000));
+                    int lifeCrystalPrice = ModContent.GetInstance<NurseOverhaulConfig>().LifeCrystalPrice;
+                    items.Add((ItemID.LifeCrystal, (lifeCrystalPrice*10000)));
                 }
             }
 
@@ -201,9 +201,28 @@ namespace NurseOverhual
             {
                 if (ModContent.GetInstance<NurseOverhaulConfig>().LifeFruitInShop)
                 {
-                    items.Add((ItemID.LifeFruit, 2000000));
+                    int lifeFruitPrice = ModContent.GetInstance<NurseOverhaulConfig>().LifeFruitPrice;
+                    items.Add((ItemID.LifeFruit, (lifeFruitPrice *10000)));
                 }
             }
+
+            /*
+                        if (NPC.downedBoss1)
+                        {
+                            if (ModContent.GetInstance<NurseOverhaulConfig>().LifeCrystalInShop)
+                            {
+                                items.Add((ItemID.LifeCrystal, 300000));
+                            }
+                        }
+
+                        if (NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3)
+                        {
+                            if (ModContent.GetInstance<NurseOverhaulConfig>().LifeFruitInShop)
+                            {
+                                items.Add((ItemID.LifeFruit, 350000));
+                            }
+                        }
+            */
 
             for (int i = 0; i < items.Count; i++) // very important for making shop items actually shop items, at least it was in 1.4.3. With 1.4.4 shop changes might not be important but it works so I'm keeping it
             {

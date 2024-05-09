@@ -30,4 +30,14 @@ NurseOverhaulConfig: {
 		// Label: Enables Life Fruit in the Nurse's shop after defeating all Mech Bosses
 		// Tooltip: Disabled by default
 	}
+
+	LifeCrystalPrice: {
+		// Label: Life Crystal Price
+		// Tooltip: Default Price is 30g. Minimum price is 5g
+	}
+
+	LifeFruitPrice: {
+		// Label: Life Fruit Price
+		// Tooltip: Default Price is 35g. Minimum price is 8g
+	}
 }
