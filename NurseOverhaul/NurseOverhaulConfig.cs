@@ -13,9 +13,13 @@ namespace NurseOverhaul
     public class NurseOverhaulConfig : ModConfig
     {
         public override ConfigScope Mode => ConfigScope.ServerSide; // Deleted most 1.4.3 extranenous code but think this is still necessary. Keeping in for now
+        [DefaultValue(true)]
         public bool NurseVIPBadgeEnabled { get; set; } = true;
+        [DefaultValue(true)]
         public bool NursesWalkieTalkieEnabled { get; set; } = true;
+        [DefaultValue(true)]
         public bool NursesPaintedShirtEnabled { get; set; } = true;
+        [DefaultValue(true)]
         public bool NurseNourishmentDiamondEnabled { get; set; } = true;
 
         [DefaultValue(30)]
