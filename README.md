@@ -77,6 +77,9 @@ And thanks to the community in general for having so many resources. A lot of wo
 
 Recent Changes
 
+1.0.8.3
+Edited documentation for errors and uniformity across platforms
+
 1.0.8.2
 Fixed a bug that disabled quick heal items by default for new players. If you were affected by this, you can manually turn on the items from the config menu, or just download this update and revert Nurse Overhaul's settings to default
 
