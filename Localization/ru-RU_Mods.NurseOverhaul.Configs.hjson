@@ -21,6 +21,11 @@ NurseOverhaulConfig: {
 		// Tooltip: Enabled by default
 	}
 
+	ItemInBank: {
+		// Label: Allow Nurse range increase items (like the ones above) to work in all storage
+		// Tooltip: Disabled by default
+	}
+
 	LifeCrystalInShop: {
 		// Label: Enables Life Crystals in the Nurse's shop after defeating Eye of Cthulhu
 		// Tooltip: Disabled by default

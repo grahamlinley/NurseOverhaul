@@ -339,6 +339,10 @@ namespace NurseOverhaul
 
         private static bool PlayerHasItem(Player player, int itemType) // helper method that will determine if the player has a Nurse healing item
         {
+            if (ModContent.GetInstance<NurseOverhaulConfig>().ItemInBank == true)
+            {
+                return player.HasItemInAnyInventory(itemType);
+            }
             return player.inventory.Any(i => i.type == itemType);
         }
 
