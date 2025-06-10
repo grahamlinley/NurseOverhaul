@@ -77,6 +77,9 @@ And thanks to the community in general for having so many resources. A lot of wo
 
 Recent Changes
 
+1.0.9
+Added community request for option to store nurse range increase items in bank
+
 1.0.8.3
 Edited documentation for errors and uniformity across platforms
 
